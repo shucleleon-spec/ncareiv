@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="es" id="html-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NCare IV | Wellness & IV Therapy — Raleigh, NC</title>
+  <link rel="icon" href="imagenes/logo1.jpg?v=2" type="image/jpeg">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --prim:#8b6f47; --prim-medio:#a6845e; --prim-claro:#f5ede0;
+      --acento:#c4956a; --texto:#2e231a; --texto-suave:#6b5240;
+      --blanco:#fffdf9; --fondo:#faf5ee; --borde:#e8d8c4;
+      --dark-bg:#2a1f14; --serif:'Cormorant Garamond',serif;
+      --sans:'DM Sans',sans-serif; --radius-card:20px; --radius-btn:50px;
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--sans);color:var(--texto);background:var(--blanco);line-height:1.6}
+    img{display:block;max-width:100%} a{color:inherit}
+    .container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
+    .text-center{text-align:center}
+    .section-label{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--acento);font-weight:500;display:block;margin-bottom:.6rem}
+    .section-title{font-family:var(--serif);font-size:clamp(1.75rem,3vw,2.5rem);font-weight:600;line-height:1.2;margin-bottom:1rem}
+    .section-desc{color:var(--texto-suave);font-size:15px;line-height:1.8;max-width:640px}
+    .section-desc.center{margin:0 auto}
+    .btn-primary{display:inline-block;background:var(--prim);color:#fff;padding:.8rem 1.8rem;border-radius:var(--radius-btn);border:none;font-size:14px;font-family:var(--sans);font-weight:500;cursor:pointer;text-decoration:none;transition:background .2s,transform .2s}
+    .btn-primary:hover{background:var(--prim-medio);transform:translateY(-1px)}
+    .btn-outline{display:inline-block;background:transparent;color:var(--prim);padding:.8rem 1.8rem;border-radius:var(--radius-btn);border:1.5px solid var(--prim);font-size:14px;font-family:var(--sans);cursor:pointer;text-decoration:none;transition:background .2s}
+    .btn-outline:hover{background:var(--prim-claro)}
+
+    /* HEADER */
+    header{position:fixed;top:0;width:100%;z-index:100;background:rgba(255,253,249,.97);border-bottom:1px solid var(--borde);backdrop-filter:blur(8px)}
+    .header-main{display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;padding:.9rem 1.5rem}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+    .logo img{width:44px;height:44px;object-fit:cover;border-radius:50%}
+    .logo-text{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--prim)}
+    .logo-sub{font-size:10px;color:var(--texto-suave);letter-spacing:1px;text-transform:uppercase;display:block}
+    .nav-links{display:flex;align-items:center;gap:1.5rem}
+    .nav-links a{text-decoration:none;color:var(--texto);font-size:14px;transition:color .2s}
+    .nav-links a:hover{color:var(--prim)}
+    .btn-nav{background:var(--prim);color:#fff;border:none;padding:.55rem 1.3rem;border-radius:var(--radius-btn);font-size:13px;font-family:var(--sans);cursor:pointer;transition:background .2s;text-decoration:none}
+    .btn-nav:hover{background:var(--prim-medio)}
+
+    /* Language switcher */
+    .lang-btn{display:flex;align-items:center;gap:5px;background:var(--prim-claro);border:1.5px solid var(--borde);border-radius:var(--radius-btn);padding:5px 12px;cursor:pointer;font-size:12px;font-family:var(--sans);font-weight:500;color:var(--prim);transition:all .2s;white-space:nowrap}
+    .lang-btn:hover{background:var(--borde)}
+    .lang-flag{font-size:15px}
+
+    /* Hamburger */
+    .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+    .hamburger span{display:block;width:24px;height:2px;background:var(--prim);border-radius:2px;transition:all .3s}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    .hamburger.open span:nth-child(2){opacity:0}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+    .mobile-menu{display:none;flex-direction:column;gap:0;background:var(--blanco);border-top:1px solid var(--borde);padding:0;overflow:hidden;max-height:0;transition:max-height .35s ease}
+    .mobile-menu.open{max-height:500px}
+    .mobile-menu a{display:block;padding:.9rem 1.5rem;text-decoration:none;color:var(--texto);font-size:15px;border-bottom:1px solid var(--borde);transition:background .2s}
+    .mobile-menu a:hover{background:var(--prim-claro);color:var(--prim)}
+    .mobile-menu .btn-nav-mobile{margin:1rem 1.5rem 1rem;border-radius:var(--radius-btn);text-align:center;background:var(--prim);color:#fff;font-weight:500;border-bottom:none}
+    .mobile-menu .btn-nav-mobile:hover{background:var(--prim-medio)}
+    .mobile-lang{padding:.75rem 1.5rem;border-bottom:1px solid var(--borde)}
+
+    /* HERO */
+    .hero{min-height:100vh;display:flex;align-items:center;padding:7rem 1.5rem 4rem;background:linear-gradient(135deg,#fdf6ed 0%,#f5e9d6 50%,#fdf8f2 100%)}
+    .hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:center}
+    .hero-tag{display:inline-block;background:var(--prim-claro);color:var(--prim);font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:var(--radius-btn);margin-bottom:1.25rem;font-weight:500}
+    .hero h1{font-family:var(--serif);font-size:clamp(2rem,4vw,3.2rem);font-weight:600;line-height:1.15;margin-bottom:1.25rem}
+    .hero h1 em{color:var(--prim);font-style:normal}
+    .hero p{font-size:16px;line-height:1.75;color:var(--texto-suave);margin-bottom:2rem;max-width:460px}
+    .hero-btns{display:flex;gap:.9rem;flex-wrap:wrap}
+    .hero-image{display:flex;justify-content:center}
+    .hero-img-frame{width:100%;max-width:440px;aspect-ratio:4/5;border-radius:30px 30px 100px 30px;overflow:hidden;background:linear-gradient(145deg,#f0dfc8,#ddc9a8)}
+    .hero-img-frame img{width:100%;height:100%;object-fit:cover}
+
+    /* NOSOTROS */
+    #nosotros{padding:5rem 1.5rem}
+    .nosotros-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+    .gift-card-section{text-align:center;padding:24px;background:var(--prim-claro);border-radius:var(--radius-card);overflow:hidden}
+    .gift-img{width:100%;border-radius:12px;margin-bottom:18px;transition:transform .4s ease}
+    .gift-card-section:hover .gift-img{transform:scale(1.04)}
+    .mision-block p{color:var(--texto-suave);line-height:1.85;font-size:15px}
+
+    /* CARDS */
+    .porque{background:var(--fondo);padding:5rem 1.5rem}
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;margin-top:2.5rem}
+    .card{background:var(--blanco);border-radius:var(--radius-card);padding:1.75rem;border:1px solid var(--borde);transition:transform .25s,box-shadow .25s,border-color .25s}
+    .card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(139,111,71,.12);border-color:var(--prim)}
+    .card-icon{width:50px;height:50px;background:var(--prim-claro);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:1rem}
+    .card h3{font-size:15px;font-weight:500;margin-bottom:.5rem}
+    .card p{font-size:13px;color:var(--texto-suave);line-height:1.7}
+
+    /* TRATAMIENTOS */
+    #tratamientos{padding:5rem 1.5rem}
+    .servicios-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.5rem;margin-top:2.5rem}
+    .servicio-card{background:var(--blanco);border-radius:var(--radius-card);border:1px solid var(--borde);overflow:hidden;display:flex;flex-direction:column;transition:transform .25s,box-shadow .25s}
+    .servicio-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(139,111,71,.14)}
+    .card-img{height:220px;overflow:hidden}
+    .card-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+    .servicio-card:hover .card-img img{transform:scale(1.04)}
+    .card-body{padding:1.4rem;flex-grow:1;display:flex;flex-direction:column}
+    .card-brand{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--texto-suave);margin-bottom:6px}
+    .card-titulo{font-family:var(--serif);font-size:1.25rem;color:var(--prim);line-height:1.2;margin-bottom:8px}
+    .card-titulo span{color:var(--acento)}
+    .card-desc{font-size:13px;color:var(--texto-suave);line-height:1.6;margin-bottom:10px}
+    .texto-expandible{font-size:13px;color:var(--texto-suave);line-height:1.65;max-height:0;overflow:hidden;transition:max-height .4s ease}
+    .texto-expandible p{margin-bottom:6px}
+    .card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:14px;border-top:1px solid var(--borde)}
+    .badge-precio{background:var(--prim-claro);color:var(--prim);border:1px solid var(--prim);padding:4px 12px;border-radius:var(--radius-btn);font-weight:600;font-size:12px}
+    .btn-leer-mas{background:var(--prim);color:#fff;border:none;padding:6px 14px;border-radius:var(--radius-btn);font-size:11px;font-weight:600;cursor:pointer;text-transform:uppercase;font-family:var(--sans);transition:background .2s}
+    .btn-leer-mas:hover{background:var(--prim-medio)}
+
+    /* TESTIMONIOS */
+    .testimonios{background:var(--fondo);padding:5rem 1.5rem}
+    .test-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;margin-top:2.5rem}
+    .test-card{background:var(--blanco);border-radius:var(--radius-card);padding:1.75rem;border:1px solid var(--borde)}
+    .test-stars{color:var(--acento);font-size:16px;margin-bottom:.9rem}
+    .test-text{font-size:14px;color:var(--texto-suave);line-height:1.8;margin-bottom:1.25rem;font-style:italic}
+    .test-author{display:flex;align-items:center;gap:10px}
+    .test-avatar{width:40px;height:40px;border-radius:50%;background:var(--prim-claro);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+    .test-name{font-weight:500;font-size:14px}
+    .test-sub{font-size:12px;color:var(--texto-suave)}
+
+    /* FAQ */
+    #faq{padding:5rem 1.5rem}
+    .faq-list{margin-top:2.5rem;max-width:760px;margin-left:auto;margin-right:auto}
+    .faq-item{border-bottom:1px solid var(--borde)}
+    .faq-q{width:100%;text-align:left;background:none;border:none;padding:1.1rem 0;font-size:15px;font-weight:500;color:var(--texto);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:var(--sans);gap:1rem}
+    .faq-q:hover{color:var(--prim)}
+    .faq-q .ico{font-size:20px;color:var(--acento);transition:transform .3s;flex-shrink:0}
+    .faq-q.open .ico{transform:rotate(45deg)}
+    .faq-a{font-size:14px;color:var(--texto-suave);line-height:1.8;padding-bottom:1.1rem;display:none}
+    .faq-a.show{display:block}
+
+    /* INSTAGRAM */
+    .ig-banda{background:var(--fondo);padding:4rem 1.5rem;text-align:center;border-top:1px solid var(--borde)}
+    .ig-banda h3{font-family:var(--serif);font-size:1.75rem;margin-bottom:.65rem}
+    .ig-banda p{color:var(--texto-suave);font-size:15px;margin-bottom:1.5rem}
+    .btn-ig{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#c8834a,#a05c38);color:#fff;padding:.8rem 2rem;border-radius:var(--radius-btn);font-size:14px;font-weight:500;text-decoration:none;transition:transform .2s,box-shadow .2s;font-family:var(--sans)}
+    .btn-ig:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(139,111,71,.25)}
+
+    /* CONTACTO */
+    #contacto{background:linear-gradient(135deg,#fdf6ed,#f5ede0);padding:5rem 1.5rem}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-top:2.5rem}
+    .contact-info h3{font-family:var(--serif);font-size:1.4rem;margin-bottom:1.25rem}
+    .info-item{display:flex;gap:12px;margin-bottom:1.1rem;align-items:flex-start}
+    .info-ico{width:38px;height:38px;background:var(--prim-claro);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+    .info-text strong{display:block;font-size:13px;margin-bottom:2px}
+    .info-text span,.info-text a{font-size:13px;color:var(--texto-suave);text-decoration:none}
+    .info-text a:hover{color:var(--prim);text-decoration:underline}
+    .calendario{margin-top:1.5rem}
+    .calendario strong{display:block;font-size:14px;margin-bottom:10px}
+    .dia-fila{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid rgba(139,111,71,.1)}
+    .dia-fila span:last-child{color:var(--texto-suave)}
+    .reserva-embed{background:var(--blanco);border-radius:var(--radius-card);border:1px solid var(--borde);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;padding:2.5rem 2rem;text-align:center}
+    .reserva-embed p{color:var(--texto-suave);font-size:15px;line-height:1.7}
+
+    /* FOOTER */
+    footer{background:var(--dark-bg);color:rgba(240,230,216,.7);padding:2rem 1.5rem;text-align:center;font-size:13px;font-family:var(--sans)}
+    footer a{color:rgba(220,200,170,.5);text-decoration:none;border-bottom:1px solid rgba(220,200,170,.15)}
+    footer a:hover{color:#ddc9a8}
+
+    /* OVERLAYS */
+    .overlay-privacidad{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9999;backdrop-filter:blur(5px);align-items:center;justify-content:center}
+    .overlay-privacidad.visible{display:flex}
+    .contenido-privacidad{background:var(--blanco);padding:2.5rem;border-radius:24px;width:90%;max-width:540px;color:var(--texto);position:relative;box-shadow:0 20px 50px rgba(0,0,0,.4);max-height:90vh;overflow:hidden;display:flex;flex-direction:column}
+    .contenido-privacidad h2{font-family:var(--serif);color:var(--prim);margin-bottom:1rem;flex-shrink:0}
+    .texto-legal{overflow-y:auto;font-size:14px;line-height:1.75;margin-bottom:1.5rem;color:var(--texto-suave);padding-right:10px;flex:1}
+    .cerrar-popup{position:absolute;top:16px;right:20px;font-size:28px;cursor:pointer;color:var(--prim);z-index:1}
+    .btn-entendido{background:var(--prim);color:#fff;border:none;padding:12px;border-radius:var(--radius-btn);width:100%;cursor:pointer;font-weight:600;font-family:var(--sans);transition:background .3s;flex-shrink:0}
+    .btn-entendido:hover{background:var(--prim-medio)}
+
+    /* FORMULARIO */
+    .form-lbl{display:block;font-size:12px;font-weight:500;color:var(--texto);margin-bottom:5px}
+    .form-inp{width:100%;padding:.7rem .9rem;border:1.5px solid var(--borde);border-radius:10px;font-size:14px;font-family:var(--sans);color:var(--texto);background:var(--blanco);outline:none;transition:border .2s}
+    .form-inp:focus{border-color:var(--prim)}
+    .check-item{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+    .check-box{width:17px;height:17px;flex-shrink:0;margin-top:2px;accent-color:var(--prim);cursor:pointer}
+    .check-item label{font-size:13px;color:var(--texto-suave);line-height:1.5;cursor:pointer}
+    .spinner-label{font-size:11px;color:var(--texto-suave);margin-bottom:4px;text-align:center}
+    .spinner-wrap{display:flex;flex-direction:column;align-items:center;gap:2px}
+    .spin-btn{background:var(--prim-claro);border:1px solid var(--borde);border-radius:6px;width:36px;height:28px;font-size:13px;cursor:pointer;color:var(--prim);font-family:var(--sans);transition:background .15s}
+    .spin-btn:hover{background:var(--borde)}
+    .spin-val{font-family:var(--serif);font-size:1.4rem;font-weight:600;color:var(--prim);min-width:52px;text-align:center;border:1.5px solid var(--borde);border-radius:8px;padding:4px 6px;background:var(--blanco)}
+    .form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1rem}
+    .form-separator{border:none;border-top:1px solid var(--borde);margin:1.2rem 0}
+    .form-section-label{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--acento);font-weight:600;margin-bottom:10px;display:block}
+
+    /* WHATSAPP */
+    .whatsapp-float{position:fixed;bottom:24px;right:24px;z-index:999;background:#25D366;color:#fff;display:flex;align-items:center;gap:8px;padding:11px 18px 11px 12px;border-radius:var(--radius-btn);text-decoration:none;font-family:var(--sans);font-size:13px;font-weight:500;box-shadow:0 4px 24px rgba(37,211,102,.4);transition:all .25s}
+    .whatsapp-float:hover{background:#1ebe5d;transform:translateY(-3px);box-shadow:0 8px 24px rgba(37,211,102,.5)}
+    .whatsapp-float svg{flex-shrink:0}
+
+    /* RESPONSIVE */
+    @media(max-width:900px){.hero-inner{grid-template-columns:1fr}.hero-image{display:none}.nosotros-grid{grid-template-columns:1fr}.contact-grid{grid-template-columns:1fr;gap:2.5rem}}
+    @media(max-width:640px){.nav-links{display:none}.hamburger{display:flex}.mobile-menu{display:flex}.hero{padding:6rem 1rem 3rem}.hero-btns{flex-direction:column}.hero-btns .btn-primary,.hero-btns .btn-outline{text-align:center}#nosotros,.porque,#tratamientos,.testimonios,#faq,.ig-banda,#contacto{padding:3.5rem 1rem}.cards-grid,.servicios-grid,.test-grid{grid-template-columns:1fr}.whatsapp-float .wa-label{display:none}.whatsapp-float{padding:12px;border-radius:50%;bottom:20px;right:16px}.form-grid-2{grid-template-columns:1fr!important}}
+    @media(max-width:380px){.logo-sub{display:none}}
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-main">
+    <a href="#inicio" class="logo">
+      <img src="imagenes/logo1.jpg" alt="NCare IV logo">
+      <div>
+        <span class="logo-text">NCare IV</span>
+        <span class="logo-sub" data-i18n="logo-sub">bienestar que se siente, energía que te acompaña</span>
+      </div>
+    </a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="#inicio"       data-i18n="nav-inicio">Inicio</a>
+      <a href="#nosotros"     data-i18n="nav-sobre">Sobre</a>
+      <a href="#tratamientos" data-i18n="nav-tratamientos">Tratamientos</a>
+      <a href="#faq"          data-i18n="nav-faq">FAQ</a>
+      <a href="javascript:void(0)" onclick="abrirPoliticas()" data-i18n="nav-politicas">Políticas y Términos</a>
+      <a href="#contacto" class="btn-nav" data-i18n="nav-reserva">Reserva Ahora</a>
+      <button class="lang-btn" onclick="toggleLang()" id="lang-btn-desktop">
+        <span class="lang-flag">🇺🇸</span><span id="lang-label-desktop">EN</span>
+      </button>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <nav class="mobile-menu" id="mobileMenu">
+    <a href="#inicio"       onclick="closeMobile()" data-i18n="nav-inicio">Inicio</a>
+    <a href="#nosotros"     onclick="closeMobile()" data-i18n="nav-sobre-full">Sobre Nosotros</a>
+    <a href="#tratamientos" onclick="closeMobile()" data-i18n="nav-tratamientos">Tratamientos</a>
+    <a href="#faq"          onclick="closeMobile()" data-i18n="nav-faq">FAQ</a>
+    <a href="javascript:void(0)" onclick="abrirPoliticas();closeMobile()" data-i18n="nav-politicas">Políticas y Términos</a>
+    <div class="mobile-lang">
+      <button class="lang-btn" onclick="toggleLang()" style="width:100%;justify-content:center;">
+        <span class="lang-flag">🇺🇸</span><span id="lang-label-mobile">Switch to English</span>
+      </button>
+    </div>
+    <a href="#contacto" onclick="closeMobile()" class="btn-nav-mobile" data-i18n="nav-reserva">Reserva Ahora</a>
+  </nav>
+</header>
+
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <span class="hero-tag" data-i18n="hero-tag">Raleigh, North Carolina</span>
+      <h1 data-i18n="hero-h1">El tiempo es tu lujo más preciado.</h1>
+      <p data-i18n="hero-p">Diseñamos una experiencia de hidratación y vitaminas a medida, donde la exclusividad se encuentra con la ciencia. En NCare IV, no solo llevamos bienestar a domicilio; te devolvemos la vitalidad y el enfoque que tu ritmo de vida exige, mientras tú simplemente te relajas en tu propio entorno.</p>
+      <div class="hero-btns">
+        <a href="#contacto"     class="btn-primary" data-i18n="hero-btn1">Solicitar Cita</a>
+        <a href="#tratamientos" class="btn-outline"  data-i18n="hero-btn2">Ver Tratamientos</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="hero-img-frame">
+        <img src="imagenes/logo.jpeg" alt="NCare IV — Wellness">
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- NOSOTROS -->
+<section id="nosotros">
+  <div class="container">
+    <div class="nosotros-grid">
+      <div class="gift-card-section">
+        <img src="imagenes/tarjeta.jpg" alt="Gift Card NCare IV" class="gift-img">
+        <a href="javascript:void(0);" onclick="abrirGiftCard()" class="btn-primary" data-i18n="gift-btn">Comprar tarjeta de regalo</a>
+      </div>
+      <div class="mision-text">
+        <span class="section-label" data-i18n="sobre-label">Sobre Nosotros</span>
+        <div class="mision-block">
+          <p data-i18n="sobre-p1">✨ <strong>NCare IV | Wellness &amp; IV Therapy</strong> — Bienestar premium, donde tú lo necesites.</p>
+          <br>
+          <p data-i18n="sobre-p2">En NCare IV ofrecemos terapias intravenosas personalizadas diseñadas para complementar tu rutina de bienestar, belleza y autocuidado, brindando una experiencia exclusiva en la comodidad de tu hogar, oficina o lugar de preferencia.</p>
+          <br>
+          <p data-i18n="sobre-p3">Nuestro compromiso es ofrecer atención profesional, discreta y personalizada, utilizando productos de alta calidad y protocolos enfocados en la comodidad, seguridad y satisfacción de cada cliente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- POR QUÉ ELEGIRNOS -->
+<section class="porque">
+  <div class="container">
+    <div class="text-center">
+      <span class="section-label" data-i18n="porque-label">Nuestras fortalezas</span>
+      <h2 class="section-title" data-i18n="porque-title">¿Por qué elegir NCare IV?</h2>
+      <p class="section-desc center" data-i18n="porque-desc">Atención especializada, tecnología de punta y un enfoque humano que nos diferencia.</p>
+    </div>
+    <div class="cards-grid">
+      <div class="card"><div class="card-icon">💜</div><h3 data-i18n="card1-h">Atención privada a domicilio</h3><p data-i18n="card1-p">Bienestar que se siente, energía que te acompaña — en la comodidad de tu espacio.</p></div>
+      <div class="card"><div class="card-icon">🔬</div><h3 data-i18n="card2-h">Experiencia premium personalizada</h3><p data-i18n="card2-p">Equipados con los más altos estándares de seguridad y calidad en cada tratamiento.</p></div>
+      <div class="card"><div class="card-icon">👩‍⚕️</div><h3 data-i18n="card3-h">Profesionales capacitados</h3><p data-i18n="card3-p">Un equipo dedicado te guía en cada paso del camino hacia tu bienestar.</p></div>
+      <div class="card"><div class="card-icon">📅</div><h3 data-i18n="card4-h">Flexibilidad de horario</h3><p data-i18n="card4-p">Agenda tus citas en los momentos que mejor se adapten a tus rutinas.</p></div>
+      <div class="card"><div class="card-icon">🤝</div><h3 data-i18n="card5-h">Ética y Transparencia</h3><p data-i18n="card5-p">Priorizamos la honestidad y la integridad. Atención clara, sin costos ocultos ni promesas irreales.</p></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- TRATAMIENTOS -->
+<section id="tratamientos">
+  <div class="container">
+    <div class="text-center">
+      <span class="section-label" data-i18n="trat-label">Nuestros servicios</span>
+      <h2 class="section-title" data-i18n="trat-title">Tratamientos</h2>
+      <p class="section-desc center" data-i18n="trat-desc">Ofrecemos una amplia gama de tratamientos de vanguardia para abordar cada desafío en tu camino al bienestar.</p>
+    </div>
+    <div class="servicios-grid">
+
+      <div class="servicio-card">
+        <div class="card-img"><img src="imagenes/tra1.jpg" alt="Vitamin C Megadose"></div>
+        <div class="card-body">
+          <p class="card-brand">NCare IV</p>
+          <h3 class="card-titulo" data-i18n="t1-titulo">MEGADOSIS DE <span>VITAMINA C</span></h3>
+          <p class="card-desc" data-i18n="t1-desc">La experiencia premium de vitamina C — una infusión de alta concentración diseñada para elevar tu bienestar.</p>
+          <div class="texto-expandible" id="extra-vitamina">
+            <p data-i18n="t1-extra1">Diseñada para complementar tu programa de bienestar y brindar una experiencia exclusiva de cuidado personal.</p>
+            <p data-i18n="t1-extra2">💎 Ideal para quienes desean elevar su rutina de salud.</p>
+            <p data-i18n="t1-extra3">• Favorece la producción natural de colágeno.<br>• Mantiene altos niveles de energía y vitalidad.<br>• Apoya el sistema inmunológico.<br>• Combate el estrés oxidativo.</p>
+          </div>
+          <div class="card-footer">
+            <span class="badge-precio">$250 · 🕒 1h</span>
+            <button onclick="toggleServicio('extra-vitamina',this)" class="btn-leer-mas" data-i18n="ver-mas">Ver más</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="servicio-card">
+        <div class="card-img"><img src="imagenes/tra2.jpg" alt="Iron IV Therapy"></div>
+        <div class="card-body">
+          <p class="card-brand">NCare IV</p>
+          <h3 class="card-titulo" data-i18n="t2-titulo">TERAPIA DE <span>HIERRO IV</span></h3>
+          <p class="card-desc" data-i18n="t2-desc">Recupera tus niveles de hierro de forma rápida y efectiva bajo valoración profesional.</p>
+          <div class="texto-expandible" id="extra-hierro">
+            <p data-i18n="t2-extra1">Una terapia especializada para personas con necesidades específicas de hierro, diseñada para apoyar los niveles adecuados de este importante mineral.</p>
+            <p data-i18n="t2-extra2">💎 Ideal para quienes buscan sentirse renovados y con mayor bienestar.</p>
+          </div>
+          <div class="card-footer">
+            <span class="badge-precio">$120 · 🕒 1h</span>
+            <button onclick="toggleServicio('extra-hierro',this)" class="btn-leer-mas" data-i18n="ver-mas">Ver más</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="servicio-card">
+        <div class="card-img"><img src="imagenes/tra3.jpg" alt="Myers Cocktail"></div>
+        <div class="card-body">
+          <p class="card-brand">NCare IV</p>
+          <h3 class="card-titulo" data-i18n="t3-titulo">COCKTAIL DE <span>MYERS</span></h3>
+          <p class="card-desc" data-i18n="t3-desc">La combinación clásica de vitaminas y minerales para impulsar tu salud integral.</p>
+          <div class="texto-expandible" id="extra-myers">
+            <p data-i18n="t3-extra1">Una exclusiva combinación de vitaminas y minerales cuidadosamente seleccionados para complementar tu rutina de bienestar y apoyar tu estilo de vida activo.</p>
+            <p data-i18n="t3-extra2">💎 Ideal para quienes buscan sentirse equilibrados y renovados.</p>
+          </div>
+          <div class="card-footer">
+            <span class="badge-precio">$120 · 🕒 1h</span>
+            <button onclick="toggleServicio('extra-myers',this)" class="btn-leer-mas" data-i18n="ver-mas">Ver más</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="servicio-card">
+        <div class="card-img"><img src="imagenes/tra4.jpg" alt="Collagen IV Infusion"></div>
+        <div class="card-body">
+          <p class="card-brand">NCare IV</p>
+          <h3 class="card-titulo" data-i18n="t4-titulo">INFUSIÓN DE <span>COLÁGENO IV</span></h3>
+          <p class="card-desc" data-i18n="t4-desc">Belleza y bienestar desde el interior — para piel, cabello y uñas radiantes.</p>
+          <div class="texto-expandible" id="extra-colageno">
+            <p data-i18n="t4-extra1">Aporta nutrientes esenciales para una apariencia radiante y saludable, mejorando la elasticidad de la piel.</p>
+          </div>
+          <div class="card-footer">
+            <span class="badge-precio">$120 · 🕒 1h</span>
+            <button onclick="toggleServicio('extra-colageno',this)" class="btn-leer-mas" data-i18n="ver-mas">Ver más</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="servicio-card">
+        <div class="card-img"><img src="imagenes/tra5.jpg" alt="Vitamin C + Glutathione"></div>
+        <div class="card-body">
+          <p class="card-brand">NCare IV</p>
+          <h3 class="card-titulo" data-i18n="t5-titulo">TERAPIA DE <span>VITAMINA C + GLUTATHIONE</span></h3>
+          <p class="card-desc" data-i18n="t5-desc">Luminosidad y bienestar en una sola infusión.</p>
+          <div class="texto-expandible" id="vitaminac">
+            <p data-i18n="t5-extra1">Una combinación premium de antioxidantes diseñada para complementar tu rutina de cuidado integral.</p>
+            <p data-i18n="t5-extra2">💎 Ideal para quienes valoran la belleza y el bienestar desde el interior.</p>
+          </div>
+          <div class="card-footer">
+            <span class="badge-precio">$120 · 🕒 1h</span>
+            <button onclick="toggleServicio('vitaminac',this)" class="btn-leer-mas" data-i18n="ver-mas">Ver más</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="servicio-card">
+        <div class="card-img"><img src="imagenes/tra6.jpg" alt="NAD+ Infusion"></div>
+        <div class="card-body">
+          <p class="card-brand">NCare IV</p>
+          <h3 class="card-titulo" data-i18n="t6-titulo">TERAPIA DE <span>NAD+ INFUSION</span></h3>
+          <p class="card-desc" data-i18n="t6-desc">Innovación para el bienestar moderno. Una terapia avanzada que aporta NAD+, una molécula clave...</p>
+          <div class="texto-expandible" id="NADINFUSION">
+            <p data-i18n="t6-extra1">presente de forma natural en el organismo y ampliamente utilizada en programas de bienestar premium.</p>
+            <p data-i18n="t6-extra2">💎 Ideal para quienes buscan una experiencia exclusiva de cuidado personal.</p>
+          </div>
+          <div class="card-footer">
+            <span class="badge-precio">$120 · 🕒 1h</span>
+            <button onclick="toggleServicio('NADINFUSION',this)" class="btn-leer-mas" data-i18n="ver-mas">Ver más</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- TESTIMONIOS -->
+<section class="testimonios">
+  <div class="container">
+    <div class="text-center">
+      <span class="section-label" data-i18n="test-label">Lo que dicen nuestros clientes</span>
+      <h2 class="section-title" data-i18n="test-title">Historias Reales</h2>
+    </div>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-text" data-i18n="test1">"El servicio fue excepcional. El personal fue muy amable y nos brindó información muy clara en todo momento. ¡Hoy nos sentimos mejor gracias a NCare IV!"</p>
+        <div class="test-author"><div class="test-avatar">👩</div><div><div class="test-name">Laura &amp; Marcos García</div><div class="test-sub">Raleigh, NC</div></div></div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-text" data-i18n="test2">"Encontramos en NCare IV el equipo humano que necesitábamos. Profesionales, empáticos y siempre disponibles para resolver nuestras dudas."</p>
+        <div class="test-author"><div class="test-avatar">👩</div><div><div class="test-name">Ana</div><div class="test-sub">Garner, NC</div></div></div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-text" data-i18n="test3">"La atención personalizada que recibimos fue increíble. Cada consulta y cada duda atendida con paciencia y profesionalidad."</p>
+        <div class="test-author"><div class="test-avatar">👨</div><div><div class="test-name">David Moreno</div><div class="test-sub">Cary, NC</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="text-center">
+      <span class="section-label" data-i18n="faq-label">Preguntas frecuentes</span>
+      <h2 class="section-title" data-i18n="faq-title">Resolvemos tus Dudas</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="faq1-q">¿Quién debería considerar una terapia IV?</span><span class="ico">+</span></button><div class="faq-a" data-i18n="faq1-a">Cualquier persona que desee complementar su bienestar, mejorar su energía, o apoyar su sistema inmunológico. Recomendamos consultar con nuestros profesionales para encontrar el tratamiento ideal para ti.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="faq2-q">¿Dónde se realiza el servicio?</span><span class="ico">+</span></button><div class="faq-a" data-i18n="faq2-a">Ofrecemos servicios a domicilio en Raleigh y áreas circundantes (Cary, Garner, etc.). Tu comodidad es nuestra prioridad.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="faq3-q">¿Son dolorosos los tratamientos IV?</span><span class="ico">+</span></button><div class="faq-a" data-i18n="faq3-a">La mayoría de los tratamientos son mínimamente invasivos. Nuestros profesionales garantizan tu comodidad y seguridad en cada paso.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="faq4-q">¿Qué debo esperar en mi primera sesión?</span><span class="ico">+</span></button><div class="faq-a" data-i18n="faq4-a">Durante la primera visita, nuestros expertos revisarán tu historial, explicarán las opciones disponibles y te acompañarán durante todo el proceso. Generalmente una sesión dura entre 45 minutos y 1 hora.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="faq5-q">¿Con qué frecuencia debo realizarme una terapia?</span><span class="ico">+</span></button><div class="faq-a" data-i18n="faq5-a">Depende de tus objetivos y necesidades personales. Nuestros profesionales te recomendarán un plan personalizado durante tu primera consulta.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="faq6-q">¿Cómo puedo reservar una cita?</span><span class="ico">+</span></button><div class="faq-a" data-i18n="faq6-a">Puedes reservar a través de WhatsApp al +1 (984) 298-9733, por email a Info@ncareiv.com, o directamente por Instagram @ncare_iv.</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- INSTAGRAM -->
+<div class="ig-banda">
+  <span class="section-label" data-i18n="ig-label">Síguenos</span>
+  <h3 data-i18n="ig-title">¡Únete a Nuestra Comunidad!</h3>
+  <p data-i18n="ig-desc">Historias de éxito, consejos de bienestar y mucho más en nuestro Instagram.</p>
+  <a href="https://www.instagram.com/ncare_iv" target="_blank" rel="noopener" class="btn-ig">
+    <span>📸</span> @ncare_iv en Instagram
+  </a>
+</div>
+
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="container">
+    <div class="text-center">
+      <span class="section-label" data-i18n="contacto-label">Reserva tu cita</span>
+      <h2 class="section-title" data-i18n="contacto-title">Contáctanos</h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3 data-i18n="contacto-info-title">Información de Contacto</h3>
+        <div class="info-item"><div class="info-ico">📍</div><div class="info-text"><strong data-i18n="ubicacion">Ubicación</strong><span>Raleigh, North Carolina</span></div></div>
+        <div class="info-item"><div class="info-ico">📞</div><div class="info-text"><strong data-i18n="telefono">Teléfono / WhatsApp</strong><a href="https://wa.me/message/H437ATWWGOKNL1" target="_blank" rel="noopener">+1 (984) 298-9733</a></div></div>
+        <div class="info-item"><div class="info-ico">✉️</div><div class="info-text"><strong>Email</strong><a href="mailto:info@ncareiv.com">Info@ncareiv.com</a></div></div>
+        <div class="info-item"><div class="info-ico">📸</div><div class="info-text"><strong>Instagram</strong><a href="https://www.instagram.com/ncare_iv" target="_blank" rel="noopener">@ncare_iv</a></div></div>
+        <div class="calendario">
+          <strong data-i18n="horario">Horario de Atención</strong>
+          <div class="dia-fila"><span data-i18n="lunes">Lunes</span><span>9:00 am – 8:00 pm</span></div>
+          <div class="dia-fila"><span data-i18n="martes">Martes</span><span>9:00 am – 8:00 pm</span></div>
+          <div class="dia-fila"><span data-i18n="miercoles">Miércoles</span><span>9:00 am – 8:00 pm</span></div>
+          <div class="dia-fila"><span data-i18n="jueves">Jueves</span><span>9:00 am – 8:00 pm</span></div>
+          <div class="dia-fila"><span data-i18n="viernes">Viernes</span><span>9:00 am – 8:00 pm</span></div>
+          <div class="dia-fila"><span data-i18n="sabado">Sábado</span><span>9:00 am – 8:00 pm</span></div>
+          <div class="dia-fila"><span data-i18n="domingo">Domingo</span><span>9:00 am – 8:00 pm</span></div>
+        </div>
+      </div>
+      <div class="reserva-embed">
+        <span style="font-size:3rem;">📅</span>
+        <h3 style="font-family:var(--serif);font-size:1.4rem;" data-i18n="reserva-title">Reserva tu cita ahora</h3>
+        <p data-i18n="reserva-desc">Contáctanos directamente por WhatsApp o Instagram y te agendaremos en el horario que mejor te convenga.</p>
+        <a href="https://wa.me/message/H437ATWWGOKNL1" target="_blank" rel="noopener" class="btn-primary" style="width:100%;text-align:center;" data-i18n="reserva-wa">💬 Reservar por WhatsApp</a>
+        <a href="https://www.instagram.com/ncare_iv" target="_blank" rel="noopener" class="btn-outline" style="width:100%;text-align:center;" data-i18n="reserva-ig">📸 Escribir por Instagram</a>
+        <button onclick="abrirFormulario()" class="btn-outline" style="width:100%;text-align:center;cursor:pointer;" data-i18n="reserva-form">📋 Formulario de Reserva</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+  <p>
+    Copyright © 2026 NCare IV · <span data-i18n="footer-rights">Todos los derechos reservados</span> ·
+    <a href="javascript:void(0)" onclick="abrirPrivacidad()" data-i18n="footer-priv">Política de Privacidad</a>
+    &nbsp;·&nbsp;
+    <a href="javascript:void(0)" onclick="abrirPoliticas()" data-i18n="footer-terms">Políticas y Términos</a>
+  </p>
+</footer>
+
+
+<!-- OVERLAY: PRIVACIDAD -->
+<div id="popup-privacidad" class="overlay-privacidad" role="dialog" aria-modal="true">
+  <div class="contenido-privacidad">
+    <span class="cerrar-popup" onclick="cerrarPrivacidad()">&times;</span>
+    <h2 data-i18n="priv-title">Política de Privacidad</h2>
+    <div class="texto-legal">
+      <p><strong data-i18n="priv-1-h">1. Datos que recolectamos:</strong> <span data-i18n="priv-1-p">En NCare IV, la privacidad de nuestros clientes es nuestra prioridad. Solo solicitamos y almacenamos los datos necesarios para la gestión de sus citas y tratamientos.</span></p>
+      <p style="margin-top:10px"><strong data-i18n="priv-2-h">2. Uso de la información:</strong> <span data-i18n="priv-2-p">Sus datos personales se utilizan exclusivamente para confirmar servicios, enviar recordatorios y mejorar su experiencia con nosotros.</span></p>
+      <p style="margin-top:10px"><strong data-i18n="priv-3-h">3. Seguridad:</strong> <span data-i18n="priv-3-p">Implementamos medidas de seguridad técnicas para proteger su información personal contra accesos no autorizados.</span></p>
+      <p style="margin-top:10px"><strong data-i18n="priv-4-h">4. Derechos:</strong> <span data-i18n="priv-4-p">Usted puede solicitar el acceso, rectificación o eliminación de sus datos en cualquier momento contactándonos a través de nuestros canales oficiales.</span></p>
+    </div>
+    <button onclick="cerrarPrivacidad()" class="btn-entendido" data-i18n="btn-ok">Entendido</button>
+  </div>
+</div>
+
+
+<!-- OVERLAY: POLÍTICAS -->
+<div id="popup-politicas" class="overlay-privacidad" role="dialog" aria-modal="true">
+  <div class="contenido-privacidad" style="max-width:620px;">
+    <span class="cerrar-popup" onclick="cerrarPoliticas()">&times;</span>
+    <h2 style="font-family:var(--serif);color:var(--prim);margin-bottom:.4rem;" data-i18n="pol-title">Políticas de Reserva y Servicio</h2>
+    <p style="font-size:13px;color:var(--texto-suave);margin-bottom:1.25rem;flex-shrink:0;" data-i18n="pol-intro">Gracias por elegir NCare IV. Por favor lee las siguientes políticas antes de reservar tu cita.</p>
+    <div class="texto-legal">
+      <p style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--acento);font-weight:600;margin-bottom:6px;" data-i18n="pol-dep-h">Depósito de Reserva</p>
+      <p data-i18n="pol-dep-p">Se requiere un depósito no reembolsable de <strong>$25</strong> para confirmar y asegurar tu cita. Este depósito será aplicado al costo total del tratamiento el día de tu servicio.</p>
+      <p style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--acento);font-weight:600;margin:16px 0 6px;" data-i18n="pol-can-h">Cancelaciones y Reprogramaciones</p>
+      <p data-i18n="pol-can-p">Las cancelaciones o reprogramaciones deben realizarse con al menos <strong>24 horas de anticipación</strong>. Las citas podrán reprogramarse dentro de un período máximo de <strong>5 días</strong>. Las ausencias sin notificación resultarán en la pérdida del depósito.</p>
+      <p style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--acento);font-weight:600;margin:16px 0 6px;" data-i18n="pol-wait-h">Tiempo de Espera</p>
+      <p data-i18n="pol-wait-p">Una vez que nuestro personal llegue al lugar acordado, se otorgará un tiempo máximo de espera de <strong>15 minutos</strong>. Si el cliente no está disponible, la cita podrá ser cancelada y el depósito retenido.</p>
+      <p style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--acento);font-weight:600;margin:16px 0 6px;" data-i18n="pol-salud-h">Evaluación de Salud</p>
+      <p data-i18n="pol-salud-p">Todos los tratamientos están sujetos a una evaluación previa de salud. NCare IV se reserva el derecho de no administrar un tratamiento si existe alguna condición médica que pueda representar un riesgo.</p>
+      <p style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--acento);font-weight:600;margin:16px 0 6px;" data-i18n="pol-resp-h">Responsabilidad del Cliente</p>
+      <p data-i18n="pol-resp-p">Es responsabilidad del cliente proporcionar información médica veraz. Cualquier omisión relacionada con alergias, medicamentos o embarazo puede afectar la seguridad del servicio.</p>
+      <p style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--acento);font-weight:600;margin:16px 0 6px;" data-i18n="pol-dom-h">Servicio a Domicilio</p>
+      <p data-i18n="pol-dom-p">Pueden aplicarse cargos adicionales por desplazamientos fuera de nuestra zona regular de servicio, informados y aprobados antes de confirmar la cita.</p>
+      <p style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--acento);font-weight:600;margin:16px 0 6px;" data-i18n="pol-aviso-h">Aviso Importante</p>
+      <p data-i18n="pol-aviso-p">Los servicios ofrecidos por NCare IV tienen como objetivo apoyar la hidratación, recuperación y bienestar general. <strong data-i18n="pol-aviso-strong">No están destinados a diagnosticar, tratar, curar ni prevenir enfermedades.</strong></p>
+      <p style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--acento);font-weight:600;margin:16px 0 6px;" data-i18n="pol-cons-h">Consentimiento</p>
+      <p data-i18n="pol-cons-p">Al reservar una cita con NCare IV, el cliente confirma que ha leído, comprendido y acepta estas políticas.</p>
+    </div>
+    <button onclick="cerrarPoliticas()" class="btn-entendido" data-i18n="btn-accept">He leído y acepto las políticas</button>
+  </div>
+</div>
+
+
+<!-- OVERLAY: FORMULARIO -->
+<div id="popup-formulario" class="overlay-privacidad" role="dialog" aria-modal="true">
+  <div class="contenido-privacidad" style="max-width:640px;padding:2rem;">
+    <span class="cerrar-popup" onclick="cerrarFormulario()">&times;</span>
+    <div style="text-align:center;margin-bottom:1.25rem;flex-shrink:0;">
+      <span style="font-size:2rem;">💧</span>
+      <h2 style="font-family:var(--serif);color:var(--prim);font-size:1.5rem;margin-top:.3rem;" data-i18n="form-title">Consentimiento Informado para Terapia IV</h2>
+      <p style="font-size:12px;color:var(--texto-suave);margin-top:.3rem;">NCare IV — Raleigh, NC</p>
+    </div>
+    <div class="texto-legal">
+      <div class="form-grid-2">
+        <div><label class="form-lbl" data-i18n="f-nombre-lbl">Nombre completo *</label><input id="f-nombre" type="text" class="form-inp" data-i18n-ph="f-nombre-ph" placeholder="Tu nombre completo"></div>
+        <div><label class="form-lbl" data-i18n="f-tel-lbl">Teléfono *</label><input id="f-telefono" type="tel" class="form-inp" placeholder="+1 (000) 000-0000"></div>
+        <div><label class="form-lbl" data-i18n="f-email-lbl">Email *</label><input id="f-email" type="email" class="form-inp" data-i18n-ph="f-email-ph" placeholder="tu@email.com"></div>
+        <div>
+          <label class="form-lbl" data-i18n="f-trat-lbl">Tratamiento de interés *</label>
+          <select id="f-tratamiento" class="form-inp">
+            <option value="" data-i18n="f-trat-sel">Selecciona...</option>
+            <option>Megadosis de Vitamina C — $250</option>
+            <option>Terapia de Hierro IV — $120</option>
+            <option>Cocktail de Myers — $120</option>
+            <option>Infusión de Colágeno IV — $120</option>
+            <option>Vitamina C + Glutathione — $120</option>
+            <option>NAD+ Infusion — $120</option>
+          </select>
+        </div>
+        <div><label class="form-lbl" data-i18n="f-dir-lbl">Dirección / Ubicación del servicio *</label><input id="f-direccion" type="text" class="form-inp" data-i18n-ph="f-dir-ph" placeholder="Tu dirección completa"></div>
+        <div><label class="form-lbl" data-i18n="f-msg-lbl">Comentarios / Alergias</label><input id="f-mensaje" type="text" class="form-inp" data-i18n-ph="f-msg-ph" placeholder="Condiciones, medicamentos, etc."></div>
+      </div>
+      <hr class="form-separator">
+      <span class="form-section-label" data-i18n="consent-title">Consentimiento Informado</span>
+      <div class="check-item"><input type="checkbox" id="c1" class="check-box"><label for="c1" data-i18n="c1">Confirmo que soy mayor de 18 años y que la información de salud proporcionada es correcta.</label></div>
+      <div class="check-item"><input type="checkbox" id="c2" class="check-box"><label for="c2" data-i18n="c2">Entiendo que la Terapia IV consiste en la administración de líquidos, vitaminas y nutrientes por vía intravenosa para apoyar la hidratación y el bienestar general.</label></div>
+      <div class="check-item"><input type="checkbox" id="c3" class="check-box"><label for="c3" data-i18n="c3">Comprendo que pueden presentarse efectos secundarios leves como molestias, hematomas, mareos o reacciones alérgicas.</label></div>
+      <div class="check-item"><input type="checkbox" id="c4" class="check-box"><label for="c4" data-i18n="c4">Entiendo que los resultados pueden variar y que no se garantiza ningún resultado específico.</label></div>
+      <div class="check-item"><input type="checkbox" id="c5" class="check-box"><label for="c5" data-i18n="c5">Doy mi consentimiento voluntario para recibir el tratamiento de Terapia IV.</label></div>
+      <hr class="form-separator">
+      <span class="form-section-label" data-i18n="firma-title">Firma Digital *</span>
+      <p style="font-size:12px;color:var(--texto-suave);margin-bottom:8px;" data-i18n="firma-desc">Dibuja tu firma en el recuadro (dedo en móvil / mouse en computadora):</p>
+      <div style="position:relative;">
+        <canvas id="firma-canvas" style="width:100%;height:130px;border:1.5px solid var(--borde);border-radius:12px;background:#fff;touch-action:none;cursor:crosshair;display:block;"></canvas>
+        <button onclick="limpiarFirma()" style="position:absolute;top:8px;right:8px;background:var(--prim-claro);color:var(--prim);border:1px solid var(--borde);border-radius:20px;font-size:11px;padding:3px 10px;cursor:pointer;font-family:var(--sans);" data-i18n="firma-limpiar">Limpiar</button>
+      </div>
+      <hr class="form-separator">
+      <span class="form-section-label" data-i18n="fecha-title">Fecha *</span>
+      <div style="display:flex;gap:.6rem;align-items:flex-end;">
+        <div><div class="spinner-label" data-i18n="dia">Día</div><div class="spinner-wrap"><button class="spin-btn" onclick="cambiarFecha('dia',1)">▲</button><div id="spin-dia" class="spin-val">01</div><button class="spin-btn" onclick="cambiarFecha('dia',-1)">▼</button></div></div>
+        <div style="font-size:1.4rem;color:var(--borde);padding-bottom:14px;">/</div>
+        <div><div class="spinner-label" data-i18n="mes">Mes</div><div class="spinner-wrap"><button class="spin-btn" onclick="cambiarFecha('mes',1)">▲</button><div id="spin-mes" class="spin-val">01</div><button class="spin-btn" onclick="cambiarFecha('mes',-1)">▼</button></div></div>
+        <div style="font-size:1.4rem;color:var(--borde);padding-bottom:14px;">/</div>
+        <div><div class="spinner-label" data-i18n="anio">Año</div><div class="spinner-wrap"><button class="spin-btn" onclick="cambiarFecha('anio',1)">▲</button><div id="spin-anio" class="spin-val">2026</div><button class="spin-btn" onclick="cambiarFecha('anio',-1)">▼</button></div></div>
+      </div>
+      <p style="font-size:12px;color:var(--texto-suave);margin-top:1.2rem;font-style:italic;" data-i18n="form-aviso">✨💧 Al enviar este formulario, acepto recibir los servicios de Terapia IV y confirmo que he leído y comprendido la información anterior.</p>
+    </div>
+
+    <!-- Honeypot -->
+    <div style="position:absolute;left:-9999px;opacity:0;pointer-events:none;" aria-hidden="true">
+      <input type="text" id="hp-field" name="website" tabindex="-1" autocomplete="off">
+    </div>
+
+    <!-- reCAPTCHA v2 -->
+    <div style="margin-top:1rem;display:flex;justify-content:center;flex-shrink:0;">
+      <div class="g-recaptcha" data-sitekey="6LcehBotAAAAAP0rVF3sV10YXJKedi8WM2lLhsVI" data-theme="light"></div>
+    </div>
+    <p style="font-size:11px;color:var(--texto-suave);text-align:center;margin-top:6px;flex-shrink:0;" data-i18n="recaptcha-msg">🔒 Formulario protegido por reCAPTCHA</p>
+
+    <p id="form-error" style="font-size:13px;margin-top:.75rem;display:none;flex-shrink:0;"></p>
+    <button onclick="enviarFormulario()" class="btn-entendido" style="margin-top:.5rem;flex-shrink:0;" data-i18n="form-send">✉️ Enviar Formulario a NCare IV</button>
+  </div>
+</div>
+
+
+<!-- WHATSAPP -->
+<a href="https://wa.me/message/H437ATWWGOKNL1" target="_blank" rel="noopener" class="whatsapp-float" aria-label="WhatsApp">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="28" height="28">
+    <path fill="#fff" d="M4.9 43.3l2.7-9.9C5.5 30.7 4.5 27.4 4.5 24 4.5 13.2 13.2 4.5 24 4.5S43.5 13.2 43.5 24 34.8 43.5 24 43.5c-3.2 0-6.3-.8-9.1-2.4L4.9 43.3z"/>
+    <path fill="#25D366" d="M24 7.5C14.9 7.5 7.5 14.9 7.5 24c0 3.1.8 6 2.4 8.6l.4.7-1.7 6.2 6.4-1.7.7.4c2.5 1.4 5.3 2.2 8.3 2.2 9.1 0 16.5-7.4 16.5-16.5S33.1 7.5 24 7.5z"/>
+    <path fill="#fff" d="M32.5 28.5c-.4-.2-2.5-1.2-2.9-1.4-.4-.1-.7-.2-1 .2-.3.4-1.1 1.4-1.4 1.7-.3.3-.5.3-.9.1-.4-.2-1.8-.7-3.4-2.1-1.3-1.1-2.1-2.5-2.4-2.9-.2-.4 0-.6.2-.8.2-.2.4-.5.6-.7.2-.2.2-.4.4-.6.1-.3 0-.5-.1-.7-.1-.2-1-2.4-1.4-3.3-.4-.9-.7-.7-1-.7h-.9c-.3 0-.7.1-1.1.5-.4.4-1.4 1.4-1.4 3.4s1.5 3.9 1.7 4.2c.2.3 2.9 4.4 7 6.2 1 .4 1.7.7 2.3.9.9.3 1.8.2 2.5.1.7-.1 2.3-.9 2.6-1.8.3-.9.3-1.6.2-1.8-.1-.1-.4-.2-.8-.4z"/>
+  </svg>
+  <span class="wa-label">WhatsApp</span>
+</a>
+
+
+<script>
+/* ════════════════════════════════════════
+   TRADUCCIONES
+════════════════════════════════════════ */
+const i18n = {
+  es: {
+    'logo-sub':'bienestar que se siente, energía que te acompaña',
+    'nav-inicio':'Inicio','nav-sobre':'Sobre','nav-tratamientos':'Tratamientos',
+    'nav-faq':'FAQ','nav-politicas':'Políticas y Términos','nav-reserva':'Reserva Ahora',
+    'nav-sobre-full':'Sobre Nosotros',
+    'lang-btn-label':'EN','lang-mobile-label':'Switch to English',
+    'hero-tag':'Raleigh, North Carolina',
+    'hero-h1':'El tiempo es tu lujo más preciado.',
+    'hero-p':'Diseñamos una experiencia de hidratación y vitaminas a medida, donde la exclusividad se encuentra con la ciencia. En NCare IV, no solo llevamos bienestar a domicilio; te devolvemos la vitalidad y el enfoque que tu ritmo de vida exige, mientras tú simplemente te relajas en tu propio entorno.',
+    'hero-btn1':'Solicitar Cita','hero-btn2':'Ver Tratamientos',
+    'gift-btn':'Comprar tarjeta de regalo',
+    'sobre-label':'Sobre Nosotros',
+    'sobre-p1':'✨ <strong>NCare IV | Wellness &amp; IV Therapy</strong> — Bienestar premium, donde tú lo necesites.',
+    'sobre-p2':'En NCare IV ofrecemos terapias intravenosas personalizadas diseñadas para complementar tu rutina de bienestar, belleza y autocuidado, brindando una experiencia exclusiva en la comodidad de tu hogar, oficina o lugar de preferencia.',
+    'sobre-p3':'Nuestro compromiso es ofrecer atención profesional, discreta y personalizada, utilizando productos de alta calidad y protocolos enfocados en la comodidad, seguridad y satisfacción de cada cliente.',
+    'porque-label':'Nuestras fortalezas','porque-title':'¿Por qué elegir NCare IV?',
+    'porque-desc':'Atención especializada, tecnología de punta y un enfoque humano que nos diferencia.',
+    'card1-h':'Atención privada a domicilio','card1-p':'Bienestar que se siente, energía que te acompaña — en la comodidad de tu espacio.',
+    'card2-h':'Experiencia premium personalizada','card2-p':'Equipados con los más altos estándares de seguridad y calidad en cada tratamiento.',
+    'card3-h':'Profesionales capacitados','card3-p':'Un equipo dedicado te guía en cada paso del camino hacia tu bienestar.',
+    'card4-h':'Flexibilidad de horario','card4-p':'Agenda tus citas en los momentos que mejor se adapten a tus rutinas.',
+    'card5-h':'Ética y Transparencia','card5-p':'Priorizamos la honestidad y la integridad. Atención clara, sin costos ocultos ni promesas irreales.',
+    'trat-label':'Nuestros servicios','trat-title':'Tratamientos',
+    'trat-desc':'Ofrecemos una amplia gama de tratamientos de vanguardia para abordar cada desafío en tu camino al bienestar.',
+    't1-titulo':'MEGADOSIS DE <span>VITAMINA C</span>',
+    't1-desc':'La experiencia premium de vitamina C — una infusión de alta concentración diseñada para elevar tu bienestar.',
+    't1-extra1':'Diseñada para complementar tu programa de bienestar y brindar una experiencia exclusiva de cuidado personal.',
+    't1-extra2':'💎 Ideal para quienes desean elevar su rutina de salud.',
+    't1-extra3':'• Favorece la producción natural de colágeno.<br>• Mantiene altos niveles de energía y vitalidad.<br>• Apoya el sistema inmunológico.<br>• Combate el estrés oxidativo.',
+    't2-titulo':'TERAPIA DE <span>HIERRO IV</span>',
+    't2-desc':'Recupera tus niveles de hierro de forma rápida y efectiva bajo valoración profesional.',
+    't2-extra1':'Una terapia especializada para personas con necesidades específicas de hierro, diseñada para apoyar los niveles adecuados de este importante mineral.',
+    't2-extra2':'💎 Ideal para quienes buscan sentirse renovados y con mayor bienestar.',
+    't3-titulo':'COCKTAIL DE <span>MYERS</span>',
+    't3-desc':'La combinación clásica de vitaminas y minerales para impulsar tu salud integral.',
+    't3-extra1':'Una exclusiva combinación de vitaminas y minerales cuidadosamente seleccionados para complementar tu rutina de bienestar.',
+    't3-extra2':'💎 Ideal para quienes buscan sentirse equilibrados y renovados.',
+    't4-titulo':'INFUSIÓN DE <span>COLÁGENO IV</span>',
+    't4-desc':'Belleza y bienestar desde el interior — para piel, cabello y uñas radiantes.',
+    't4-extra1':'Aporta nutrientes esenciales para una apariencia radiante y saludable, mejorando la elasticidad de la piel.',
+    't5-titulo':'TERAPIA DE <span>VITAMINA C + GLUTATHIONE</span>',
+    't5-desc':'Luminosidad y bienestar en una sola infusión.',
+    't5-extra1':'Una combinación premium de antioxidantes diseñada para complementar tu rutina de cuidado integral.',
+    't5-extra2':'💎 Ideal para quienes valoran la belleza y el bienestar desde el interior.',
+    't6-titulo':'TERAPIA DE <span>NAD+ INFUSION</span>',
+    't6-desc':'Innovación para el bienestar moderno. Una terapia avanzada que aporta NAD+, una molécula clave...',
+    't6-extra1':'presente de forma natural en el organismo y ampliamente utilizada en programas de bienestar premium.',
+    't6-extra2':'💎 Ideal para quienes buscan una experiencia exclusiva de cuidado personal.',
+    'ver-mas':'Ver más',
+    'test-label':'Lo que dicen nuestros clientes','test-title':'Historias Reales',
+    'test1':'"El servicio fue excepcional. El personal fue muy amable y nos brindó información muy clara en todo momento. ¡Hoy nos sentimos mejor gracias a NCare IV!"',
+    'test2':'"Encontramos en NCare IV el equipo humano que necesitábamos. Profesionales, empáticos y siempre disponibles para resolver nuestras dudas."',
+    'test3':'"La atención personalizada que recibimos fue increíble. Cada consulta y cada duda atendida con paciencia y profesionalidad."',
+    'faq-label':'Preguntas frecuentes','faq-title':'Resolvemos tus Dudas',
+    'faq1-q':'¿Quién debería considerar una terapia IV?','faq1-a':'Cualquier persona que desee complementar su bienestar, mejorar su energía, o apoyar su sistema inmunológico. Recomendamos consultar con nuestros profesionales para encontrar el tratamiento ideal para ti.',
+    'faq2-q':'¿Dónde se realiza el servicio?','faq2-a':'Ofrecemos servicios a domicilio en Raleigh y áreas circundantes (Cary, Garner, etc.). Tu comodidad es nuestra prioridad.',
+    'faq3-q':'¿Son dolorosos los tratamientos IV?','faq3-a':'La mayoría de los tratamientos son mínimamente invasivos. Nuestros profesionales garantizan tu comodidad y seguridad en cada paso.',
+    'faq4-q':'¿Qué debo esperar en mi primera sesión?','faq4-a':'Durante la primera visita, nuestros expertos revisarán tu historial, explicarán las opciones disponibles y te acompañarán durante todo el proceso. Generalmente una sesión dura entre 45 minutos y 1 hora.',
+    'faq5-q':'¿Con qué frecuencia debo realizarme una terapia?','faq5-a':'Depende de tus objetivos y necesidades personales. Nuestros profesionales te recomendarán un plan personalizado durante tu primera consulta.',
+    'faq6-q':'¿Cómo puedo reservar una cita?','faq6-a':'Puedes reservar a través de WhatsApp al +1 (984) 298-9733, por email a Info@ncareiv.com, o directamente por Instagram @ncare_iv.',
+    'ig-label':'Síguenos','ig-title':'¡Únete a Nuestra Comunidad!','ig-desc':'Historias de éxito, consejos de bienestar y mucho más en nuestro Instagram.',
+    'contacto-label':'Reserva tu cita','contacto-title':'Contáctanos','contacto-info-title':'Información de Contacto',
+    'ubicacion':'Ubicación','telefono':'Teléfono / WhatsApp','horario':'Horario de Atención',
+    'lunes':'Lunes','martes':'Martes','miercoles':'Miércoles','jueves':'Jueves','viernes':'Viernes','sabado':'Sábado','domingo':'Domingo',
+    'reserva-title':'Reserva tu cita ahora','reserva-desc':'Contáctanos directamente por WhatsApp o Instagram y te agendaremos en el horario que mejor te convenga.',
+    'reserva-wa':'💬 Reservar por WhatsApp','reserva-ig':'📸 Escribir por Instagram','reserva-form':'📋 Formulario de Reserva',
+    'footer-rights':'Todos los derechos reservados','footer-priv':'Política de Privacidad','footer-terms':'Políticas y Términos',
+    'priv-title':'Política de Privacidad',
+    'priv-1-h':'1. Datos que recolectamos:','priv-1-p':'En NCare IV, la privacidad de nuestros clientes es nuestra prioridad. Solo solicitamos y almacenamos los datos necesarios para la gestión de sus citas y tratamientos.',
+    'priv-2-h':'2. Uso de la información:','priv-2-p':'Sus datos personales se utilizan exclusivamente para confirmar servicios, enviar recordatorios y mejorar su experiencia con nosotros.',
+    'priv-3-h':'3. Seguridad:','priv-3-p':'Implementamos medidas de seguridad técnicas para proteger su información personal contra accesos no autorizados.',
+    'priv-4-h':'4. Derechos:','priv-4-p':'Usted puede solicitar el acceso, rectificación o eliminación de sus datos en cualquier momento contactándonos a través de nuestros canales oficiales.',
+    'btn-ok':'Entendido',
+    'pol-title':'Políticas de Reserva y Servicio','pol-intro':'Gracias por elegir NCare IV. Por favor lee las siguientes políticas antes de reservar tu cita.',
+    'pol-dep-h':'Depósito de Reserva','pol-dep-p':'Se requiere un depósito no reembolsable de <strong>$25</strong> para confirmar y asegurar tu cita. Este depósito será aplicado al costo total del tratamiento el día de tu servicio.',
+    'pol-can-h':'Cancelaciones y Reprogramaciones','pol-can-p':'Las cancelaciones o reprogramaciones deben realizarse con al menos <strong>24 horas de anticipación</strong>. Las citas podrán reprogramarse dentro de un período máximo de <strong>5 días</strong>. Las ausencias sin notificación resultarán en la pérdida del depósito.',
+    'pol-wait-h':'Tiempo de Espera','pol-wait-p':'Una vez que nuestro personal llegue al lugar acordado, se otorgará un tiempo máximo de espera de <strong>15 minutos</strong>. Si el cliente no está disponible, la cita podrá ser cancelada y el depósito retenido.',
+    'pol-salud-h':'Evaluación de Salud','pol-salud-p':'Todos los tratamientos están sujetos a una evaluación previa de salud. NCare IV se reserva el derecho de no administrar un tratamiento si existe alguna condición médica que pueda representar un riesgo.',
+    'pol-resp-h':'Responsabilidad del Cliente','pol-resp-p':'Es responsabilidad del cliente proporcionar información médica veraz. Cualquier omisión relacionada con alergias, medicamentos o embarazo puede afectar la seguridad del servicio.',
+    'pol-dom-h':'Servicio a Domicilio','pol-dom-p':'Pueden aplicarse cargos adicionales por desplazamientos fuera de nuestra zona regular de servicio, informados y aprobados antes de confirmar la cita.',
+    'pol-aviso-h':'Aviso Importante','pol-aviso-p':'Los servicios ofrecidos por NCare IV tienen como objetivo apoyar la hidratación, recuperación y bienestar general. <strong>No están destinados a diagnosticar, tratar, curar ni prevenir enfermedades.</strong>',
+    'pol-aviso-strong':'No están destinados a diagnosticar, tratar, curar ni prevenir enfermedades.',
+    'pol-cons-h':'Consentimiento','pol-cons-p':'Al reservar una cita con NCare IV, el cliente confirma que ha leído, comprendido y acepta estas políticas.',
+    'btn-accept':'He leído y acepto las políticas',
+    'form-title':'Consentimiento Informado para Terapia IV',
+    'f-nombre-lbl':'Nombre completo *','f-nombre-ph':'Tu nombre completo',
+    'f-tel-lbl':'Teléfono *','f-email-lbl':'Email *','f-email-ph':'tu@email.com',
+    'f-trat-lbl':'Tratamiento de interés *','f-trat-sel':'Selecciona...',
+    'f-dir-lbl':'Dirección / Ubicación del servicio *','f-dir-ph':'Tu dirección completa',
+    'f-msg-lbl':'Comentarios / Alergias','f-msg-ph':'Condiciones, medicamentos, etc.',
+    'consent-title':'Consentimiento Informado',
+    'c1':'Confirmo que soy mayor de 18 años y que la información de salud proporcionada es correcta.',
+    'c2':'Entiendo que la Terapia IV consiste en la administración de líquidos, vitaminas y nutrientes por vía intravenosa para apoyar la hidratación y el bienestar general.',
+    'c3':'Comprendo que pueden presentarse efectos secundarios leves como molestias, hematomas, mareos o reacciones alérgicas.',
+    'c4':'Entiendo que los resultados pueden variar y que no se garantiza ningún resultado específico.',
+    'c5':'Doy mi consentimiento voluntario para recibir el tratamiento de Terapia IV.',
+    'firma-title':'Firma Digital *','firma-desc':'Dibuja tu firma en el recuadro (dedo en móvil / mouse en computadora):','firma-limpiar':'Limpiar',
+    'fecha-title':'Fecha *','dia':'Día','mes':'Mes','anio':'Año',
+    'form-aviso':'✨💧 Al enviar este formulario, acepto recibir los servicios de Terapia IV y confirmo que he leído y comprendido la información anterior.',
+    'recaptcha-msg':'🔒 Formulario protegido por reCAPTCHA',
+    'form-send':'✉️ Enviar Formulario a NCare IV',
+    'err-campos':'⚠️ Por favor completa todos los campos obligatorios.',
+    'err-email':'⚠️ El formato del email no es válido.',
+    'err-tel':'⚠️ El teléfono solo puede contener números, espacios y + - ( ).',
+    'err-nombre':'⚠️ El nombre solo puede contener letras y espacios.',
+    'err-checks':'⚠️ Debes marcar todas las casillas de consentimiento.',
+    'err-firma':'⚠️ Por favor dibuja tu firma en el recuadro.',
+    'err-recaptcha':'⚠️ Por favor marca el checkbox "No soy un robot".',
+    'err-rate':'⚠️ Has alcanzado el límite de envíos. Contáctanos por WhatsApp.',
+    'err-tiempo':'⚠️ Por favor tómate un momento para revisar el formulario antes de enviarlo.',
+    'ok-msg':'✅ ¡Listo! Se abrirá tu app de correo para enviar el formulario.',
+  },
+  en: {
+    'logo-sub':'wellness you feel, energy that stays with you',
+    'nav-inicio':'Home','nav-sobre':'About','nav-tratamientos':'Treatments',
+    'nav-faq':'FAQ','nav-politicas':'Policies & Terms','nav-reserva':'Book Now',
+    'nav-sobre-full':'About Us',
+    'lang-btn-label':'ES','lang-mobile-label':'Cambiar a Español',
+    'hero-tag':'Raleigh, North Carolina',
+    'hero-h1':'Your time is your most precious luxury.',
+    'hero-p':'We design a personalized hydration and vitamin experience where exclusivity meets science. At NCare IV, we bring wellness to your door and restore the vitality your lifestyle demands, while you simply relax in your own space.',
+    'hero-btn1':'Book an Appointment','hero-btn2':'View Treatments',
+    'gift-btn':'Buy a Gift Card',
+    'sobre-label':'About Us',
+    'sobre-p1':'✨ <strong>NCare IV | Wellness &amp; IV Therapy</strong> — Premium wellness, wherever you need it.',
+    'sobre-p2':'At NCare IV we offer personalized IV therapy treatments designed to complement your wellness, beauty, and self-care routine, providing an exclusive experience in the comfort of your home, office, or preferred location.',
+    'sobre-p3':'Our commitment is to provide professional, discreet, and personalized care using high-quality products and protocols focused on the comfort, safety, and satisfaction of every client.',
+    'porque-label':'Our strengths','porque-title':'Why choose NCare IV?',
+    'porque-desc':'Specialized care, cutting-edge technology, and a human approach that sets us apart.',
+    'card1-h':'Private in-home service','card1-p':'Wellness you feel, energy that stays with you — in the comfort of your own space.',
+    'card2-h':'Personalized premium experience','card2-p':'Equipped with the highest safety and quality standards in every treatment.',
+    'card3-h':'Trained professionals','card3-p':'A dedicated team guides you every step of the way toward your wellness goals.',
+    'card4-h':'Schedule flexibility','card4-p':'Book your appointments at the times that best fit your routine.',
+    'card5-h':'Ethics & Transparency','card5-p':'We prioritize honesty and integrity. Clear service, no hidden costs, no unrealistic promises.',
+    'trat-label':'Our services','trat-title':'Treatments',
+    'trat-desc':'We offer a wide range of cutting-edge treatments to address every challenge on your wellness journey.',
+    't1-titulo':'VITAMIN C <span>MEGADOSE</span>',
+    't1-desc':'The premium Vitamin C experience — a high-concentration infusion designed to elevate your wellness.',
+    't1-extra1':'Designed to complement your wellness program and provide an exclusive personal care experience.',
+    't1-extra2':'💎 Ideal for those who want to elevate their health routine.',
+    't1-extra3':'• Supports natural collagen production.<br>• Maintains high energy and vitality.<br>• Boosts the immune system.<br>• Fights oxidative stress.',
+    't2-titulo':'<span>IRON IV</span> THERAPY',
+    't2-desc':'Restore your iron levels quickly and effectively under professional assessment.',
+    't2-extra1':'A specialized therapy for people with specific iron needs, designed to support adequate mineral levels.',
+    't2-extra2':'💎 Ideal for those looking to feel renewed and more energetic.',
+    't3-titulo':'MYERS <span>COCKTAIL</span>',
+    't3-desc':'The classic combination of vitamins and minerals to boost your overall health.',
+    't3-extra1':'An exclusive blend of carefully selected vitamins and minerals to complement your wellness routine and support your active lifestyle.',
+    't3-extra2':'💎 Ideal for those looking to feel balanced and renewed.',
+    't4-titulo':'<span>COLLAGEN IV</span> INFUSION',
+    't4-desc':'Beauty and wellness from within — for radiant skin, hair, and nails.',
+    't4-extra1':'Provides essential nutrients for a radiant and healthy appearance, improving skin elasticity.',
+    't5-titulo':'<span>VITAMIN C + GLUTATHIONE</span> THERAPY',
+    't5-desc':'Luminosity and wellness in a single infusion.',
+    't5-extra1':'A premium antioxidant combination designed to complement your holistic care routine.',
+    't5-extra2':'💎 Ideal for those who value beauty and wellness from within.',
+    't6-titulo':'<span>NAD+ INFUSION</span> THERAPY',
+    't6-desc':'Innovation for modern wellness. An advanced therapy that delivers NAD+, a key molecule...',
+    't6-extra1':'naturally present in the body and widely used in premium wellness programs.',
+    't6-extra2':'💎 Ideal for those seeking an exclusive personal care experience.',
+    'ver-mas':'Read more',
+    'test-label':'What our clients say','test-title':'Real Stories',
+    'test1':'"The service was exceptional. The staff was very friendly and provided clear information throughout. We feel so much better thanks to NCare IV!"',
+    'test2':'"We found in NCare IV the human team we needed. Professional, empathetic, and always available to answer our questions."',
+    'test3':'"The personalized attention we received was incredible. Every question answered with patience and professionalism."',
+    'faq-label':'Frequently asked questions','faq-title':'We Answer Your Questions',
+    'faq1-q':'Who should consider IV therapy?','faq1-a':'Anyone who wants to complement their wellness, boost energy, or support their immune system. We recommend consulting with our professionals to find the ideal treatment for you.',
+    'faq2-q':'Where is the service provided?','faq2-a':'We offer mobile services in Raleigh and surrounding areas (Cary, Garner, etc.). Your comfort is our priority.',
+    'faq3-q':'Are IV treatments painful?','faq3-a':'Most treatments are minimally invasive. Our professionals ensure your comfort and safety at every step with advanced techniques and personalized care.',
+    'faq4-q':'What should I expect at my first session?','faq4-a':'During the first visit, our experts will review your medical history, explain available options, and guide you throughout the process. A typical session lasts between 45 minutes and 1 hour.',
+    'faq5-q':'How often should I get IV therapy?','faq5-a':'It depends on your personal goals and needs. Our professionals will recommend a personalized plan during your first consultation.',
+    'faq6-q':'How can I book an appointment?','faq6-a':'You can book via WhatsApp at +1 (984) 298-9733, by email at Info@ncareiv.com, or directly through Instagram @ncare_iv.',
+    'ig-label':'Follow us','ig-title':'Join Our Community!','ig-desc':'Success stories, wellness tips, and much more on our Instagram.',
+    'contacto-label':'Book your appointment','contacto-title':'Contact Us','contacto-info-title':'Contact Information',
+    'ubicacion':'Location','telefono':'Phone / WhatsApp','horario':'Business Hours',
+    'lunes':'Monday','martes':'Tuesday','miercoles':'Wednesday','jueves':'Thursday','viernes':'Friday','sabado':'Saturday','domingo':'Sunday',
+    'reserva-title':'Book your appointment now','reserva-desc':'Contact us directly via WhatsApp or Instagram and we will schedule you at the most convenient time.',
+    'reserva-wa':'💬 Book via WhatsApp','reserva-ig':'📸 Message on Instagram','reserva-form':'📋 Booking Form',
+    'footer-rights':'All rights reserved','footer-priv':'Privacy Policy','footer-terms':'Policies & Terms',
+    'priv-title':'Privacy Policy',
+    'priv-1-h':'1. Data we collect:','priv-1-p':'At NCare IV, our clients privacy is our priority. We only request and store data necessary for managing appointments and treatments.',
+    'priv-2-h':'2. Use of information:','priv-2-p':'Your personal data is used exclusively to confirm services, send reminders, and improve your experience with us.',
+    'priv-3-h':'3. Security:','priv-3-p':'We implement technical security measures to protect your personal information against unauthorized access.',
+    'priv-4-h':'4. Rights:','priv-4-p':'You may request access, rectification, or deletion of your data at any time by contacting us through our official channels.',
+    'btn-ok':'Got it',
+    'pol-title':'Booking & Service Policies','pol-intro':'Thank you for choosing NCare IV. Please read the following policies before booking your appointment.',
+    'pol-dep-h':'Booking Deposit','pol-dep-p':'A non-refundable deposit of <strong>$25</strong> is required to confirm your appointment. This deposit will be applied to the total treatment cost on the day of your service.',
+    'pol-can-h':'Cancellations & Rescheduling','pol-can-p':'Cancellations or rescheduling must be made at least <strong>24 hours in advance</strong>. Appointments may be rescheduled within <strong>5 days</strong> of the original date. No-shows will result in loss of the deposit.',
+    'pol-wait-h':'Wait Time','pol-wait-p':'Once our staff arrives at the agreed location, a maximum wait time of <strong>15 minutes</strong> is granted. If the client is unavailable, the appointment may be cancelled and the deposit retained.',
+    'pol-salud-h':'Health Assessment','pol-salud-p':'All treatments are subject to a prior health assessment. NCare IV reserves the right to withhold a treatment if any medical condition poses a risk to the client.',
+    'pol-resp-h':'Client Responsibility','pol-resp-p':'The client is responsible for providing accurate and complete medical information. Any omission related to allergies, medications, or pregnancy may affect service safety.',
+    'pol-dom-h':'Mobile Service','pol-dom-p':'Additional charges may apply for travel outside our regular service area. These charges will be communicated and approved before confirming the appointment.',
+    'pol-aviso-h':'Important Notice','pol-aviso-p':'The services offered by NCare IV are intended to support hydration, recovery, and general wellness. <strong>They are not intended to diagnose, treat, cure, or prevent any disease.</strong>',
+    'pol-aviso-strong':'They are not intended to diagnose, treat, cure, or prevent any disease.',
+    'pol-cons-h':'Consent','pol-cons-p':'By booking an appointment with NCare IV, the client confirms they have read, understood, and agree to these service policies.',
+    'btn-accept':'I have read and accept the policies',
+    'form-title':'Informed Consent for IV Therapy',
+    'f-nombre-lbl':'Full name *','f-nombre-ph':'Your full name',
+    'f-tel-lbl':'Phone *','f-email-lbl':'Email *','f-email-ph':'your@email.com',
+    'f-trat-lbl':'Treatment of interest *','f-trat-sel':'Select...',
+    'f-dir-lbl':'Service address / location *','f-dir-ph':'Your full address',
+    'f-msg-lbl':'Comments / Allergies','f-msg-ph':'Conditions, medications, etc.',
+    'consent-title':'Informed Consent',
+    'c1':'I confirm I am over 18 years old and that the health information provided is accurate.',
+    'c2':'I understand that IV Therapy involves the administration of fluids, vitamins, and nutrients intravenously to support hydration and general wellness.',
+    'c3':'I understand that mild side effects may occur, such as discomfort, bruising, dizziness, or allergic reactions.',
+    'c4':'I understand that results may vary and that no specific outcome is guaranteed.',
+    'c5':'I voluntarily consent to receive IV Therapy treatment.',
+    'firma-title':'Digital Signature *','firma-desc':'Draw your signature in the box (finger on mobile / mouse on desktop):','firma-limpiar':'Clear',
+    'fecha-title':'Date *','dia':'Day','mes':'Month','anio':'Year',
+    'form-aviso':'✨💧 By submitting this form, I agree to receive IV Therapy services and confirm I have read and understood the information above.',
+    'recaptcha-msg':'🔒 Form protected by reCAPTCHA',
+    'form-send':'✉️ Send Form to NCare IV',
+    'err-campos':'⚠️ Please complete all required fields.',
+    'err-email':'⚠️ Please enter a valid email address.',
+    'err-tel':'⚠️ Phone may only contain digits, spaces, and + - ( ).',
+    'err-nombre':'⚠️ Name may only contain letters and spaces.',
+    'err-checks':'⚠️ You must check all consent boxes.',
+    'err-firma':'⚠️ Please draw your signature in the box.',
+    'err-recaptcha':'⚠️ Please check the "I am not a robot" box.',
+    'err-rate':'⚠️ Submission limit reached. Please contact us via WhatsApp.',
+    'err-tiempo':'⚠️ Please take a moment to review the form before submitting.',
+    'ok-msg':'✅ Done! Your email app will open to send the form.',
+  }
+};
+
+/* ════════ MOTOR DE TRADUCCIÓN ════════ */
+let currentLang = 'es';
+
+function detectLang() {
+  const saved = localStorage.getItem('ncareiv-lang');
+  if (saved) return saved;
+  const browser = (navigator.language || navigator.userLanguage || 'es').toLowerCase();
+  return browser.startsWith('en') ? 'en' : 'es';
+}
+
+function applyLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('ncareiv-lang', lang);
+  document.getElementById('html-root').lang = lang;
+  const t = i18n[lang];
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const key = el.getAttribute('data-i18n-ph');
+    if (t[key] !== undefined) el.placeholder = t[key];
+  });
+
+  document.getElementById('lang-label-desktop').textContent = t['lang-btn-label'];
+  document.getElementById('lang-label-mobile').textContent  = t['lang-mobile-label'];
+
+  const sel = document.getElementById('f-tratamiento');
+  if (sel) sel.options[0].text = t['f-trat-sel'];
+
+  document.querySelectorAll('.btn-leer-mas').forEach(btn => {
+    const match = btn.getAttribute('onclick').match(/'([^']+)'/);
+    if (!match) return;
+    const el = document.getElementById(match[1]);
+    if (el && el.style.maxHeight && el.style.maxHeight !== '0px') {
+      btn.textContent = lang === 'en' ? 'Read less' : 'Ver menos';
+    } else {
+      btn.textContent = t['ver-mas'];
+    }
+  });
+}
+
+function toggleLang() { applyLang(currentLang === 'es' ? 'en' : 'es'); }
+document.addEventListener('DOMContentLoaded', () => { applyLang(detectLang()); });
+
+/* ════════ HAMBURGER ════════ */
+const hamburger  = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  const isOpen = mobileMenu.classList.toggle('open');
+  hamburger.classList.toggle('open', isOpen);
+  hamburger.setAttribute('aria-expanded', isOpen);
+});
+function closeMobile() {
+  mobileMenu.classList.remove('open');
+  hamburger.classList.remove('open');
+  hamburger.setAttribute('aria-expanded','false');
+}
+
+/* ════════ FAQ ════════ */
+function toggleFaq(btn) {
+  const answer = btn.nextElementSibling;
+  const isOpen = btn.classList.contains('open');
+  document.querySelectorAll('.faq-q').forEach(b => { b.classList.remove('open'); b.nextElementSibling.classList.remove('show'); });
+  if (!isOpen) { btn.classList.add('open'); answer.classList.add('show'); }
+}
+
+/* ════════ TRATAMIENTOS ════════ */
+function toggleServicio(id, btn) {
+  const el = document.getElementById(id);
+  const expanded = el.style.maxHeight && el.style.maxHeight !== '0px';
+  el.style.maxHeight = expanded ? '0px' : '300px';
+  btn.textContent = expanded ? i18n[currentLang]['ver-mas'] : (currentLang === 'en' ? 'Read less' : 'Ver menos');
+}
+
+/* ════════ GIFT CARD ════════ */
+function abrirGiftCard() {
+  const w=500,h=700,left=Math.round(screen.width/2-w/2),top=Math.round(screen.height/2-h/2);
+  window.open('https://book.heygoldie.com/es/gift-cards?business=ncare-iv','Gift Card',`width=${w},height=${h},top=${top},left=${left},scrollbars=yes`);
+}
+
+/* ════════ OVERLAYS ════════ */
+function abrirPrivacidad(){ document.getElementById('popup-privacidad').classList.add('visible'); document.body.style.overflow='hidden'; }
+function cerrarPrivacidad(){ document.getElementById('popup-privacidad').classList.remove('visible'); document.body.style.overflow=''; }
+function abrirPoliticas() { document.getElementById('popup-politicas').classList.add('visible');  document.body.style.overflow='hidden'; }
+function cerrarPoliticas(){ document.getElementById('popup-politicas').classList.remove('visible'); document.body.style.overflow=''; }
+
+window.addEventListener('click', e => {
+  ['popup-privacidad','popup-politicas','popup-formulario'].forEach(id => {
+    if (e.target === document.getElementById(id)) {
+      document.getElementById(id).classList.remove('visible');
+      document.body.style.overflow='';
+    }
+  });
+});
+window.addEventListener('keydown', e => {
+  if (e.key==='Escape') {
+    ['popup-privacidad','popup-politicas','popup-formulario'].forEach(id => document.getElementById(id).classList.remove('visible'));
+    document.body.style.overflow='';
+  }
+});
+
+/* ════════ FORMULARIO SEGURO ════════ */
+let intentosEnvio=0; const MAX_INTENTOS=3;
+let tiempoAperturaForm=0; const TIEMPO_MIN_MS=10000;
+
+function abrirFormulario(){
+  document.getElementById('popup-formulario').classList.add('visible');
+  document.body.style.overflow='hidden';
+  tiempoAperturaForm=Date.now();
+  initCanvas(); initFecha();
+}
+function cerrarFormulario(){
+  document.getElementById('popup-formulario').classList.remove('visible');
+  document.body.style.overflow='';
+}
+
+function sanitizar(str){
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#x27;').replace(/\//g,'&#x2F;')
+    .replace(/[^\w\s\-.,áéíóúÁÉÍÓÚñÑüÜ@+():/#!?°ºª]/g,'').trim().substring(0,300);
+}
+function validarEmail(e){ return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(e); }
+function validarTelefono(t){ return /^[\d\s\+\-\(\)]{7,20}$/.test(t); }
+
+function enviarFormulario(){
+  const t=i18n[currentLang];
+  const errEl=document.getElementById('form-error');
+  errEl.style.display='none'; errEl.style.color='#c0392b';
+
+  if(document.getElementById('hp-field').value.length>0){ errEl.textContent='⚠️ Error.'; errEl.style.display='block'; return; }
+  if(intentosEnvio>=MAX_INTENTOS){ errEl.textContent=t['err-rate']; errEl.style.display='block'; return; }
+  if(Date.now()-tiempoAperturaForm<TIEMPO_MIN_MS){ errEl.textContent=t['err-tiempo']; errEl.style.display='block'; return; }
+
+  const nombre=sanitizar(document.getElementById('f-nombre').value);
+  const telefono=sanitizar(document.getElementById('f-telefono').value);
+  const email=sanitizar(document.getElementById('f-email').value);
+  const tratamiento=sanitizar(document.getElementById('f-tratamiento').value);
+  const direccion=sanitizar(document.getElementById('f-direccion').value);
+  const mensaje=sanitizar(document.getElementById('f-mensaje').value);
+  const checks=['c1','c2','c3','c4','c5'].every(id=>document.getElementById(id).checked);
+  const fecha=`${String(fechaState.dia).padStart(2,'0')}/${String(fechaState.mes).padStart(2,'0')}/${fechaState.anio}`;
+
+  if(!nombre||!telefono||!email||!tratamiento||!direccion){ errEl.textContent=t['err-campos']; errEl.style.display='block'; return; }
+  if(!validarEmail(email)){ errEl.textContent=t['err-email']; errEl.style.display='block'; return; }
+  if(!validarTelefono(telefono)){ errEl.textContent=t['err-tel']; errEl.style.display='block'; return; }
+  if(!/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-'\.]{2,80}$/.test(nombre)){ errEl.textContent=t['err-nombre']; errEl.style.display='block'; return; }
+  if(!checks){ errEl.textContent=t['err-checks']; errEl.style.display='block'; return; }
+  if(firmaVacia){ errEl.textContent=t['err-firma']; errEl.style.display='block'; return; }
+  const recap=typeof grecaptcha!=='undefined'?grecaptcha.getResponse():'';
+  if(!recap){ errEl.textContent=t['err-recaptcha']; errEl.style.display='block'; return; }
+
+  intentosEnvio++;
+  const cuerpo=[
+    '=== NCAREIV CONSENT FORM ===','',
+    'CLIENT DATA',
+    'Name     : '+nombre,'Phone    : '+telefono,'Email    : '+email,
+    'Treatment: '+tratamiento,'Address  : '+direccion,'Comments : '+(mensaje||'—'),'',
+    'INFORMED CONSENT',
+    '[x] Over 18 & health info correct','[x] Understands IV Therapy',
+    '[x] Aware of possible side effects','[x] Understands results may vary',
+    '[x] Gives voluntary consent','',
+    'Date: '+fecha,'','(Digital signature completed)','(reCAPTCHA v2 verified)',
+  ].join('%0D%0A');
+
+  const asunto=encodeURIComponent('IV Consent - '+nombre+' - '+fecha);
+  window.location.href='mailto:info@ncareiv.com?subject='+asunto+'&body='+cuerpo;
+
+  setTimeout(()=>{
+    errEl.style.color='#27ae60'; errEl.textContent=t['ok-msg']; errEl.style.display='block';
+    if(typeof grecaptcha!=='undefined') grecaptcha.reset();
+  },500);
+}
+
+/* ════════ FECHA SPINNER ════════ */
+const fechaState={dia:1,mes:1,anio:2026};
+function initFecha(){
+  const h=new Date(); fechaState.dia=h.getDate(); fechaState.mes=h.getMonth()+1; fechaState.anio=h.getFullYear();
+  renderFecha();
+}
+function renderFecha(){
+  document.getElementById('spin-dia').textContent=String(fechaState.dia).padStart(2,'0');
+  document.getElementById('spin-mes').textContent=String(fechaState.mes).padStart(2,'0');
+  document.getElementById('spin-anio').textContent=fechaState.anio;
+}
+function cambiarFecha(campo,delta){
+  if(campo==='dia')      fechaState.dia=((fechaState.dia-1+delta+31)%31)+1;
+  else if(campo==='mes') fechaState.mes=((fechaState.mes-1+delta+12)%12)+1;
+  else                   fechaState.anio=Math.max(2024,Math.min(2035,fechaState.anio+delta));
+  renderFecha();
+}
+
+/* ════════ FIRMA CANVAS ════════ */
+let firmaCtx,firmaDibujando=false,firmaVacia=true;
+function initCanvas(){
+  const canvas=document.getElementById('firma-canvas');
+  const rect=canvas.getBoundingClientRect();
+  canvas.width=rect.width*(window.devicePixelRatio||1);
+  canvas.height=rect.height*(window.devicePixelRatio||1);
+  firmaCtx=canvas.getContext('2d');
+  firmaCtx.scale(window.devicePixelRatio||1,window.devicePixelRatio||1);
+  firmaCtx.strokeStyle='#2e231a'; firmaCtx.lineWidth=2.2; firmaCtx.lineCap='round'; firmaCtx.lineJoin='round';
+  firmaVacia=true;
+  canvas.onmousedown =e=>{firmaDibujando=true;firmaCtx.beginPath();firmaCtx.moveTo(...posC(canvas,e));};
+  canvas.onmousemove =e=>{if(!firmaDibujando)return;firmaVacia=false;firmaCtx.lineTo(...posC(canvas,e));firmaCtx.stroke();};
+  canvas.onmouseup   =()=>firmaDibujando=false;
+  canvas.onmouseleave=()=>firmaDibujando=false;
+  canvas.ontouchstart=e=>{e.preventDefault();firmaDibujando=true;firmaCtx.beginPath();firmaCtx.moveTo(...posC(canvas,e.touches[0]));};
+  canvas.ontouchmove =e=>{e.preventDefault();if(!firmaDibujando)return;firmaVacia=false;firmaCtx.lineTo(...posC(canvas,e.touches[0]));firmaCtx.stroke();};
+  canvas.ontouchend  =()=>firmaDibujando=false;
+}
+function posC(canvas,e){const r=canvas.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top];}
+function limpiarFirma(){const c=document.getElementById('firma-canvas');firmaCtx.clearRect(0,0,c.width,c.height);firmaVacia=true;}
+</script>
+
+</body>
+</html>
