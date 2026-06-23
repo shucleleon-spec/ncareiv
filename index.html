@@ -68,6 +68,22 @@
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+
+  <!-- ── Protección básica de código ── -->
+  <script>
+    // Bloquear clic derecho
+    document.addEventListener('contextmenu', e => e.preventDefault());
+
+    // Bloquear F12, Ctrl+U, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+S
+    document.addEventListener('keydown', e => {
+      if (
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) ||
+        (e.ctrlKey && ['U','S'].includes(e.key.toUpperCase()))
+      ) { e.preventDefault(); return false; }
+    });
+  </script>
+
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
