@@ -684,20 +684,8 @@
         <div><label class="form-lbl" data-i18n="f-msg-lbl">Comentarios / Alergias</label><input id="f-mensaje" type="text" class="form-inp" data-i18n-ph="f-msg-ph" placeholder="Condiciones, medicamentos, etc."></div>
       </div>
       <hr class="form-separator">
-      <span class="form-section-label" data-i18n="consent-title">Consentimiento Informado</span>
-      <div class="check-item"><input type="checkbox" id="c1" class="check-box"><label for="c1" data-i18n="c1">Confirmo que soy mayor de 18 años y que la información de salud proporcionada es correcta.</label></div>
-      <div class="check-item"><input type="checkbox" id="c2" class="check-box"><label for="c2" data-i18n="c2">Entiendo que la Terapia IV consiste en la administración de líquidos, vitaminas y nutrientes por vía intravenosa para apoyar la hidratación y el bienestar general.</label></div>
-      <div class="check-item"><input type="checkbox" id="c3" class="check-box"><label for="c3" data-i18n="c3">Comprendo que pueden presentarse efectos secundarios leves como molestias, hematomas, mareos o reacciones alérgicas.</label></div>
-      <div class="check-item"><input type="checkbox" id="c4" class="check-box"><label for="c4" data-i18n="c4">Entiendo que los resultados pueden variar y que no se garantiza ningún resultado específico.</label></div>
-      <div class="check-item"><input type="checkbox" id="c5" class="check-box"><label for="c5" data-i18n="c5">Doy mi consentimiento voluntario para recibir el tratamiento de Terapia IV.</label></div>
-      <hr class="form-separator">
-      <span class="form-section-label" data-i18n="firma-title">Firma Digital *</span>
-      <p style="font-size:12px;color:var(--texto-suave);margin-bottom:8px;" data-i18n="firma-desc">Dibuja tu firma en el recuadro (dedo en móvil / mouse en computadora):</p>
-      <div style="position:relative;">
-        <canvas id="firma-canvas" style="width:100%;height:130px;border:1.5px solid var(--borde);border-radius:12px;background:#fff;touch-action:none;cursor:crosshair;display:block;"></canvas>
-        <button onclick="limpiarFirma()" style="position:absolute;top:8px;right:8px;background:var(--prim-claro);color:var(--prim);border:1px solid var(--borde);border-radius:20px;font-size:11px;padding:3px 10px;cursor:pointer;font-family:var(--sans);" data-i18n="firma-limpiar">Limpiar</button>
-      </div>
-      <hr class="form-separator">
+
+      <!-- FECHA — ahora va primero, visible al abrir -->
       <span class="form-section-label" data-i18n="fecha-title">Fecha *</span>
       <div style="display:flex;gap:.6rem;align-items:flex-end;">
         <div><div class="spinner-label" data-i18n="dia">Día</div><div class="spinner-wrap"><button class="spin-btn" onclick="cambiarFecha('dia',1)">▲</button><div id="spin-dia" class="spin-val">01</div><button class="spin-btn" onclick="cambiarFecha('dia',-1)">▼</button></div></div>
@@ -706,6 +694,27 @@
         <div style="font-size:1.4rem;color:var(--borde);padding-bottom:14px;">/</div>
         <div><div class="spinner-label" data-i18n="anio">Año</div><div class="spinner-wrap"><button class="spin-btn" onclick="cambiarFecha('anio',1)">▲</button><div id="spin-anio" class="spin-val">2026</div><button class="spin-btn" onclick="cambiarFecha('anio',-1)">▼</button></div></div>
       </div>
+
+      <hr class="form-separator">
+
+      <!-- CONSENTIMIENTO -->
+      <span class="form-section-label" data-i18n="consent-title">Consentimiento Informado</span>
+      <div class="check-item"><input type="checkbox" id="c1" class="check-box"><label for="c1" data-i18n="c1">Confirmo que soy mayor de 18 años y que la información de salud proporcionada es correcta.</label></div>
+      <div class="check-item"><input type="checkbox" id="c2" class="check-box"><label for="c2" data-i18n="c2">Entiendo que la Terapia IV consiste en la administración de líquidos, vitaminas y nutrientes por vía intravenosa para apoyar la hidratación y el bienestar general.</label></div>
+      <div class="check-item"><input type="checkbox" id="c3" class="check-box"><label for="c3" data-i18n="c3">Comprendo que pueden presentarse efectos secundarios leves como molestias, hematomas, mareos o reacciones alérgicas.</label></div>
+      <div class="check-item"><input type="checkbox" id="c4" class="check-box"><label for="c4" data-i18n="c4">Entiendo que los resultados pueden variar y que no se garantiza ningún resultado específico.</label></div>
+      <div class="check-item"><input type="checkbox" id="c5" class="check-box"><label for="c5" data-i18n="c5">Doy mi consentimiento voluntario para recibir el tratamiento de Terapia IV.</label></div>
+
+      <hr class="form-separator">
+
+      <!-- FIRMA — al final -->
+      <span class="form-section-label" data-i18n="firma-title">Firma Digital *</span>
+      <p style="font-size:12px;color:var(--texto-suave);margin-bottom:8px;" data-i18n="firma-desc">Dibuja tu firma en el recuadro (dedo en móvil / mouse en computadora):</p>
+      <div style="position:relative;">
+        <canvas id="firma-canvas" style="width:100%;height:130px;border:1.5px solid var(--borde);border-radius:12px;background:#fff;touch-action:none;cursor:crosshair;display:block;"></canvas>
+        <button onclick="limpiarFirma()" style="position:absolute;top:8px;right:8px;background:var(--prim-claro);color:var(--prim);border:1px solid var(--borde);border-radius:20px;font-size:11px;padding:3px 10px;cursor:pointer;font-family:var(--sans);" data-i18n="firma-limpiar">Limpiar</button>
+      </div>
+
       <p style="font-size:12px;color:var(--texto-suave);margin-top:1.2rem;font-style:italic;" data-i18n="form-aviso">✨💧 Al enviar este formulario, acepto recibir los servicios de Terapia IV y confirmo que he leído y comprendido la información anterior.</p>
     </div>
 
