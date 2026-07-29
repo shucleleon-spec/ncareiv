@@ -316,7 +316,7 @@ function showDetail(c) {
       <div class="detail-field"><label>Teléfono</label><p>${esc(c.telefono)}</p></div>
       <div class="detail-field full"><label>Tratamiento</label><p>${esc(c.tratamiento)}</p></div>
       <div class="detail-field full"><label>Dirección / Ubicación</label><p>${esc(c.direccion)}</p></div>
-      <div class="detail-field"><label>Fecha de firma</label><p>${esc(c.fecha_firma||'—')}</p></div>
+      <div class="detail-field"><label>Fecha de cita / Appointment Date</label><p>${esc(c.fecha_firma||'—')}</p></div>
       ${c.mensaje ? `<div class="detail-field full"><label>Comentarios</label><p>${esc(c.mensaje)}</p></div>` : ''}
     </div>
     <div class="consent-checks">
