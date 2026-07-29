@@ -1103,7 +1103,7 @@ function sanitizar(str){
 function validarEmail(e){ return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(e); }
 function validarTelefono(t){ return /^[\d\s\+\-\(\)]{7,20}$/.test(t); }
 
-function enviarFormulario(){
+async function enviarFormulario(){
   const t=i18n[currentLang];
   const errEl=document.getElementById('form-error');
   errEl.style.display='none'; errEl.style.color='#c0392b';
