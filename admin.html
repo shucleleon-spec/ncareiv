@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NCare IV — Panel Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --prim:#8b6f47; --prim-medio:#a6845e; --prim-claro:#f5ede0;
+      --acento:#c4956a; --texto:#2e231a; --texto-suave:#6b5240;
+      --blanco:#fffdf9; --fondo:#faf5ee; --borde:#e8d8c4;
+      --dark-bg:#2a1f14; --serif:'Cormorant Garamond',serif;
+      --sans:'DM Sans',sans-serif; --radius:12px;
+    }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    body{ font-family:var(--sans); background:var(--fondo); color:var(--texto); min-height:100vh; }
+    input,select{ font-family:var(--sans); font-size:14px; padding:8px 12px; border:1.5px solid var(--borde); border-radius:var(--radius); background:var(--blanco); color:var(--texto); outline:none; width:100%; }
+    input:focus,select:focus{ border-color:var(--prim); }
+    button{ font-family:var(--sans); cursor:pointer; border:none; border-radius:50px; padding:8px 18px; font-size:14px; transition:opacity .15s; }
+    button:hover{ opacity:.85; }
+    .btn-primary{ background:var(--prim); color:#fff; font-weight:500; }
+    .btn-ghost{ background:transparent; border:1.5px solid var(--borde); color:var(--texto); }
+    .btn-danger{ background:#fdf0f0; color:#c0392b; border:1.5px solid #f5c6c6; }
+    .hidden{ display:none!important; }
+    .badge{ display:inline-block; font-size:11px; padding:3px 10px; border-radius:20px; background:var(--prim-claro); color:var(--prim); font-weight:500; }
+
+    /* LOGIN */
+    #view-login{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
+    .login-card{ background:var(--blanco); border:1px solid var(--borde); border-radius:20px; padding:2.5rem; width:100%; max-width:360px; box-shadow:0 8px 30px rgba(139,111,71,.1); }
+    .login-logo{ width:64px; height:64px; border-radius:50%; object-fit:cover; display:block; margin:0 auto 16px; }
+    .login-title{ font-family:var(--serif); font-size:1.6rem; color:var(--prim); text-align:center; margin-bottom:6px; }
+    .login-sub{ font-size:13px; color:var(--texto-suave); text-align:center; margin-bottom:1.75rem; }
+    .form-group{ margin-bottom:1rem; }
+    .form-group label{ display:block; font-size:12px; color:var(--texto-suave); margin-bottom:5px; }
+
+    /* DASHBOARD */
+    #view-admin{ display:none; max-width:1000px; margin:0 auto; padding:2rem 1.5rem; }
+    .header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:2rem; flex-wrap:wrap; gap:12px; }
+    .header-logo{ display:flex; align-items:center; gap:12px; }
+    .header-logo img{ width:44px; height:44px; border-radius:50%; object-fit:cover; }
+    .header-title{ font-family:var(--serif); font-size:1.4rem; color:var(--texto); }
+    .header-sub{ font-size:12px; color:var(--texto-suave); }
+    .header-actions{ display:flex; gap:8px; }
+
+    .stats-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:2rem; }
+    .stat-card{ background:var(--blanco); border:1px solid var(--borde); border-radius:16px; padding:1.25rem; text-align:center; }
+    .stat-label{ font-size:11px; color:var(--texto-suave); text-transform:uppercase; letter-spacing:.1em; margin-bottom:6px; }
+    .stat-num{ font-family:var(--serif); font-size:2.5rem; font-weight:600; color:var(--prim); }
+
+    .filters{ display:flex; gap:10px; margin-bottom:1.25rem; flex-wrap:wrap; }
+    .filters input{ flex:1; min-width:200px; }
+    .filters select{ width:auto; min-width:200px; }
+
+    .consent-list{ display:flex; flex-direction:column; gap:10px; }
+    .consent-item{ background:var(--blanco); border:1px solid var(--borde); border-radius:16px; padding:1rem 1.25rem; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; cursor:pointer; transition:border-color .2s, box-shadow .2s; }
+    .consent-item:hover{ border-color:var(--prim); box-shadow:0 4px 16px rgba(139,111,71,.1); }
+    .consent-avatar{ width:40px; height:40px; border-radius:50%; background:var(--prim-claro); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:600; color:var(--prim); flex-shrink:0; }
+    .consent-info{ flex:1; min-width:0; }
+    .consent-name{ font-weight:500; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .consent-meta{ font-size:12px; color:var(--texto-suave); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .consent-right{ display:flex; align-items:center; gap:10px; flex-shrink:0; }
+    .consent-date{ text-align:right; }
+    .consent-date-main{ font-size:12px; color:var(--texto-suave); }
+    .consent-date-time{ font-size:11px; color:var(--acento); }
+
+    /* DETALLE */
+    #view-detail{ display:none; max-width:700px; margin:0 auto; padding:2rem 1.5rem; }
+    .detail-card{ background:var(--blanco); border:1px solid var(--borde); border-radius:20px; padding:2rem; }
+    .detail-header{ display:flex; align-items:center; gap:14px; margin-bottom:1.5rem; padding-bottom:1.5rem; border-bottom:1px solid var(--borde); }
+    .detail-avatar{ width:52px; height:52px; border-radius:50%; background:var(--prim-claro); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:600; color:var(--prim); flex-shrink:0; }
+    .detail-name{ font-family:var(--serif); font-size:1.4rem; }
+    .detail-date{ font-size:13px; color:var(--texto-suave); }
+    .detail-grid{ display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem; }
+    .detail-field label{ font-size:11px; color:var(--acento); text-transform:uppercase; letter-spacing:.05em; display:block; margin-bottom:3px; }
+    .detail-field p{ font-size:14px; }
+    .detail-field.full{ grid-column:span 2; }
+    .consent-checks{ background:#f0faf5; border:1px solid #b7e4cc; border-radius:14px; padding:1.25rem; margin-bottom:1.5rem; }
+    .consent-checks-title{ font-size:11px; font-weight:600; color:#1e7a45; text-transform:uppercase; letter-spacing:.1em; margin-bottom:10px; }
+    .check-row{ display:flex; align-items:flex-start; gap:8px; margin-bottom:6px; }
+    .check-icon{ color:#1e7a45; flex-shrink:0; font-size:16px; }
+    .check-text{ font-size:13px; color:#1e7a45; }
+    .detail-footer{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+    .detail-id{ font-size:11px; color:var(--acento); }
+
+    .empty-msg{ text-align:center; color:var(--texto-suave); padding:3rem; }
+    .empty-msg span{ display:block; font-size:13px; color:var(--acento); margin-top:6px; }
+    .error-msg{ color:#c0392b; font-size:13px; display:none; margin-top:8px; }
+    .loading{ text-align:center; padding:2rem; color:var(--texto-suave); font-size:14px; }
+
+    @media(max-width:640px){
+      .stats-grid{ grid-template-columns:1fr; }
+      .detail-grid{ grid-template-columns:1fr; }
+      .detail-field.full{ grid-column:span 1; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══════════════════════════════════ -->
+<div id="view-login">
+  <div class="login-card">
+    <img src="imagenes/logo1.jpg" alt="NCare IV" class="login-logo" onerror="this.style.display='none'">
+    <h1 class="login-title">NCare IV Admin</h1>
+    <p class="login-sub">Panel de consentimientos</p>
+    <div class="form-group">
+      <label>Usuario</label>
+      <input type="text" id="login-user" placeholder="admin" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <p class="error-msg" id="login-error">Usuario o contraseña incorrectos.</p>
+    <button class="btn-primary" onclick="doLogin()" style="width:100%;padding:12px;margin-top:8px">Entrar al panel</button>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD ═══════════════════════════════ -->
+<div id="view-admin">
+  <div class="header">
+    <div class="header-logo">
+      <img src="imagenes/logo1.jpg" alt="NCare IV" onerror="this.style.display='none'">
+      <div>
+        <p class="header-title">Panel de Consentimientos</p>
+        <p class="header-sub">NCare IV — Raleigh, NC</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-ghost" onclick="exportCSV()">⬇️ Exportar CSV</button>
+      <button class="btn-ghost" onclick="doLogout()">Salir</button>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card"><p class="stat-label">Total registros</p><p class="stat-num" id="stat-total">—</p></div>
+    <div class="stat-card"><p class="stat-label">Este mes</p><p class="stat-num" id="stat-month">—</p></div>
+    <div class="stat-card"><p class="stat-label">Hoy</p><p class="stat-num" id="stat-today">—</p></div>
+  </div>
+
+  <div class="filters">
+    <input type="text" id="search-input" placeholder="Buscar nombre, email o tratamiento..." oninput="filterList()">
+    <select id="filter-trat" onchange="filterList()">
+      <option value="">Todos los tratamientos</option>
+      <option>Megadosis de Vitamina C</option>
+      <option>Terapia de Hierro IV</option>
+      <option>Cocktail de Myers</option>
+      <option>Infusión de Colágeno IV</option>
+      <option>Vitamina C + Glutathione</option>
+      <option>NAD+ Infusion</option>
+    </select>
+  </div>
+
+  <div id="loading-msg" class="loading">Cargando consentimientos...</div>
+  <div class="consent-list" id="consent-list"></div>
+  <div id="empty-msg" class="empty-msg hidden">
+    No hay consentimientos registrados aún.
+    <span>Los formularios enviados desde ncareiv.com aparecerán aquí.</span>
+  </div>
+</div>
+
+<!-- ══ DETALLE ══════════════════════════════════ -->
+<div id="view-detail">
+  <button class="btn-ghost" onclick="backToList()" style="margin-bottom:1.25rem">← Volver</button>
+  <div class="detail-card" id="detail-content"></div>
+</div>
+
+<script>
+// ══ CONFIGURACIÓN ══════════════════════════════
+// ⚠️ IMPORTANTE: Cambia esta URL por la URL de tu Worker después de desplegarlo
+const WORKER_URL = 'https://ncareiv-worker.shucleleon.workers.dev';
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'ncareiv2026';
+
+let allConsents = [];
+let credentials = '';
+
+// ══ LOGIN ══════════════════════════════════════
+document.getElementById('login-pass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+async function doLogin() {
+  const user = document.getElementById('login-user').value.trim();
+  const pass = document.getElementById('login-pass').value.trim();
+  const errEl = document.getElementById('login-error');
+  errEl.style.display = 'none';
+
+  credentials = btoa(`${user}:${pass}`);
+
+  try {
+    const res = await fetch(`${WORKER_URL}/admin/consents`, {
+      headers: { 'Authorization': `Basic ${credentials}` }
+    });
+
+    if (res.status === 401) {
+      errEl.style.display = 'block';
+      credentials = '';
+      return;
+    }
+
+    const data = await res.json();
+    allConsents = data.consents || [];
+    document.getElementById('view-login').style.display = 'none';
+    document.getElementById('view-admin').style.display = 'block';
+    document.getElementById('loading-msg').style.display = 'none';
+    renderStats();
+    renderList();
+  } catch (err) {
+    errEl.textContent = 'Error conectando al servidor. Verifica que el Worker esté desplegado.';
+    errEl.style.display = 'block';
+  }
+}
+
+function doLogout() {
+  credentials = '';
+  allConsents = [];
+  document.getElementById('view-admin').style.display = 'none';
+  document.getElementById('view-login').style.display = 'flex';
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+}
+
+// ══ STATS ═══════════════════════════════════════
+function renderStats() {
+  const now = new Date();
+  const todayStr = now.toDateString();
+  const monthKey = `${now.getMonth()}-${now.getFullYear()}`;
+  document.getElementById('stat-total').textContent = allConsents.length;
+  document.getElementById('stat-month').textContent = allConsents.filter(c => {
+    const d = new Date(c.timestamp);
+    return `${d.getMonth()}-${d.getFullYear()}` === monthKey;
+  }).length;
+  document.getElementById('stat-today').textContent = allConsents.filter(c =>
+    new Date(c.timestamp).toDateString() === todayStr
+  ).length;
+}
+
+// ══ LISTA ═══════════════════════════════════════
+function filterList() { renderList(); }
+
+function renderList() {
+  const search = document.getElementById('search-input').value.toLowerCase();
+  const trat   = document.getElementById('filter-trat').value.toLowerCase();
+  const list   = document.getElementById('consent-list');
+  const empty  = document.getElementById('empty-msg');
+
+  const filtered = [...allConsents].filter(c => {
+    const ms = !search || (c.nombre||'').toLowerCase().includes(search) ||
+               (c.email||'').toLowerCase().includes(search) ||
+               (c.tratamiento||'').toLowerCase().includes(search);
+    const mt = !trat || (c.tratamiento||'').toLowerCase().includes(trat);
+    return ms && mt;
+  });
+
+  list.innerHTML = '';
+  if (!filtered.length) { empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+
+  filtered.forEach(c => {
+    const d = new Date(c.timestamp);
+    const dateStr = d.toLocaleDateString('es-US', {day:'2-digit', month:'short', year:'numeric'});
+    const timeStr = d.toLocaleTimeString('es-US', {hour:'2-digit', minute:'2-digit'});
+    const tratShort = (c.tratamiento||'').split('—')[0].trim();
+    const initial = (c.nombre||'?').charAt(0).toUpperCase();
+
+    const el = document.createElement('div');
+    el.className = 'consent-item';
+    el.onclick = () => showDetail(c);
+    el.innerHTML = `
+      <div class="consent-avatar">${esc(initial)}</div>
+      <div class="consent-info">
+        <p class="consent-name">${esc(c.nombre)}</p>
+        <p class="consent-meta">${esc(c.email)} · ${esc(c.telefono)}</p>
+      </div>
+      <div class="consent-right">
+        <span class="badge">${esc(tratShort)}</span>
+        <div class="consent-date">
+          <p class="consent-date-main">${dateStr}</p>
+          <p class="consent-date-time">${timeStr}</p>
+        </div>
+        <span style="color:var(--acento);font-size:18px">›</span>
+      </div>`;
+    list.appendChild(el);
+  });
+}
+
+// ══ DETALLE ══════════════════════════════════════
+function showDetail(c) {
+  document.getElementById('view-admin').style.display = 'none';
+  document.getElementById('view-detail').style.display = 'block';
+
+  const d = new Date(c.timestamp);
+  const dateStr = d.toLocaleDateString('es-US', {weekday:'long', day:'2-digit', month:'long', year:'numeric'});
+  const timeStr = d.toLocaleTimeString('es-US', {hour:'2-digit', minute:'2-digit'});
+  const initial = (c.nombre||'?').charAt(0).toUpperCase();
+
+  const checks = [
+    'Mayor de 18 años — datos de salud correctos',
+    'Entiende en qué consiste la Terapia IV',
+    'Conoce posibles efectos secundarios leves',
+    'Entiende que los resultados pueden variar',
+    'Da consentimiento voluntario para el tratamiento',
+  ];
+
+  document.getElementById('detail-content').innerHTML = `
+    <div class="detail-header">
+      <div class="detail-avatar">${esc(initial)}</div>
+      <div>
+        <p class="detail-name">${esc(c.nombre)}</p>
+        <p class="detail-date">${dateStr} · ${timeStr}</p>
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-field"><label>Email</label><p>${esc(c.email)}</p></div>
+      <div class="detail-field"><label>Teléfono</label><p>${esc(c.telefono)}</p></div>
+      <div class="detail-field full"><label>Tratamiento</label><p>${esc(c.tratamiento)}</p></div>
+      <div class="detail-field full"><label>Dirección / Ubicación</label><p>${esc(c.direccion)}</p></div>
+      <div class="detail-field"><label>Fecha de firma</label><p>${esc(c.fecha_firma||'—')}</p></div>
+      ${c.mensaje ? `<div class="detail-field full"><label>Comentarios</label><p>${esc(c.mensaje)}</p></div>` : ''}
+    </div>
+    <div class="consent-checks">
+      <p class="consent-checks-title">✅ Consentimiento informado — firmado y verificado</p>
+      ${checks.map(ch => `
+        <div class="check-row">
+          <span class="check-icon">✓</span>
+          <span class="check-text">${ch}</span>
+        </div>`).join('')}
+    </div>
+    <div class="detail-footer">
+      <p class="detail-id">ID: ${esc(c.id)}</p>
+      <button class="btn-danger" onclick="deleteConsent('${esc(c.id)}')">🗑 Eliminar registro</button>
+    </div>`;
+}
+
+function backToList() {
+  document.getElementById('view-detail').style.display = 'none';
+  document.getElementById('view-admin').style.display = 'block';
+}
+
+// ══ ELIMINAR ═════════════════════════════════════
+async function deleteConsent(id) {
+  if (!confirm('¿Eliminar este registro permanentemente? Esta acción no se puede deshacer.')) return;
+  try {
+    const res = await fetch(`${WORKER_URL}/admin/consents/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Basic ${credentials}` }
+    });
+    if (res.ok) {
+      allConsents = allConsents.filter(c => c.id !== id);
+      renderStats();
+      backToList();
+      renderList();
+    }
+  } catch (err) {
+    alert('Error eliminando el registro.');
+  }
+}
+
+// ══ EXPORTAR CSV ══════════════════════════════════
+function exportCSV() {
+  if (!allConsents.length) { alert('No hay registros para exportar.'); return; }
+  const header = ['ID','Fecha','Nombre','Email','Telefono','Tratamiento','Direccion','Comentarios','Fecha Firma'];
+  const rows = allConsents.map(c => [
+    c.id, new Date(c.timestamp).toLocaleString('es-US'),
+    c.nombre, c.email, c.telefono, c.tratamiento, c.direccion, c.mensaje||'', c.fecha_firma||''
+  ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(','));
+  const csv = [header.join(','), ...rows].join('\n');
+  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `ncareiv_consentimientos_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ══ UTILS ════════════════════════════════════════
+function esc(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>

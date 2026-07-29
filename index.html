@@ -1132,54 +1132,78 @@ function enviarFormulario(){
 
   intentosEnvio++;
 
-  /* ── Guardar en base de datos local ── */
-  const consent = {
-    id: 'c_' + Date.now(),
-    timestamp: new Date().toISOString(),
-    nombre, email, telefono, tratamiento, direccion,
-    mensaje: mensaje || '',
-    fecha_firma: fecha,
-    consentimiento: [true,true,true,true,true],
-    firma: true,
-    recaptcha: true
+  /* ── Enviar al Cloudflare Worker ── */
+  const WORKER_URL = 'https://ncareiv-worker.shucleleon.workers.dev';
+
+  const payload = {
+    nombre, email, telefono, tratamiento,
+    direccion, mensaje, fecha_firma: fecha
   };
 
-  /* Leer registros existentes, agregar el nuevo y guardar */
-  const STORAGE_KEY = 'ncareiv-consents';
-  let existentes = [];
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) existentes = JSON.parse(stored);
-  } catch(e) { existentes = []; }
+    const btnSend = document.querySelector('#popup-formulario .btn-entendido');
+    if (btnSend) {
+      btnSend.disabled = true;
+      btnSend.textContent = currentLang === 'en' ? '⏳ Sending...' : '⏳ Enviando...';
+    }
 
-  existentes.push(consent);
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(existentes)); } catch(e) {}
-
-  /* Confirmación visual */
-  const btnSend = document.querySelector('#popup-formulario .btn-entendido');
-  if (btnSend) { btnSend.disabled = true; btnSend.textContent = '✅ ' + (currentLang === 'en' ? 'Sent!' : '¡Enviado!'); }
-
-  errEl.style.color = '#27ae60';
-  errEl.textContent = currentLang === 'en'
-    ? '✅ Your consent has been saved. Thank you!'
-    : '✅ ¡Tu consentimiento fue guardado exitosamente! Gracias.';
-  errEl.style.display = 'block';
-
-  /* Limpiar formulario después de 2 segundos */
-  setTimeout(() => {
-    ['f-nombre','f-telefono','f-email','f-direccion','f-mensaje'].forEach(id => {
-      const el = document.getElementById(id);
-      if(el) el.value = '';
+    const response = await fetch(`${WORKER_URL}/consent`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
     });
-    document.getElementById('f-tratamiento').value = '';
-    ['c1','c2','c3','c4','c5'].forEach(id => { document.getElementById(id).checked = false; });
-    limpiarFirma();
-    initFecha();
+
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+      /* Éxito — limpiar formulario */
+      errEl.style.color = '#27ae60';
+      errEl.textContent = currentLang === 'en'
+        ? '✅ Your consent has been saved successfully. Thank you!'
+        : '✅ ¡Tu consentimiento fue guardado exitosamente! Gracias.';
+      errEl.style.display = 'block';
+
+      setTimeout(() => {
+        ['f-nombre','f-telefono','f-email','f-direccion','f-mensaje'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.value = '';
+        });
+        document.getElementById('f-tratamiento').value = '';
+        ['c1','c2','c3','c4','c5'].forEach(id => {
+          document.getElementById(id).checked = false;
+        });
+        limpiarFirma();
+        initFecha();
+        if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
+        if (btnSend) {
+          btnSend.disabled = false;
+          btnSend.textContent = currentLang === 'en'
+            ? '✉️ Send Form to NCare IV'
+            : '✉️ Enviar Formulario a NCare IV';
+        }
+        errEl.style.display = 'none';
+        cerrarFormulario();
+      }, 2500);
+
+    } else {
+      throw new Error(result.error || 'Error desconocido');
+    }
+
+  } catch (err) {
+    errEl.style.color = '#c0392b';
+    errEl.textContent = currentLang === 'en'
+      ? '⚠️ Connection error. Please try again or contact us via WhatsApp.'
+      : '⚠️ Error de conexión. Por favor intenta de nuevo o contáctanos por WhatsApp.';
+    errEl.style.display = 'block';
+    const btnSend = document.querySelector('#popup-formulario .btn-entendido');
+    if (btnSend) {
+      btnSend.disabled = false;
+      btnSend.textContent = currentLang === 'en'
+        ? '✉️ Send Form to NCare IV'
+        : '✉️ Enviar Formulario a NCare IV';
+    }
     if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
-    if (btnSend) { btnSend.disabled = false; btnSend.textContent = currentLang === 'en' ? '✉️ Send Form to NCare IV' : '✉️ Enviar Formulario a NCare IV'; }
-    errEl.style.display = 'none';
-    cerrarFormulario();
-  }, 2500);
+  }
 }
 
 /* ════════ FECHA SPINNER ════════ */
