@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NCare IV — Panel Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <!-- ── Protección básica de código ── -->
+  <script>
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+      if (
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) ||
+        (e.ctrlKey && ['U','S'].includes(e.key.toUpperCase()))
+      ) { e.preventDefault(); return false; }
+    });
+  </script>
+
   <style>
     :root {
       --prim:#8b6f47; --prim-medio:#a6845e; --prim-claro:#f5ede0;
@@ -170,7 +182,7 @@
 // ⚠️ IMPORTANTE: Cambia esta URL por la URL de tu Worker después de desplegarlo
 const WORKER_URL = 'https://ncareiv-worker.shucleleon.workers.dev';
 const ADMIN_USER = 'admin';
-const ADMIN_PASS = 'ncareiv2026';
+const ADMIN_PASS = 'ncareiv2026*';
 
 let allConsents = [];
 let credentials = '';
