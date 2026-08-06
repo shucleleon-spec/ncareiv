@@ -5,116 +5,188 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NCare IV — Panel Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
-  <!-- ── Protección básica de código ── -->
   <script>
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => {
-      if (
-        e.key === 'F12' ||
-        (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) ||
-        (e.ctrlKey && ['U','S'].includes(e.key.toUpperCase()))
-      ) { e.preventDefault(); return false; }
+      if (e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C'].includes(e.key.toUpperCase()))||(e.ctrlKey&&['U','S'].includes(e.key.toUpperCase()))){e.preventDefault();return false;}
     });
   </script>
-
   <style>
-    :root {
-      --prim:#8b6f47; --prim-medio:#a6845e; --prim-claro:#f5ede0;
-      --acento:#c4956a; --texto:#2e231a; --texto-suave:#6b5240;
-      --blanco:#fffdf9; --fondo:#faf5ee; --borde:#e8d8c4;
-      --dark-bg:#2a1f14; --serif:'Cormorant Garamond',serif;
-      --sans:'DM Sans',sans-serif; --radius:12px;
+    :root{
+      --prim:#8b6f47;--prim-medio:#a6845e;--prim-claro:#f5ede0;
+      --acento:#c4956a;--texto:#2e231a;--texto-suave:#6b5240;
+      --blanco:#fffdf9;--fondo:#faf5ee;--borde:#e8d8c4;
+      --dark-bg:#2a1f14;--serif:'Cormorant Garamond',serif;
+      --sans:'DM Sans',sans-serif;--radius:12px;
+      --verde:#1e7a45;--verde-claro:#f0faf5;--verde-borde:#b7e4cc;
+      --rojo:#c0392b;--rojo-claro:#fdf0f0;--rojo-borde:#f5c6c6;
+      --azul:#1a56a0;--azul-claro:#eff6ff;--azul-borde:#bfdbfe;
     }
-    *{ box-sizing:border-box; margin:0; padding:0; }
-    body{ font-family:var(--sans); background:var(--fondo); color:var(--texto); min-height:100vh; }
-    input,select{ font-family:var(--sans); font-size:14px; padding:8px 12px; border:1.5px solid var(--borde); border-radius:var(--radius); background:var(--blanco); color:var(--texto); outline:none; width:100%; }
-    input:focus,select:focus{ border-color:var(--prim); }
-    button{ font-family:var(--sans); cursor:pointer; border:none; border-radius:50px; padding:8px 18px; font-size:14px; transition:opacity .15s; }
-    button:hover{ opacity:.85; }
-    .btn-primary{ background:var(--prim); color:#fff; font-weight:500; }
-    .btn-ghost{ background:transparent; border:1.5px solid var(--borde); color:var(--texto); }
-    .btn-danger{ background:#fdf0f0; color:#c0392b; border:1.5px solid #f5c6c6; }
-    .hidden{ display:none!important; }
-    .badge{ display:inline-block; font-size:11px; padding:3px 10px; border-radius:20px; background:var(--prim-claro); color:var(--prim); font-weight:500; }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:var(--sans);background:var(--fondo);color:var(--texto);min-height:100vh;}
+    input,select,textarea{font-family:var(--sans);font-size:14px;padding:8px 12px;border:1.5px solid var(--borde);border-radius:var(--radius);background:var(--blanco);color:var(--texto);outline:none;width:100%;}
+    input:focus,select:focus,textarea:focus{border-color:var(--prim);}
+    button{font-family:var(--sans);cursor:pointer;border:none;border-radius:50px;padding:8px 18px;font-size:14px;transition:opacity .15s;}
+    button:hover{opacity:.85;}
+    .btn-primary{background:var(--prim);color:#fff;font-weight:500;}
+    .btn-ghost{background:transparent;border:1.5px solid var(--borde);color:var(--texto);}
+    .btn-ghost:hover{border-color:var(--prim);background:var(--prim-claro);}
+    .btn-danger{background:var(--rojo-claro);color:var(--rojo);border:1.5px solid var(--rojo-borde);}
+    .btn-outline{background:transparent;color:var(--prim);border:1.5px solid var(--prim);}
+    .btn-outline:hover{background:var(--prim-claro);}
+    .hidden{display:none!important;}
+    .badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;background:var(--prim-claro);color:var(--prim);font-weight:500;}
 
-    /* LOGIN */
-    #view-login{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
-    .login-card{ background:var(--blanco); border:1px solid var(--borde); border-radius:20px; padding:2.5rem; width:100%; max-width:360px; box-shadow:0 8px 30px rgba(139,111,71,.1); }
-    .login-logo{ width:64px; height:64px; border-radius:50%; object-fit:cover; display:block; margin:0 auto 16px; }
-    .login-title{ font-family:var(--serif); font-size:1.6rem; color:var(--prim); text-align:center; margin-bottom:6px; }
-    .login-sub{ font-size:13px; color:var(--texto-suave); text-align:center; margin-bottom:1.75rem; }
-    .form-group{ margin-bottom:1rem; }
-    .form-group label{ display:block; font-size:12px; color:var(--texto-suave); margin-bottom:5px; }
+    /* ── LOGIN ── */
+    #view-login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;}
+    .login-card{background:var(--blanco);border:1px solid var(--borde);border-radius:20px;padding:2.5rem;width:100%;max-width:360px;box-shadow:0 8px 30px rgba(139,111,71,.1);}
+    .login-logo{width:64px;height:64px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 16px;}
+    .login-title{font-family:var(--serif);font-size:1.6rem;color:var(--prim);text-align:center;margin-bottom:6px;}
+    .login-sub{font-size:13px;color:var(--texto-suave);text-align:center;margin-bottom:1.75rem;}
+    .form-group{margin-bottom:1rem;}
+    .form-group label{display:block;font-size:12px;color:var(--texto-suave);margin-bottom:5px;}
 
-    /* DASHBOARD */
-    #view-admin{ display:none; max-width:1000px; margin:0 auto; padding:2rem 1.5rem; }
-    .header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:2rem; flex-wrap:wrap; gap:12px; }
-    .header-logo{ display:flex; align-items:center; gap:12px; }
-    .header-logo img{ width:44px; height:44px; border-radius:50%; object-fit:cover; }
-    .header-title{ font-family:var(--serif); font-size:1.4rem; color:var(--texto); }
-    .header-sub{ font-size:12px; color:var(--texto-suave); }
-    .header-actions{ display:flex; gap:8px; }
+    /* ── SHELL AUTENTICADO ── */
+    #shell{display:none;min-height:100vh;flex-direction:column;}
 
-    .stats-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:2rem; }
-    .stat-card{ background:var(--blanco); border:1px solid var(--borde); border-radius:16px; padding:1.25rem; text-align:center; }
-    .stat-label{ font-size:11px; color:var(--texto-suave); text-transform:uppercase; letter-spacing:.1em; margin-bottom:6px; }
-    .stat-num{ font-family:var(--serif); font-size:2.5rem; font-weight:600; color:var(--prim); }
+    /* Top bar */
+    .topbar{background:var(--blanco);border-bottom:1px solid var(--borde);padding:.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:20;}
+    .topbar-logo{display:flex;align-items:center;gap:10px;}
+    .topbar-logo img{width:36px;height:36px;border-radius:50%;object-fit:cover;}
+    .topbar-title{font-family:var(--serif);font-size:1.1rem;color:var(--prim);}
+    .topbar-sub{font-size:10px;color:var(--texto-suave);display:block;}
+    .topbar-right{display:flex;align-items:center;gap:8px;}
 
-    .filters{ display:flex; gap:10px; margin-bottom:1.25rem; flex-wrap:wrap; }
-    .filters input{ flex:1; min-width:200px; }
-    .filters select{ width:auto; min-width:200px; }
+    /* Tab nav */
+    .tab-nav{background:var(--blanco);border-bottom:1px solid var(--borde);display:flex;padding:0 1.5rem;gap:0;position:sticky;top:57px;z-index:19;}
+    .tab-btn{padding:.75rem 1.25rem;font-size:13px;font-weight:500;color:var(--texto-suave);border-bottom:2px solid transparent;cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--sans);display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap;}
+    .tab-btn:hover{color:var(--prim);}
+    .tab-btn.active{color:var(--prim);border-bottom-color:var(--prim);}
 
-    .consent-list{ display:flex; flex-direction:column; gap:10px; }
-    .consent-item{ background:var(--blanco); border:1px solid var(--borde); border-radius:16px; padding:1rem 1.25rem; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; cursor:pointer; transition:border-color .2s, box-shadow .2s; }
-    .consent-item:hover{ border-color:var(--prim); box-shadow:0 4px 16px rgba(139,111,71,.1); }
-    .consent-avatar{ width:40px; height:40px; border-radius:50%; background:var(--prim-claro); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:600; color:var(--prim); flex-shrink:0; }
-    .consent-info{ flex:1; min-width:0; }
-    .consent-name{ font-weight:500; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .consent-meta{ font-size:12px; color:var(--texto-suave); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .consent-right{ display:flex; align-items:center; gap:10px; flex-shrink:0; }
-    .consent-date{ text-align:right; }
-    .consent-date-main{ font-size:12px; color:var(--texto-suave); }
-    .consent-date-time{ font-size:11px; color:var(--acento); }
+    /* Tab content */
+    .tab-content{flex:1;}
+    .tab-page{display:none;max-width:1000px;margin:0 auto;padding:1.5rem;}
+    .tab-page.active{display:block;}
 
-    /* DETALLE */
-    #view-detail{ display:none; max-width:700px; margin:0 auto; padding:2rem 1.5rem; }
-    .detail-card{ background:var(--blanco); border:1px solid var(--borde); border-radius:20px; padding:2rem; }
-    .detail-header{ display:flex; align-items:center; gap:14px; margin-bottom:1.5rem; padding-bottom:1.5rem; border-bottom:1px solid var(--borde); }
-    .detail-avatar{ width:52px; height:52px; border-radius:50%; background:var(--prim-claro); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:600; color:var(--prim); flex-shrink:0; }
-    .detail-name{ font-family:var(--serif); font-size:1.4rem; }
-    .detail-date{ font-size:13px; color:var(--texto-suave); }
-    .detail-grid{ display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem; }
-    .detail-field label{ font-size:11px; color:var(--acento); text-transform:uppercase; letter-spacing:.05em; display:block; margin-bottom:3px; }
-    .detail-field p{ font-size:14px; }
-    .detail-field.full{ grid-column:span 2; }
-    .consent-checks{ background:#f0faf5; border:1px solid #b7e4cc; border-radius:14px; padding:1.25rem; margin-bottom:1.5rem; }
-    .consent-checks-title{ font-size:11px; font-weight:600; color:#1e7a45; text-transform:uppercase; letter-spacing:.1em; margin-bottom:10px; }
-    .check-row{ display:flex; align-items:flex-start; gap:8px; margin-bottom:6px; }
-    .check-icon{ color:#1e7a45; flex-shrink:0; font-size:16px; }
-    .check-text{ font-size:13px; color:#1e7a45; }
-    .detail-footer{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
-    .detail-id{ font-size:11px; color:var(--acento); }
+    /* ── CONSENTIMIENTOS ── */
+    .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:10px;}
+    .page-title{font-family:var(--serif);font-size:1.4rem;color:var(--texto);}
+    .page-actions{display:flex;gap:8px;}
+    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;}
+    .stat-card{background:var(--blanco);border:1px solid var(--borde);border-radius:16px;padding:1.25rem;text-align:center;}
+    .stat-label{font-size:11px;color:var(--texto-suave);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+    .stat-num{font-family:var(--serif);font-size:2.5rem;font-weight:600;color:var(--prim);}
+    .filters{display:flex;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap;}
+    .filters input{flex:1;min-width:180px;}
+    .filters select{width:auto;min-width:180px;}
+    .consent-list{display:flex;flex-direction:column;gap:10px;}
+    .consent-item{background:var(--blanco);border:1px solid var(--borde);border-radius:16px;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;cursor:pointer;transition:border-color .2s,box-shadow .2s;}
+    .consent-item:hover{border-color:var(--prim);box-shadow:0 4px 16px rgba(139,111,71,.1);}
+    .consent-avatar{width:40px;height:40px;border-radius:50%;background:var(--prim-claro);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:var(--prim);flex-shrink:0;}
+    .consent-info{flex:1;min-width:0;}
+    .consent-name{font-weight:500;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .consent-meta{font-size:12px;color:var(--texto-suave);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .consent-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+    .consent-date-main{font-size:12px;color:var(--texto-suave);}
+    .consent-date-time{font-size:11px;color:var(--acento);}
+    .empty-msg{text-align:center;color:var(--texto-suave);padding:3rem;}
+    .empty-msg span{display:block;font-size:13px;color:var(--acento);margin-top:6px;}
+    .loading{text-align:center;padding:2rem;color:var(--texto-suave);font-size:14px;}
+    .error-msg{color:var(--rojo);font-size:13px;display:none;margin-top:8px;}
 
-    .empty-msg{ text-align:center; color:var(--texto-suave); padding:3rem; }
-    .empty-msg span{ display:block; font-size:13px; color:var(--acento); margin-top:6px; }
-    .error-msg{ color:#c0392b; font-size:13px; display:none; margin-top:8px; }
-    .loading{ text-align:center; padding:2rem; color:var(--texto-suave); font-size:14px; }
+    /* Detalle consentimiento */
+    #view-detail{display:none;max-width:700px;margin:0 auto;padding:1.5rem;}
+    .detail-card{background:var(--blanco);border:1px solid var(--borde);border-radius:20px;padding:2rem;}
+    .detail-header{display:flex;align-items:center;gap:14px;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--borde);}
+    .detail-avatar{width:52px;height:52px;border-radius:50%;background:var(--prim-claro);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600;color:var(--prim);flex-shrink:0;}
+    .detail-name{font-family:var(--serif);font-size:1.4rem;}
+    .detail-date{font-size:13px;color:var(--texto-suave);}
+    .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+    .detail-field label{font-size:11px;color:var(--acento);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:3px;}
+    .detail-field p{font-size:14px;}
+    .detail-field.full{grid-column:span 2;}
+    .consent-checks{background:var(--verde-claro);border:1px solid var(--verde-borde);border-radius:14px;padding:1.25rem;margin-bottom:1.5rem;}
+    .check-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;}
+    .detail-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+    .detail-id{font-size:11px;color:var(--acento);}
+
+    /* ── EVALUADOR ── */
+    .eval-progress{height:3px;background:var(--borde);margin-bottom:0;}
+    .eval-progress-fill{height:100%;background:var(--prim);transition:width .4s;}
+    .eval-steps-nav{display:flex;background:var(--blanco);border-bottom:1px solid var(--borde);overflow-x:auto;gap:0;padding:0 1.5rem;}
+    .eval-step-tab{padding:.6rem 1rem;font-size:12px;white-space:nowrap;color:var(--texto-suave);border-bottom:2px solid transparent;cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--sans);display:flex;align-items:center;gap:5px;transition:all .2s;}
+    .eval-step-tab.active{color:var(--prim);border-bottom-color:var(--prim);}
+    .eval-step-tab.done{color:var(--verde);}
+    .eval-step-num{width:18px;height:18px;border-radius:50%;background:var(--borde);font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:500;flex-shrink:0;}
+    .eval-step-tab.active .eval-step-num{background:var(--prim);color:#fff;}
+    .eval-step-tab.done .eval-step-num{background:var(--verde);color:#fff;}
+    .eval-content{max-width:680px;margin:0 auto;padding:1.5rem;}
+    .eval-page{display:none;}
+    .eval-page.active{display:block;}
+    .section-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--acento);font-weight:500;display:block;margin-bottom:4px;}
+    .section-title{font-family:var(--serif);font-size:1.5rem;color:var(--texto);}
+    .section-desc{font-size:13px;color:var(--texto-suave);margin-top:4px;}
+    .section-header{margin-bottom:1.25rem;}
+    .patient-card{background:var(--blanco);border:1px solid var(--borde);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem;}
+    .patient-card label{font-size:12px;color:var(--texto-suave);display:block;margin-bottom:5px;}
+    .input-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .check-group{margin-bottom:1.25rem;}
+    .check-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+    .check-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--blanco);border:1px solid var(--borde);border-radius:var(--radius);cursor:pointer;transition:all .15s;user-select:none;}
+    .check-item:hover{border-color:var(--prim);background:var(--prim-claro);}
+    .check-item.checked{border-color:var(--prim);background:var(--prim-claro);}
+    .check-item input{width:15px;height:15px;accent-color:var(--prim);flex-shrink:0;cursor:pointer;}
+    .check-item label{font-size:12px;color:var(--texto);cursor:pointer;line-height:1.3;}
+    .alert-seg{background:var(--rojo-claro);border:1px solid var(--rojo-borde);border-radius:var(--radius);padding:1rem;margin-bottom:1rem;display:none;}
+    .alert-seg p{font-size:13px;color:var(--rojo);}
+    .nav-btns{display:flex;gap:10px;margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--borde);}
+    .nav-btns .btn-primary{flex:1;padding:12px;}
+    .nav-btns .btn-ghost{padding:12px 20px;}
+
+    /* Resultado evaluador */
+    .result-header-eval{background:var(--blanco);border:1px solid var(--borde);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:14px;}
+    .result-avatar{width:48px;height:48px;border-radius:50%;background:var(--prim-claro);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:var(--prim);flex-shrink:0;font-family:var(--serif);}
+    .alert-contraind{background:var(--rojo-claro);border:1.5px solid var(--rojo-borde);border-radius:var(--radius);padding:1rem;margin-bottom:1.25rem;}
+    .resumen-card{background:var(--fondo);border:1px solid var(--borde);border-radius:var(--radius);padding:1rem;margin-bottom:1.25rem;}
+    .resumen-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+    .resumen-tag{font-size:12px;padding:3px 10px;border-radius:20px;background:var(--blanco);color:var(--texto);border:1px solid var(--borde);}
+    .trat-card{background:var(--blanco);border:1px solid var(--borde);border-radius:var(--radius);padding:1.25rem;margin-bottom:10px;}
+    .trat-card.top{border:2px solid var(--prim);}
+    .trat-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;}
+    .trat-left{display:flex;align-items:center;gap:10px;}
+    .trat-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+    .trat-nombre{font-size:14px;font-weight:500;color:var(--texto);}
+    .trat-prioridad{font-size:11px;color:var(--prim);}
+    .trat-precio{font-size:13px;font-weight:500;background:var(--prim-claro);color:var(--prim);padding:3px 12px;border-radius:20px;white-space:nowrap;}
+    .trat-razones{display:flex;flex-wrap:wrap;gap:5px;}
+    .trat-razon{font-size:11px;padding:2px 8px;border-radius:20px;background:var(--fondo);color:var(--texto-suave);border:1px solid var(--borde);}
+    .no-result{background:var(--verde-claro);border:1px solid var(--verde-borde);border-radius:var(--radius);padding:1.5rem;text-align:center;margin-bottom:1.25rem;}
+    .disclaimer{font-size:11px;color:var(--texto-suave);padding-top:1rem;border-top:1px solid var(--borde);margin-top:1rem;line-height:1.6;}
+    .result-actions-eval{display:flex;gap:8px;flex-wrap:wrap;margin-top:1.25rem;}
+    .result-actions-eval button{flex:1;padding:10px;}
 
     @media(max-width:640px){
-      .stats-grid{ grid-template-columns:1fr; }
-      .detail-grid{ grid-template-columns:1fr; }
-      .detail-field.full{ grid-column:span 1; }
+      .stats-grid{grid-template-columns:1fr;}
+      .detail-grid{grid-template-columns:1fr;}
+      .detail-field.full{grid-column:span 1;}
+      .check-grid{grid-template-columns:1fr;}
+      .input-row{grid-template-columns:1fr;}
+      .tab-btn{font-size:12px;padding:.65rem .85rem;}
+    }
+    @media print{
+      .topbar,.tab-nav,.eval-steps-nav,.eval-progress,.result-actions-eval,.nav-btns,.page-actions,.filters{display:none!important;}
+      body{background:#fff;}
     }
   </style>
 </head>
 <body>
 
-<!-- ══ LOGIN ══════════════════════════════════ -->
+<!-- ══ LOGIN ══════════════════════════════════════════ -->
 <div id="view-login">
   <div class="login-card">
     <img src="imagenes/logo1.jpg" alt="NCare IV" class="login-logo" onerror="this.style.display='none'">
     <h1 class="login-title">NCare IV Admin</h1>
-    <p class="login-sub">Panel de consentimientos</p>
+    <p class="login-sub">Panel de gestión interno</p>
     <div class="form-group">
       <label>Usuario</label>
       <input type="text" id="login-user" placeholder="admin" autocomplete="username">
@@ -124,144 +196,337 @@
       <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
     </div>
     <p class="error-msg" id="login-error">Usuario o contraseña incorrectos.</p>
-    <button class="btn-primary" onclick="doLogin()" style="width:100%;padding:12px;margin-top:8px">Entrar al panel</button>
+    <button class="btn-primary" onclick="doLogin()" style="width:100%;padding:12px;margin-top:8px">Entrar</button>
   </div>
 </div>
 
-<!-- ══ DASHBOARD ═══════════════════════════════ -->
-<div id="view-admin">
-  <div class="header">
-    <div class="header-logo">
+<!-- ══ SHELL AUTENTICADO ══════════════════════════════ -->
+<div id="shell">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="topbar-logo">
       <img src="imagenes/logo1.jpg" alt="NCare IV" onerror="this.style.display='none'">
       <div>
-        <p class="header-title">Panel de Consentimientos</p>
-        <p class="header-sub">NCare IV — Raleigh, NC</p>
+        <span class="topbar-title">NCare IV</span>
+        <span class="topbar-sub">Panel de administración</span>
       </div>
     </div>
-    <div class="header-actions">
-      <button class="btn-ghost" onclick="exportCSV()">⬇️ Exportar CSV</button>
-      <button class="btn-ghost" onclick="doLogout()">Salir</button>
+    <div class="topbar-right">
+      <span style="font-size:12px;color:var(--texto-suave)" id="topbar-fecha"></span>
+      <button class="btn-ghost" onclick="doLogout()" style="font-size:12px;padding:6px 14px">Salir</button>
     </div>
-  </div>
+  </header>
 
-  <div class="stats-grid">
-    <div class="stat-card"><p class="stat-label">Total registros</p><p class="stat-num" id="stat-total">—</p></div>
-    <div class="stat-card"><p class="stat-label">Este mes</p><p class="stat-num" id="stat-month">—</p></div>
-    <div class="stat-card"><p class="stat-label">Hoy</p><p class="stat-num" id="stat-today">—</p></div>
-  </div>
+  <!-- Tab navigation -->
+  <nav class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('consentimientos')" id="tab-consentimientos">
+      📋 Consentimientos
+    </button>
+    <button class="tab-btn" onclick="switchTab('evaluador')" id="tab-evaluador">
+      🩺 Evaluador de pacientes
+    </button>
+  </nav>
 
-  <div class="filters">
-    <input type="text" id="search-input" placeholder="Buscar nombre, email o tratamiento..." oninput="filterList()">
-    <select id="filter-trat" onchange="filterList()">
-      <option value="">Todos los tratamientos</option>
-      <option>Megadosis de Vitamina C</option>
-      <option>Terapia de Hierro IV</option>
-      <option>Cocktail de Myers</option>
-      <option>Infusión de Colágeno IV</option>
-      <option>Vitamina C + Glutathione</option>
-      <option>NAD+ Infusion</option>
-    </select>
-  </div>
+  <div class="tab-content">
 
-  <div id="loading-msg" class="loading">Cargando consentimientos...</div>
-  <div class="consent-list" id="consent-list"></div>
-  <div id="empty-msg" class="empty-msg hidden">
-    No hay consentimientos registrados aún.
-    <span>Los formularios enviados desde ncareiv.com aparecerán aquí.</span>
-  </div>
-</div>
+    <!-- ══════════════════════════════
+         TAB 1: CONSENTIMIENTOS
+    ══════════════════════════════ -->
+    <div class="tab-page active" id="page-consentimientos">
+      <div class="tab-page" id="view-admin-list" style="display:block;max-width:1000px;margin:0 auto;padding:1.5rem;">
+        <div class="page-header">
+          <p class="page-title">Consentimientos firmados</p>
+          <div class="page-actions">
+            <button class="btn-ghost" onclick="admExportCSV()" style="font-size:13px">⬇️ Exportar CSV</button>
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card"><p class="stat-label">Total registros</p><p class="stat-num" id="stat-total">—</p></div>
+          <div class="stat-card"><p class="stat-label">Este mes</p><p class="stat-num" id="stat-month">—</p></div>
+          <div class="stat-card"><p class="stat-label">Hoy</p><p class="stat-num" id="stat-today">—</p></div>
+        </div>
+        <div class="filters">
+          <input type="text" id="search-input" placeholder="Buscar nombre, email o tratamiento..." oninput="admFilterList()">
+          <select id="filter-trat" onchange="admFilterList()">
+            <option value="">Todos los tratamientos</option>
+            <option>Megadosis de Vitamina C</option>
+            <option>Terapia de Hierro IV</option>
+            <option>Cocktail de Myers</option>
+            <option>Infusión de Colágeno IV</option>
+            <option>Vitamina C + Glutathione</option>
+            <option>NAD+ Infusion</option>
+          </select>
+        </div>
+        <div id="loading-msg" class="loading">Cargando consentimientos...</div>
+        <div class="consent-list" id="consent-list"></div>
+        <div id="empty-msg" class="empty-msg hidden">
+          No hay consentimientos registrados aún.
+          <span>Los formularios enviados desde ncareiv.com aparecerán aquí.</span>
+        </div>
+      </div>
 
-<!-- ══ DETALLE ══════════════════════════════════ -->
-<div id="view-detail">
-  <button class="btn-ghost" onclick="backToList()" style="margin-bottom:1.25rem">← Volver</button>
-  <div class="detail-card" id="detail-content"></div>
-</div>
+      <div id="view-detail" style="display:none;max-width:700px;margin:0 auto;padding:1.5rem;">
+        <button class="btn-ghost" onclick="admBackList()" style="margin-bottom:1.25rem;font-size:13px">← Volver</button>
+        <div class="detail-card" id="detail-content"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         TAB 2: EVALUADOR
+    ══════════════════════════════ -->
+    <div class="tab-page" id="page-evaluador">
+      <div class="eval-progress"><div class="eval-progress-fill" id="eval-progress"></div></div>
+      <div class="eval-steps-nav">
+        <button class="eval-step-tab active" onclick="evalGoStep(0)" id="etab-0"><span class="eval-step-num">1</span> Paciente</button>
+        <button class="eval-step-tab" onclick="evalGoStep(1)" id="etab-1"><span class="eval-step-num">2</span> Consulta</button>
+        <button class="eval-step-tab" onclick="evalGoStep(2)" id="etab-2"><span class="eval-step-num">3</span> Síntomas</button>
+        <button class="eval-step-tab" onclick="evalGoStep(3)" id="etab-3"><span class="eval-step-num">4</span> Estilo de vida</button>
+        <button class="eval-step-tab" onclick="evalGoStep(4)" id="etab-4"><span class="eval-step-num">5</span> Objetivos</button>
+        <button class="eval-step-tab" onclick="evalGoStep(5)" id="etab-5"><span class="eval-step-num">6</span> Seguridad</button>
+        <button class="eval-step-tab" onclick="evalGoStep(6)" id="etab-6"><span class="eval-step-num">★</span> Resultado</button>
+      </div>
+
+      <div class="eval-content">
+
+        <!-- Paso 1: Paciente -->
+        <div class="eval-page active" id="epage-0">
+          <div class="section-header">
+            <span class="section-label">Paso 1 de 6</span>
+            <h2 class="section-title">Datos del paciente</h2>
+            <p class="section-desc">Información básica para personalizar la evaluación.</p>
+          </div>
+          <div class="patient-card">
+            <div class="input-row" style="margin-bottom:12px">
+              <div><label>Nombre completo *</label><input type="text" id="p-nombre" placeholder="Nombre del paciente"></div>
+              <div><label>Edad *</label><input type="number" id="p-edad" placeholder="Años" min="1" max="120"></div>
+            </div>
+            <div class="input-row" style="margin-bottom:12px">
+              <div><label>Sexo</label><select id="p-sexo"><option value="">Selecciona...</option><option>Femenino</option><option>Masculino</option><option>Prefiero no decir</option></select></div>
+              <div><label>Peso aproximado</label><input type="text" id="p-peso" placeholder="Ej: 65 kg"></div>
+            </div>
+            <div><label>Notas adicionales</label><input type="text" id="p-notas" placeholder="Observaciones, historial relevante..."></div>
+          </div>
+          <div class="nav-btns"><button class="btn-primary" onclick="evalNext(0)">Siguiente →</button></div>
+        </div>
+
+        <!-- Paso 2: Motivo -->
+        <div class="eval-page" id="epage-1">
+          <div class="section-header">
+            <span class="section-label">Paso 2 de 6</span>
+            <h2 class="section-title">Motivo de consulta</h2>
+            <p class="section-desc">Selecciona todos los que apliquen.</p>
+          </div>
+          <div class="check-grid">
+            <div class="check-item" onclick="etoggle(this,'m-fatiga')"><input type="checkbox" id="m-fatiga"><label for="m-fatiga">Fatiga / cansancio</label></div>
+            <div class="check-item" onclick="etoggle(this,'m-energia')"><input type="checkbox" id="m-energia"><label for="m-energia">Baja energía</label></div>
+            <div class="check-item" onclick="etoggle(this,'m-estres')"><input type="checkbox" id="m-estres"><label for="m-estres">Estrés físico o mental</label></div>
+            <div class="check-item" onclick="etoggle(this,'m-concentracion')"><input type="checkbox" id="m-concentracion"><label for="m-concentracion">Falta de concentración</label></div>
+            <div class="check-item" onclick="etoggle(this,'m-deporte')"><input type="checkbox" id="m-deporte"><label for="m-deporte">Recuperación deportiva</label></div>
+            <div class="check-item" onclick="etoggle(this,'m-deshidratacion')"><input type="checkbox" id="m-deshidratacion"><label for="m-deshidratacion">Deshidratación</label></div>
+            <div class="check-item" onclick="etoggle(this,'m-enfermedad')"><input type="checkbox" id="m-enfermedad"><label for="m-enfermedad">Recuperación post-enfermedad</label></div>
+            <div class="check-item" onclick="etoggle(this,'m-inmune')"><input type="checkbox" id="m-inmune"><label for="m-inmune">Sistema inmune bajo</label></div>
+            <div class="check-item" onclick="etoggle(this,'m-celular')"><input type="checkbox" id="m-celular"><label for="m-celular">Bienestar celular / envejecimiento</label></div>
+            <div class="check-item" onclick="etoggle(this,'m-antioxidante')"><input type="checkbox" id="m-antioxidante"><label for="m-antioxidante">Antioxidantes / detox</label></div>
+            <div class="check-item" onclick="etoggle(this,'m-piel')"><input type="checkbox" id="m-piel"><label for="m-piel">Piel opaca / sin luminosidad</label></div>
+            <div class="check-item" onclick="etoggle(this,'m-cabello')"><input type="checkbox" id="m-cabello"><label for="m-cabello">Caída de cabello</label></div>
+            <div class="check-item" onclick="etoggle(this,'m-unas')"><input type="checkbox" id="m-unas"><label for="m-unas">Uñas frágiles</label></div>
+            <div class="check-item" onclick="etoggle(this,'m-apariencia')"><input type="checkbox" id="m-apariencia"><label for="m-apariencia">Mejorar apariencia general</label></div>
+            <div class="check-item" onclick="etoggle(this,'m-hierro')"><input type="checkbox" id="m-hierro"><label for="m-hierro">Sospecha deficiencia de hierro</label></div>
+            <div class="check-item" onclick="etoggle(this,'m-otro')"><input type="checkbox" id="m-otro"><label for="m-otro">Otro motivo</label></div>
+          </div>
+          <div class="nav-btns"><button class="btn-ghost" onclick="evalPrev(1)">← Atrás</button><button class="btn-primary" onclick="evalNext(1)">Siguiente →</button></div>
+        </div>
+
+        <!-- Paso 3: Síntomas -->
+        <div class="eval-page" id="epage-2">
+          <div class="section-header">
+            <span class="section-label">Paso 3 de 6</span>
+            <h2 class="section-title">Síntomas actuales</h2>
+            <p class="section-desc">Marca los síntomas que el paciente reporta.</p>
+          </div>
+          <div class="check-grid">
+            <div class="check-item" onclick="etoggle(this,'s-cansancio')"><input type="checkbox" id="s-cansancio"><label for="s-cansancio">Cansancio constante</label></div>
+            <div class="check-item" onclick="etoggle(this,'s-debilidad')"><input type="checkbox" id="s-debilidad"><label for="s-debilidad">Debilidad general</label></div>
+            <div class="check-item" onclick="etoggle(this,'s-musculares')"><input type="checkbox" id="s-musculares"><label for="s-musculares">Dolores musculares</label></div>
+            <div class="check-item" onclick="etoggle(this,'s-calambres')"><input type="checkbox" id="s-calambres"><label for="s-calambres">Calambres</label></div>
+            <div class="check-item" onclick="etoggle(this,'s-cabeza')"><input type="checkbox" id="s-cabeza"><label for="s-cabeza">Dolor de cabeza</label></div>
+            <div class="check-item" onclick="etoggle(this,'s-mareos')"><input type="checkbox" id="s-mareos"><label for="s-mareos">Mareos frecuentes</label></div>
+            <div class="check-item" onclick="etoggle(this,'s-nauseas')"><input type="checkbox" id="s-nauseas"><label for="s-nauseas">Náuseas</label></div>
+            <div class="check-item" onclick="etoggle(this,'s-rendimiento')"><input type="checkbox" id="s-rendimiento"><label for="s-rendimiento">Bajo rendimiento físico</label></div>
+            <div class="check-item" onclick="etoggle(this,'s-recuperacion')"><input type="checkbox" id="s-recuperacion"><label for="s-recuperacion">Recuperación lenta post-ejercicio</label></div>
+            <div class="check-item" onclick="etoggle(this,'s-sueno')"><input type="checkbox" id="s-sueno"><label for="s-sueno">Sueño no reparador</label></div>
+            <div class="check-item" onclick="etoggle(this,'s-concentracion')"><input type="checkbox" id="s-concentracion"><label for="s-concentracion">Dificultad para concentrarse</label></div>
+            <div class="check-item" onclick="etoggle(this,'s-estres')"><input type="checkbox" id="s-estres"><label for="s-estres">Estrés elevado</label></div>
+            <div class="check-item" onclick="etoggle(this,'s-pielseca')"><input type="checkbox" id="s-pielseca"><label for="s-pielseca">Piel seca / opaca</label></div>
+            <div class="check-item" onclick="etoggle(this,'s-cabellop')"><input type="checkbox" id="s-cabellop"><label for="s-cabellop">Pérdida de cabello</label></div>
+            <div class="check-item" onclick="etoggle(this,'s-unasp')"><input type="checkbox" id="s-unasp"><label for="s-unasp">Uñas quebradizas</label></div>
+          </div>
+          <div class="nav-btns"><button class="btn-ghost" onclick="evalPrev(2)">← Atrás</button><button class="btn-primary" onclick="evalNext(2)">Siguiente →</button></div>
+        </div>
+
+        <!-- Paso 4: Estilo de vida -->
+        <div class="eval-page" id="epage-3">
+          <div class="section-header">
+            <span class="section-label">Paso 4 de 6</span>
+            <h2 class="section-title">Estilo de vida</h2>
+            <p class="section-desc">Factores del día a día que influyen en el tratamiento.</p>
+          </div>
+          <div class="check-grid">
+            <div class="check-item" onclick="etoggle(this,'v-ejercicio')"><input type="checkbox" id="v-ejercicio"><label for="v-ejercicio">Ejercicio intenso frecuente</label></div>
+            <div class="check-item" onclick="etoggle(this,'v-trabajo')"><input type="checkbox" id="v-trabajo"><label for="v-trabajo">Alta carga laboral</label></div>
+            <div class="check-item" onclick="etoggle(this,'v-estres')"><input type="checkbox" id="v-estres"><label for="v-estres">Estrés prolongado</label></div>
+            <div class="check-item" onclick="etoggle(this,'v-descanso')"><input type="checkbox" id="v-descanso"><label for="v-descanso">Poco descanso / sueño</label></div>
+            <div class="check-item" onclick="etoggle(this,'v-alimentacion')"><input type="checkbox" id="v-alimentacion"><label for="v-alimentacion">Alimentación irregular</label></div>
+            <div class="check-item" onclick="etoggle(this,'v-alcohol')"><input type="checkbox" id="v-alcohol"><label for="v-alcohol">Consumo frecuente de alcohol</label></div>
+            <div class="check-item" onclick="etoggle(this,'v-ambiental')"><input type="checkbox" id="v-ambiental"><label for="v-ambiental">Exposición a estrés ambiental</label></div>
+          </div>
+          <div class="nav-btns"><button class="btn-ghost" onclick="evalPrev(3)">← Atrás</button><button class="btn-primary" onclick="evalNext(3)">Siguiente →</button></div>
+        </div>
+
+        <!-- Paso 5: Objetivos -->
+        <div class="eval-page" id="epage-4">
+          <div class="section-header">
+            <span class="section-label">Paso 5 de 6</span>
+            <h2 class="section-title">Objetivo del paciente</h2>
+            <p class="section-desc">¿Qué resultado espera obtener?</p>
+          </div>
+          <div class="check-grid">
+            <div class="check-item" onclick="etoggle(this,'o-energia')"><input type="checkbox" id="o-energia"><label for="o-energia">Sentirse con más energía</label></div>
+            <div class="check-item" onclick="etoggle(this,'o-hidratacion')"><input type="checkbox" id="o-hidratacion"><label for="o-hidratacion">Recuperar hidratación</label></div>
+            <div class="check-item" onclick="etoggle(this,'o-antioxidante')"><input type="checkbox" id="o-antioxidante"><label for="o-antioxidante">Apoyo antioxidante</label></div>
+            <div class="check-item" onclick="etoggle(this,'o-piel')"><input type="checkbox" id="o-piel"><label for="o-piel">Mejorar piel / cabello / uñas</label></div>
+            <div class="check-item" onclick="etoggle(this,'o-deporte')"><input type="checkbox" id="o-deporte"><label for="o-deporte">Mejor desempeño físico</label></div>
+            <div class="check-item" onclick="etoggle(this,'o-bienestar')"><input type="checkbox" id="o-bienestar"><label for="o-bienestar">Mejor bienestar general</label></div>
+            <div class="check-item" onclick="etoggle(this,'o-celular')"><input type="checkbox" id="o-celular"><label for="o-celular">Optimizar salud celular</label></div>
+          </div>
+          <div class="nav-btns"><button class="btn-ghost" onclick="evalPrev(4)">← Atrás</button><button class="btn-primary" onclick="evalNext(4)">Siguiente →</button></div>
+        </div>
+
+        <!-- Paso 6: Seguridad -->
+        <div class="eval-page" id="epage-5">
+          <div class="section-header">
+            <span class="section-label">Paso 6 de 6 — Importante</span>
+            <h2 class="section-title">Verificación de seguridad</h2>
+            <p class="section-desc">Marca si el paciente presenta alguna de estas condiciones.</p>
+          </div>
+          <div class="check-grid">
+            <div class="check-item" onclick="etoggle(this,'seg-embarazo');checkSeg()"><input type="checkbox" id="seg-embarazo"><label for="seg-embarazo">Embarazo o lactancia</label></div>
+            <div class="check-item" onclick="etoggle(this,'seg-renal');checkSeg()"><input type="checkbox" id="seg-renal"><label for="seg-renal">Enfermedad renal</label></div>
+            <div class="check-item" onclick="etoggle(this,'seg-cardiaca');checkSeg()"><input type="checkbox" id="seg-cardiaca"><label for="seg-cardiaca">Enfermedad cardíaca</label></div>
+            <div class="check-item" onclick="etoggle(this,'seg-presion');checkSeg()"><input type="checkbox" id="seg-presion"><label for="seg-presion">Presión arterial no controlada</label></div>
+            <div class="check-item" onclick="etoggle(this,'seg-alergias')"><input type="checkbox" id="seg-alergias"><label for="seg-alergias">Alergias conocidas</label></div>
+            <div class="check-item" onclick="etoggle(this,'seg-medicamentos')"><input type="checkbox" id="seg-medicamentos"><label for="seg-medicamentos">Medicamentos actuales</label></div>
+            <div class="check-item" onclick="etoggle(this,'seg-laboratorio')"><input type="checkbox" id="seg-laboratorio"><label for="seg-laboratorio">Resultados de laboratorio disponibles</label></div>
+          </div>
+          <div class="alert-seg" id="seg-alert">
+            <p><strong>⚠️ Atención:</strong> El paciente presenta condiciones que requieren evaluación adicional antes de proceder con cualquier protocolo.</p>
+          </div>
+          <div class="nav-btns"><button class="btn-ghost" onclick="evalPrev(5)">← Atrás</button><button class="btn-primary" onclick="evalGenerar()">Ver recomendación →</button></div>
+        </div>
+
+        <!-- Paso 7: Resultado -->
+        <div class="eval-page" id="epage-6">
+          <div id="eval-resultado"></div>
+          <div class="result-actions-eval">
+            <button class="btn-outline" onclick="window.print()">🖨️ Imprimir</button>
+            <button class="btn-primary" onclick="evalReset()">+ Nueva evaluación</button>
+          </div>
+        </div>
+
+      </div><!-- /eval-content -->
+    </div><!-- /page-evaluador -->
+
+  </div><!-- /tab-content -->
+</div><!-- /shell -->
 
 <script>
-// ══ CONFIGURACIÓN ══════════════════════════════
-// ⚠️ IMPORTANTE: Cambia esta URL por la URL de tu Worker después de desplegarlo
-const WORKER_URL = 'https://ncareiv-worker.shucleleon.workers.dev';
-const ADMIN_USER = 'admin';
-const ADMIN_PASS = 'ncareiv2026*';
+/* ════════════════════════════════════════
+   CONFIGURACIÓN
+════════════════════════════════════════ */
+const WORKER_URL  = 'https://ncareiv-worker.shucleleon.workers.dev';
+const ADMIN_USER  = 'admin';
+const ADMIN_PASS  = 'ncareiv2026*';
 
 let allConsents = [];
 let credentials = '';
+let activeTab   = 'consentimientos';
 
-// ══ LOGIN ══════════════════════════════════════
-document.getElementById('login-pass').addEventListener('keydown', e => {
-  if (e.key === 'Enter') doLogin();
-});
+document.getElementById('topbar-fecha').textContent =
+  new Date().toLocaleDateString('es-US',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+
+/* ════════════════════════════════════════
+   LOGIN
+════════════════════════════════════════ */
+document.getElementById('login-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 
 async function doLogin() {
-  const user = document.getElementById('login-user').value.trim();
-  const pass = document.getElementById('login-pass').value.trim();
+  const user  = document.getElementById('login-user').value.trim();
+  const pass  = document.getElementById('login-pass').value.trim();
   const errEl = document.getElementById('login-error');
   errEl.style.display = 'none';
-
   credentials = btoa(`${user}:${pass}`);
-
   try {
-    const res = await fetch(`${WORKER_URL}/admin/consents`, {
-      headers: { 'Authorization': `Basic ${credentials}` }
-    });
-
-    if (res.status === 401) {
-      errEl.style.display = 'block';
-      credentials = '';
-      return;
-    }
-
+    const res  = await fetch(`${WORKER_URL}/admin/consents`, { headers:{'Authorization':`Basic ${credentials}`} });
+    if (res.status === 401) { errEl.style.display='block'; credentials=''; return; }
     const data = await res.json();
     allConsents = data.consents || [];
     document.getElementById('view-login').style.display = 'none';
-    document.getElementById('view-admin').style.display = 'block';
+    document.getElementById('shell').style.display      = 'flex';
     document.getElementById('loading-msg').style.display = 'none';
-    renderStats();
-    renderList();
-  } catch (err) {
-    errEl.textContent = 'Error conectando al servidor. Verifica que el Worker esté desplegado.';
+    admRenderStats(); admRenderList();
+  } catch(err) {
+    errEl.textContent = 'Error conectando al servidor.';
     errEl.style.display = 'block';
   }
 }
 
 function doLogout() {
-  credentials = '';
-  allConsents = [];
-  document.getElementById('view-admin').style.display = 'none';
-  document.getElementById('view-login').style.display = 'flex';
+  credentials = ''; allConsents = [];
+  document.getElementById('shell').style.display       = 'none';
+  document.getElementById('view-login').style.display  = 'flex';
   document.getElementById('login-user').value = '';
   document.getElementById('login-pass').value = '';
 }
 
-// ══ STATS ═══════════════════════════════════════
-function renderStats() {
+/* ════════════════════════════════════════
+   TAB SWITCHING
+════════════════════════════════════════ */
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('page-'+tab).classList.add('active');
+}
+
+/* ════════════════════════════════════════
+   CONSENTIMIENTOS
+════════════════════════════════════════ */
+function admRenderStats() {
   const now = new Date();
   const todayStr = now.toDateString();
   const monthKey = `${now.getMonth()}-${now.getFullYear()}`;
   document.getElementById('stat-total').textContent = allConsents.length;
   document.getElementById('stat-month').textContent = allConsents.filter(c => {
-    const d = new Date(c.timestamp);
-    return `${d.getMonth()}-${d.getFullYear()}` === monthKey;
+    const d = new Date(c.timestamp); return `${d.getMonth()}-${d.getFullYear()}` === monthKey;
   }).length;
   document.getElementById('stat-today').textContent = allConsents.filter(c =>
     new Date(c.timestamp).toDateString() === todayStr
   ).length;
 }
 
-// ══ LISTA ═══════════════════════════════════════
-function filterList() { renderList(); }
+function admFilterList() { admRenderList(); }
 
-function renderList() {
-  const search = document.getElementById('search-input').value.toLowerCase();
-  const trat   = document.getElementById('filter-trat').value.toLowerCase();
-  const list   = document.getElementById('consent-list');
-  const empty  = document.getElementById('empty-msg');
+function admRenderList() {
+  const search  = document.getElementById('search-input').value.toLowerCase();
+  const trat    = document.getElementById('filter-trat').value.toLowerCase();
+  const list    = document.getElementById('consent-list');
+  const empty   = document.getElementById('empty-msg');
 
   const filtered = [...allConsents].filter(c => {
-    const ms = !search || (c.nombre||'').toLowerCase().includes(search) ||
-               (c.email||'').toLowerCase().includes(search) ||
-               (c.tratamiento||'').toLowerCase().includes(search);
-    const mt = !trat || (c.tratamiento||'').toLowerCase().includes(trat);
+    const ms = !search||(c.nombre||'').toLowerCase().includes(search)||(c.email||'').toLowerCase().includes(search)||(c.tratamiento||'').toLowerCase().includes(search);
+    const mt = !trat||(c.tratamiento||'').toLowerCase().includes(trat);
     return ms && mt;
   });
 
@@ -271,14 +536,13 @@ function renderList() {
 
   filtered.forEach(c => {
     const d = new Date(c.timestamp);
-    const dateStr = d.toLocaleDateString('es-US', {day:'2-digit', month:'short', year:'numeric'});
-    const timeStr = d.toLocaleTimeString('es-US', {hour:'2-digit', minute:'2-digit'});
+    const dateStr = d.toLocaleDateString('es-US',{day:'2-digit',month:'short',year:'numeric'});
+    const timeStr = d.toLocaleTimeString('es-US',{hour:'2-digit',minute:'2-digit'});
     const tratShort = (c.tratamiento||'').split('—')[0].trim();
-    const initial = (c.nombre||'?').charAt(0).toUpperCase();
-
+    const initial   = (c.nombre||'?').charAt(0).toUpperCase();
     const el = document.createElement('div');
     el.className = 'consent-item';
-    el.onclick = () => showDetail(c);
+    el.onclick = () => admShowDetail(c);
     el.innerHTML = `
       <div class="consent-avatar">${esc(initial)}</div>
       <div class="consent-info">
@@ -287,7 +551,7 @@ function renderList() {
       </div>
       <div class="consent-right">
         <span class="badge">${esc(tratShort)}</span>
-        <div class="consent-date">
+        <div>
           <p class="consent-date-main">${dateStr}</p>
           <p class="consent-date-time">${timeStr}</p>
         </div>
@@ -297,24 +561,14 @@ function renderList() {
   });
 }
 
-// ══ DETALLE ══════════════════════════════════════
-function showDetail(c) {
-  document.getElementById('view-admin').style.display = 'none';
-  document.getElementById('view-detail').style.display = 'block';
-
+function admShowDetail(c) {
+  document.getElementById('view-admin-list').style.display = 'none';
+  document.getElementById('view-detail').style.display     = 'block';
   const d = new Date(c.timestamp);
-  const dateStr = d.toLocaleDateString('es-US', {weekday:'long', day:'2-digit', month:'long', year:'numeric'});
-  const timeStr = d.toLocaleTimeString('es-US', {hour:'2-digit', minute:'2-digit'});
+  const dateStr = d.toLocaleDateString('es-US',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  const timeStr = d.toLocaleTimeString('es-US',{hour:'2-digit',minute:'2-digit'});
   const initial = (c.nombre||'?').charAt(0).toUpperCase();
-
-  const checks = [
-    'Mayor de 18 años — datos de salud correctos',
-    'Entiende en qué consiste la Terapia IV',
-    'Conoce posibles efectos secundarios leves',
-    'Entiende que los resultados pueden variar',
-    'Da consentimiento voluntario para el tratamiento',
-  ];
-
+  const checks  = ['Mayor de 18 años — datos de salud correctos','Entiende en qué consiste la Terapia IV','Conoce posibles efectos secundarios leves','Entiende que los resultados pueden variar','Da consentimiento voluntario para el tratamiento'];
   document.getElementById('detail-content').innerHTML = `
     <div class="detail-header">
       <div class="detail-avatar">${esc(initial)}</div>
@@ -328,69 +582,275 @@ function showDetail(c) {
       <div class="detail-field"><label>Teléfono</label><p>${esc(c.telefono)}</p></div>
       <div class="detail-field full"><label>Tratamiento</label><p>${esc(c.tratamiento)}</p></div>
       <div class="detail-field full"><label>Dirección / Ubicación</label><p>${esc(c.direccion)}</p></div>
-      <div class="detail-field"><label>Fecha de cita / Appointment Date</label><p>${esc(c.fecha_firma||'—')}</p></div>
-      ${c.mensaje ? `<div class="detail-field full"><label>Comentarios</label><p>${esc(c.mensaje)}</p></div>` : ''}
+      <div class="detail-field"><label>Fecha de cita</label><p>${esc(c.fecha_firma||'—')}</p></div>
+      ${c.mensaje?`<div class="detail-field full"><label>Comentarios</label><p>${esc(c.mensaje)}</p></div>`:''}
     </div>
     <div class="consent-checks">
-      <p class="consent-checks-title">✅ Consentimiento informado — firmado y verificado</p>
-      ${checks.map(ch => `
-        <div class="check-row">
-          <span class="check-icon">✓</span>
-          <span class="check-text">${ch}</span>
-        </div>`).join('')}
+      <p style="font-size:11px;font-weight:600;color:var(--verde);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">✅ Consentimiento informado — firmado</p>
+      ${checks.map(ch=>`<div class="check-row"><span style="color:var(--verde);font-size:15px;flex-shrink:0">✓</span><span style="font-size:13px;color:var(--verde)">${ch}</span></div>`).join('')}
     </div>
     <div class="detail-footer">
       <p class="detail-id">ID: ${esc(c.id)}</p>
-      <button class="btn-danger" onclick="deleteConsent('${esc(c.id)}')">🗑 Eliminar registro</button>
+      <button class="btn-danger" onclick="admDelete('${esc(c.id)}')">🗑 Eliminar</button>
     </div>`;
 }
 
-function backToList() {
-  document.getElementById('view-detail').style.display = 'none';
-  document.getElementById('view-admin').style.display = 'block';
+function admBackList() {
+  document.getElementById('view-detail').style.display     = 'none';
+  document.getElementById('view-admin-list').style.display = 'block';
 }
 
-// ══ ELIMINAR ═════════════════════════════════════
-async function deleteConsent(id) {
-  if (!confirm('¿Eliminar este registro permanentemente? Esta acción no se puede deshacer.')) return;
+async function admDelete(id) {
+  if (!confirm('¿Eliminar este registro permanentemente?')) return;
   try {
-    const res = await fetch(`${WORKER_URL}/admin/consents/${id}`, {
-      method: 'DELETE',
-      headers: { 'Authorization': `Basic ${credentials}` }
-    });
-    if (res.ok) {
-      allConsents = allConsents.filter(c => c.id !== id);
-      renderStats();
-      backToList();
-      renderList();
-    }
-  } catch (err) {
-    alert('Error eliminando el registro.');
-  }
+    const res = await fetch(`${WORKER_URL}/admin/consents/${id}`,{method:'DELETE',headers:{'Authorization':`Basic ${credentials}`}});
+    if (res.ok) { allConsents=allConsents.filter(c=>c.id!==id); admRenderStats(); admBackList(); admRenderList(); }
+  } catch(err) { alert('Error eliminando el registro.'); }
 }
 
-// ══ EXPORTAR CSV ══════════════════════════════════
-function exportCSV() {
+function admExportCSV() {
   if (!allConsents.length) { alert('No hay registros para exportar.'); return; }
-  const header = ['ID','Fecha','Nombre','Email','Telefono','Tratamiento','Direccion','Comentarios','Fecha Firma'];
-  const rows = allConsents.map(c => [
-    c.id, new Date(c.timestamp).toLocaleString('es-US'),
-    c.nombre, c.email, c.telefono, c.tratamiento, c.direccion, c.mensaje||'', c.fecha_firma||''
-  ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(','));
-  const csv = [header.join(','), ...rows].join('\n');
-  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `ncareiv_consentimientos_${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
+  const header = ['ID','Fecha','Nombre','Email','Telefono','Tratamiento','Direccion','Comentarios','Fecha Cita'];
+  const rows = allConsents.map(c=>[c.id,new Date(c.timestamp).toLocaleString('es-US'),c.nombre,c.email,c.telefono,c.tratamiento,c.direccion,c.mensaje||'',c.fecha_firma||''].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','));
+  const csv = [header.join(','),...rows].join('\n');
+  const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const url  = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download=`ncareiv_consentimientos_${new Date().toISOString().slice(0,10)}.csv`; a.click();
   URL.revokeObjectURL(url);
 }
 
-// ══ UTILS ════════════════════════════════════════
-function esc(str) {
-  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+/* ════════════════════════════════════════
+   EVALUADOR
+════════════════════════════════════════ */
+let evalStep = 0;
+const EVAL_TOTAL = 6;
+
+function evalGoStep(n) {
+  document.querySelectorAll('.eval-page').forEach((p,i)=>p.classList.toggle('active',i===n));
+  document.querySelectorAll('.eval-step-tab').forEach((t,i)=>{
+    t.classList.toggle('active',i===n);
+    t.classList.toggle('done',i<n);
+  });
+  evalStep = n;
+  document.getElementById('eval-progress').style.width=((n/EVAL_TOTAL)*100)+'%';
+  document.getElementById('page-evaluador').scrollTop = 0;
+  window.scrollTo({top:0,behavior:'smooth'});
 }
+
+function evalNext(n) {
+  if (n===0) {
+    if (!document.getElementById('p-nombre').value.trim()||!document.getElementById('p-edad').value.trim()) {
+      alert('Por favor ingresa el nombre y la edad del paciente.'); return;
+    }
+  }
+  evalGoStep(n+1);
+}
+function evalPrev(n) { evalGoStep(n-1); }
+
+function etoggle(div,id) {
+  const cb = document.getElementById(id);
+  cb.checked = !cb.checked;
+  div.classList.toggle('checked', cb.checked);
+}
+
+function checkSeg() {
+  const segs = ['seg-embarazo','seg-renal','seg-cardiaca','seg-presion'];
+  document.getElementById('seg-alert').style.display = segs.some(id=>document.getElementById(id).checked) ? 'block' : 'none';
+}
+
+function getChecked(ids) { return ids.filter(id=>document.getElementById(id)?.checked); }
+function getLbl(id) { return document.querySelector(`label[for="${id}"]`)?.textContent.trim()||id; }
+
+async function evalGenerar() {
+  evalGoStep(6);
+  const nombre = document.getElementById('p-nombre').value.trim();
+  const edad   = document.getElementById('p-edad').value.trim();
+  const sexo   = document.getElementById('p-sexo').value;
+  const notas  = document.getElementById('p-notas').value.trim();
+  const motivos   = getChecked(['m-fatiga','m-energia','m-estres','m-concentracion','m-deporte','m-deshidratacion','m-enfermedad','m-inmune','m-celular','m-antioxidante','m-piel','m-cabello','m-unas','m-apariencia','m-hierro','m-otro']);
+  const sintomas  = getChecked(['s-cansancio','s-debilidad','s-musculares','s-calambres','s-cabeza','s-mareos','s-nauseas','s-rendimiento','s-recuperacion','s-sueno','s-concentracion','s-estres','s-pielseca','s-cabellop','s-unasp']);
+  const vida      = getChecked(['v-ejercicio','v-trabajo','v-estres','v-descanso','v-alimentacion','v-alcohol','v-ambiental']);
+  const objetivos = getChecked(['o-energia','o-hidratacion','o-antioxidante','o-piel','o-deporte','o-bienestar','o-celular']);
+  const contraind = getChecked(['seg-embarazo','seg-renal','seg-cardiaca','seg-presion']);
+  const segExtra  = getChecked(['seg-alergias','seg-medicamentos','seg-laboratorio']);
+  const allSel    = [...motivos,...sintomas,...vida,...objetivos];
+  const ahora     = new Date();
+  const fechaStr  = ahora.toLocaleDateString('es-US',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  const horaStr   = ahora.toLocaleTimeString('es-US',{hour:'2-digit',minute:'2-digit'});
+
+  /* Loading */
+  document.getElementById('eval-resultado').innerHTML = `
+    <div style="text-align:center;padding:3rem 1rem">
+      <div style="width:52px;height:52px;border:3px solid var(--borde);border-top-color:var(--prim);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem"></div>
+      <p style="font-size:15px;font-weight:500;color:var(--texto)">Analizando perfil con IA...</p>
+      <p style="font-size:13px;color:var(--texto-suave);margin-top:6px">Claude está procesando los datos clínicos</p>
+    </div>
+    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>`;
+
+  const prompt = `Eres un asistente clínico especializado en IV Therapy para NCare IV, Raleigh NC.
+
+PERFIL:
+- Nombre: ${nombre}, Edad: ${edad}, Sexo: ${sexo||'No especificado'}
+- Notas: ${notas||'Ninguna'}
+
+MOTIVOS: ${motivos.length?motivos.map(id=>getLbl(id)).join(', '):'Ninguno'}
+SÍNTOMAS: ${sintomas.length?sintomas.map(id=>getLbl(id)).join(', '):'Ninguno'}
+ESTILO DE VIDA: ${vida.length?vida.map(id=>getLbl(id)).join(', '):'No especificado'}
+OBJETIVOS: ${objetivos.length?objetivos.map(id=>getLbl(id)).join(', '):'No especificados'}
+CONTRAINDICACIONES: ${contraind.length?contraind.map(id=>getLbl(id)).join(', '):'Ninguna'}
+OTRAS CONDICIONES: ${segExtra.length?segExtra.map(id=>getLbl(id)).join(', '):'Ninguna'}
+
+PROTOCOLOS DISPONIBLES:
+1. Terapia de Hierro IV — $120
+2. Cocktail de Myers — $120
+3. NAD+ Infusion — $120
+4. Vitamina C + Glutatión — $120
+5. Megadosis de Vitamina C — $250
+6. Infusión de Colágeno IV — $120
+7. Hidratación IV — $120
+
+Responde SOLO con JSON válido sin texto extra:
+{
+  "resumen_clinico": "2-3 oraciones sobre el perfil del paciente",
+  "contraindicaciones_alerta": true|false,
+  "mensaje_contraindicacion": "explicación si hay contraindicaciones",
+  "protocolos": [
+    {
+      "nombre": "nombre exacto",
+      "porcentaje": número 0-100,
+      "prioridad": "Alta"|"Media"|"Complementaria",
+      "razon_principal": "una oración",
+      "beneficios_especificos": ["b1","b2","b3"],
+      "precio": "$120"
+    }
+  ],
+  "recomendacion_sesiones": "frecuencia sugerida",
+  "nota_clinica": "observación adicional"
+}
+Solo incluye protocolos con porcentaje >30%. Máximo 4. Ordena de mayor a menor porcentaje.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:prompt}]})
+    });
+    const data = await response.json();
+    const rawText = data.content?.[0]?.text || '';
+    let ai;
+    try { ai = JSON.parse(rawText.replace(/```json|```/g,'').trim()); }
+    catch(e) { throw new Error('JSON inválido de IA'); }
+
+    const emojis = {'Terapia de Hierro IV':'⚡','Cocktail de Myers':'💊','NAD+ Infusion':'🧬','Vitamina C + Glutatión':'✨','Megadosis de Vitamina C':'🌟','Infusión de Colágeno IV':'💅','Hidratación IV':'💧'};
+    const bgMap  = {'Terapia de Hierro IV':'#fdf0f0','Cocktail de Myers':'#eff6ff','NAD+ Infusion':'#f5f3ff','Vitamina C + Glutatión':'#fffbeb','Megadosis de Vitamina C':'#fff7ed','Infusión de Colágeno IV':'#f0faf5','Hidratación IV':'#e0f2fe'};
+    const txtMap = {'Terapia de Hierro IV':'#c0392b','Cocktail de Myers':'#1a56a0','NAD+ Infusion':'#5b21b6','Vitamina C + Glutatión':'#8b6f00','Megadosis de Vitamina C':'#c2410c','Infusión de Colágeno IV':'#1e7a45','Hidratación IV':'#0369a1'};
+
+    let html = `
+      <div style="background:var(--blanco);border:1px solid var(--borde);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;border-radius:50%;background:var(--prim-claro);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:var(--prim);flex-shrink:0;font-family:var(--serif)">${esc(nombre.charAt(0).toUpperCase())}</div>
+        <div>
+          <p style="font-family:var(--serif);font-size:1.3rem">${esc(nombre)}${edad?', '+edad+' años':''}${sexo?' · '+sexo:''}</p>
+          <p style="font-size:12px;color:var(--texto-suave)">${fechaStr} · ${horaStr}</p>
+          <div style="display:inline-flex;align-items:center;gap:4px;background:var(--prim-claro);border-radius:20px;padding:2px 8px;margin-top:4px">
+            <span style="font-size:11px;color:var(--prim);font-weight:500">✨ Análisis generado por IA</span>
+          </div>
+        </div>
+      </div>`;
+
+    if (ai.contraindicaciones_alerta && ai.mensaje_contraindicacion) {
+      html += `<div style="background:var(--rojo-claro);border:1.5px solid var(--rojo-borde);border-radius:var(--radius);padding:1rem;margin-bottom:1.25rem">
+        <p style="font-size:13px;font-weight:500;color:var(--rojo);margin-bottom:6px">⚠️ Alerta de seguridad</p>
+        <p style="font-size:13px;color:var(--rojo)">${esc(ai.mensaje_contraindicacion)}</p></div>`;
+    }
+
+    if (ai.resumen_clinico) {
+      html += `<div style="background:var(--fondo);border:1px solid var(--borde);border-radius:var(--radius);padding:1rem;margin-bottom:1.25rem">
+        <p style="font-size:11px;font-weight:500;color:var(--texto-suave);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Análisis clínico</p>
+        <p style="font-size:13px;color:var(--texto);line-height:1.6">${esc(ai.resumen_clinico)}</p></div>`;
+    }
+
+    if (allSel.length>0) {
+      html += `<div style="background:var(--fondo);border:1px solid var(--borde);border-radius:var(--radius);padding:1rem;margin-bottom:1.25rem">
+        <p style="font-size:11px;font-weight:500;color:var(--texto-suave);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Perfil del paciente</p>
+        <div style="display:flex;flex-wrap:wrap;gap:5px">${allSel.map(id=>`<span style="font-size:12px;padding:3px 10px;border-radius:20px;background:var(--blanco);color:var(--texto);border:1px solid var(--borde)">${getLbl(id)}</span>`).join('')}</div></div>`;
+    }
+
+    if (ai.protocolos && ai.protocolos.length>0) {
+      html += `<p style="font-size:11px;font-weight:500;color:var(--texto-suave);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">Protocolos recomendados por IA</p>`;
+      ai.protocolos.forEach((p,i) => {
+        const emoji = emojis[p.nombre]||'💉';
+        const bg    = bgMap[p.nombre]||'#f5ede0';
+        const txt   = txtMap[p.nombre]||'#8b6f47';
+        const pct   = Math.min(100,Math.max(0,p.porcentaje||0));
+        const prioBg  = p.prioridad==='Alta'?'#f0faf5':p.prioridad==='Media'?'#fffbeb':'#f5ede0';
+        const prioTxt = p.prioridad==='Alta'?'#1e7a45':p.prioridad==='Media'?'#8b6f00':'#6b5240';
+        html += `
+          <div style="background:var(--blanco);border:${i===0?'2px solid var(--prim)':'1px solid var(--borde)'};border-radius:var(--radius);padding:1.25rem;margin-bottom:10px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:36px;height:36px;border-radius:50%;background:${bg};display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${emoji}</div>
+                <div>
+                  <p style="font-size:14px;font-weight:500;color:var(--texto)">${esc(p.nombre)}</p>
+                  <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:${prioBg};color:${prioTxt};font-weight:500">${esc(p.prioridad||'')}</span>
+                </div>
+              </div>
+              <span style="font-size:13px;font-weight:500;background:var(--prim-claro);color:var(--prim);padding:3px 12px;border-radius:20px;white-space:nowrap">${esc(p.precio||'')}</span>
+            </div>
+            <div style="margin-bottom:10px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+                <span style="font-size:11px;color:var(--texto-suave)">Compatibilidad con el perfil</span>
+                <span style="font-size:13px;font-weight:600;color:${txt}">${pct}%</span>
+              </div>
+              <div style="height:8px;background:var(--fondo);border-radius:10px;overflow:hidden">
+                <div style="height:100%;width:${pct}%;background:${txt};border-radius:10px"></div>
+              </div>
+            </div>
+            <p style="font-size:13px;color:var(--texto);line-height:1.5;margin-bottom:8px">${esc(p.razon_principal||'')}</p>
+            ${p.beneficios_especificos&&p.beneficios_especificos.length?`<div style="display:flex;flex-wrap:wrap;gap:5px">${p.beneficios_especificos.map(b=>`<span style="font-size:11px;padding:2px 8px;border-radius:20px;background:${bg};color:${txt}">${esc(b)}</span>`).join('')}</div>`:''}
+          </div>`;
+      });
+    }
+
+    if (ai.recomendacion_sesiones) {
+      html += `<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:var(--radius);padding:1rem;margin-top:10px">
+        <p style="font-size:12px;font-weight:500;color:#1a56a0;margin-bottom:3px">📅 Frecuencia recomendada</p>
+        <p style="font-size:13px;color:#1a56a0">${esc(ai.recomendacion_sesiones)}</p></div>`;
+    }
+
+    if (ai.nota_clinica) {
+      html += `<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:var(--radius);padding:1rem;margin-top:10px">
+        <p style="font-size:12px;font-weight:500;color:#8b6f00;margin-bottom:3px">🩺 Nota clínica</p>
+        <p style="font-size:13px;color:#8b6f00">${esc(ai.nota_clinica)}</p></div>`;
+    }
+
+    html += `<p style="font-size:11px;color:var(--texto-suave);padding-top:1rem;border-top:1px solid var(--borde);margin-top:1rem;line-height:1.6">Análisis generado por IA (Claude — Anthropic) como herramienta de orientación clínica interna. No reemplaza el criterio profesional. Realiza siempre una valoración individualizada antes de administrar cualquier tratamiento.</p>`;
+
+    document.getElementById('eval-resultado').innerHTML = html;
+
+  } catch(err) {
+    console.error('Error IA:', err);
+    document.getElementById('eval-resultado').innerHTML = `
+      <div style="background:var(--rojo-claro);border:1px solid var(--rojo-borde);border-radius:var(--radius);padding:1rem;margin-bottom:1rem">
+        <p style="font-size:13px;font-weight:500;color:var(--rojo)">⚠️ No se pudo conectar con la IA</p>
+        <p style="font-size:12px;color:var(--rojo);margin-top:4px">Verifica tu conexión e intenta de nuevo.</p>
+      </div>
+      <button class="btn-primary" onclick="evalGenerar()" style="width:100%">🔄 Reintentar</button>`;
+  }
+}
+
+function evalReset() {
+  document.querySelectorAll('#page-evaluador input[type=checkbox]').forEach(cb=>{cb.checked=false;cb.closest('.check-item')?.classList.remove('checked');});
+  document.querySelectorAll('#page-evaluador input[type=text], #page-evaluador input[type=number]').forEach(i=>i.value='');
+  document.querySelectorAll('#page-evaluador select').forEach(s=>s.selectedIndex=0);
+  document.getElementById('seg-alert').style.display='none';
+  document.getElementById('eval-resultado').innerHTML='';
+  evalGoStep(0);
+}
+
+/* ════════════════════════════════════════
+   UTILS
+════════════════════════════════════════ */
+function esc(str){ return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 </script>
 </body>
 </html>
