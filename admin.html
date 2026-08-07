@@ -730,16 +730,17 @@ Responde SOLO con JSON válido sin texto extra:
 Solo incluye protocolos con porcentaje >30%. Máximo 4. Ordena de mayor a menor porcentaje.`;
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:prompt}]})
+    const response = await fetch(WORKER_URL + '/admin/evaluate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + credentials
+      },
+      body: JSON.stringify({ prompt })
     });
     const data = await response.json();
-    const rawText = data.content?.[0]?.text || '';
-    let ai;
-    try { ai = JSON.parse(rawText.replace(/```json|```/g,'').trim()); }
-    catch(e) { throw new Error('JSON inválido de IA'); }
+    if (!response.ok || !data.success) throw new Error(data.error || 'Error del servidor');
+    const ai = data.result;
 
     const emojis = {'Terapia de Hierro IV':'⚡','Cocktail de Myers':'💊','NAD+ Infusion':'🧬','Vitamina C + Glutatión':'✨','Megadosis de Vitamina C':'🌟','Infusión de Colágeno IV':'💅','Hidratación IV':'💧'};
     const bgMap  = {'Terapia de Hierro IV':'#fdf0f0','Cocktail de Myers':'#eff6ff','NAD+ Infusion':'#f5f3ff','Vitamina C + Glutatión':'#fffbeb','Megadosis de Vitamina C':'#fff7ed','Infusión de Colágeno IV':'#f0faf5','Hidratación IV':'#e0f2fe'};
