@@ -739,8 +739,10 @@ Solo incluye protocolos con porcentaje >30%. Máximo 4. Ordena de mayor a menor 
       body: JSON.stringify({ prompt })
     });
     const data = await response.json();
-    if (!response.ok || !data.success) throw new Error(data.error || 'Error del servidor');
+    console.log('Worker response:', JSON.stringify(data).substring(0, 200));
+    if (!response.ok || !data.success) throw new Error(data.error || 'Error del servidor: ' + response.status);
     const ai = data.result;
+    if (!ai || !ai.protocolos) throw new Error('La IA no devolvió protocolos válidos');
 
     const emojis = {'Terapia de Hierro IV':'⚡','Cocktail de Myers':'💊','NAD+ Infusion':'🧬','Vitamina C + Glutatión':'✨','Megadosis de Vitamina C':'🌟','Infusión de Colágeno IV':'💅','Hidratación IV':'💧'};
     const bgMap  = {'Terapia de Hierro IV':'#fdf0f0','Cocktail de Myers':'#eff6ff','NAD+ Infusion':'#f5f3ff','Vitamina C + Glutatión':'#fffbeb','Megadosis de Vitamina C':'#fff7ed','Infusión de Colágeno IV':'#f0faf5','Hidratación IV':'#e0f2fe'};
@@ -832,8 +834,9 @@ Solo incluye protocolos con porcentaje >30%. Máximo 4. Ordena de mayor a menor 
     console.error('Error IA:', err);
     document.getElementById('eval-resultado').innerHTML = `
       <div style="background:var(--rojo-claro);border:1px solid var(--rojo-borde);border-radius:var(--radius);padding:1rem;margin-bottom:1rem">
-        <p style="font-size:13px;font-weight:500;color:var(--rojo)">⚠️ No se pudo conectar con la IA</p>
-        <p style="font-size:12px;color:var(--rojo);margin-top:4px">Verifica tu conexión e intenta de nuevo.</p>
+        <p style="font-size:13px;font-weight:500;color:var(--rojo)">⚠️ Error al generar recomendación</p>
+        <p style="font-size:12px;color:var(--rojo);margin-top:4px;font-family:monospace">${err.message}</p>
+        <p style="font-size:12px;color:var(--rojo);margin-top:6px">Revisa la consola del navegador (F12 → Console) para más detalles.</p>
       </div>
       <button class="btn-primary" onclick="evalGenerar()" style="width:100%">🔄 Reintentar</button>`;
   }
