@@ -226,6 +226,9 @@
     <button class="tab-btn" onclick="switchTab('evaluador')" id="tab-evaluador">
       🩺 Evaluador de pacientes
     </button>
+    <button class="tab-btn" onclick="switchTab('evaluaciones')" id="tab-evaluaciones">
+      📊 Historial de evaluaciones
+    </button>
   </nav>
 
   <div class="tab-content">
@@ -436,6 +439,36 @@
 
       </div><!-- /eval-content -->
     </div><!-- /page-evaluador -->
+
+  <!-- ══════════════════════════════
+       TAB 3: HISTORIAL EVALUACIONES
+  ══════════════════════════════ -->
+  <div class="tab-page" id="page-evaluaciones">
+    <div style="max-width:1000px;margin:0 auto;padding:1.5rem">
+      <div class="page-header">
+        <p class="page-title">Historial de evaluaciones</p>
+        <div class="page-actions">
+          <button class="btn-ghost" onclick="evalExportCSV()" style="font-size:13px">⬇️ Exportar CSV</button>
+          <button class="btn-ghost" onclick="loadEvaluaciones()" style="font-size:13px">🔄 Actualizar</button>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><p class="stat-label">Total evaluaciones</p><p class="stat-num" id="eval-stat-total">—</p></div>
+        <div class="stat-card"><p class="stat-label">Este mes</p><p class="stat-num" id="eval-stat-month">—</p></div>
+        <div class="stat-card"><p class="stat-label">Hoy</p><p class="stat-num" id="eval-stat-today">—</p></div>
+      </div>
+      <div id="eval-loading" class="loading">Cargando evaluaciones...</div>
+      <div id="eval-list" style="display:flex;flex-direction:column;gap:10px"></div>
+      <div id="eval-empty" class="empty-msg hidden">
+        No hay evaluaciones registradas aún.
+        <span>Las evaluaciones del Evaluador de pacientes aparecerán aquí.</span>
+      </div>
+      <div id="eval-detail-view" style="display:none;margin-top:1rem">
+        <button class="btn-ghost" onclick="evalBackList()" style="margin-bottom:1.25rem;font-size:13px">← Volver</button>
+        <div id="eval-detail-content" style="background:var(--blanco);border:1px solid var(--borde);border-radius:20px;padding:2rem"></div>
+      </div>
+    </div>
+  </div>
 
   </div><!-- /tab-content -->
 </div><!-- /shell -->
@@ -830,6 +863,20 @@ Solo incluye protocolos con porcentaje >30%. Máximo 4. Ordena de mayor a menor 
 
     document.getElementById('eval-resultado').innerHTML = html;
 
+    // Guardar evaluación en la base de datos
+    try {
+      await fetch(WORKER_URL + '/admin/evaluaciones', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Basic ' + credentials },
+        body: JSON.stringify({
+          nombre, edad, sexo,
+          motivos, sintomas, vida, objetivos,
+          seguridad: [...contraind, ...segExtra],
+          resultado: ai
+        })
+      });
+    } catch(e) { console.warn('No se pudo guardar la evaluación:', e); }
+
   } catch(err) {
     console.error('Error IA:', err);
     document.getElementById('eval-resultado').innerHTML = `
@@ -852,8 +899,210 @@ function evalReset() {
 }
 
 /* ════════════════════════════════════════
-   UTILS
+   EVALUACIONES — HISTORIAL
 ════════════════════════════════════════ */
+let allEvaluaciones = [];
+
+async function loadEvaluaciones() {
+  document.getElementById('eval-loading').style.display = 'block';
+  document.getElementById('eval-list').innerHTML = '';
+  document.getElementById('eval-empty').classList.add('hidden');
+  try {
+    const res = await fetch(WORKER_URL + '/admin/evaluaciones', {
+      headers: { 'Authorization': 'Basic ' + credentials }
+    });
+    const data = await res.json();
+    allEvaluaciones = data.evaluaciones || [];
+    evalRenderStats();
+    evalRenderList();
+  } catch(err) {
+    console.error('Error loading evaluaciones:', err);
+  }
+  document.getElementById('eval-loading').style.display = 'none';
+}
+
+function evalRenderStats() {
+  const now = new Date();
+  const todayStr = now.toDateString();
+  const monthKey = `${now.getMonth()}-${now.getFullYear()}`;
+  document.getElementById('eval-stat-total').textContent = allEvaluaciones.length;
+  document.getElementById('eval-stat-month').textContent = allEvaluaciones.filter(e => {
+    const d = new Date(e.timestamp); return `${d.getMonth()}-${d.getFullYear()}` === monthKey;
+  }).length;
+  document.getElementById('eval-stat-today').textContent = allEvaluaciones.filter(e =>
+    new Date(e.timestamp).toDateString() === todayStr
+  ).length;
+}
+
+function evalRenderList() {
+  const list  = document.getElementById('eval-list');
+  const empty = document.getElementById('eval-empty');
+  list.innerHTML = '';
+  if (!allEvaluaciones.length) { empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+
+  allEvaluaciones.forEach(e => {
+    const d = new Date(e.timestamp);
+    const dateStr = d.toLocaleDateString('es-US',{day:'2-digit',month:'short',year:'numeric'});
+    const timeStr = d.toLocaleTimeString('es-US',{hour:'2-digit',minute:'2-digit'});
+    let resultado = {};
+    try { resultado = JSON.parse(e.resultado||'{}'); } catch{}
+    const topProtocol = resultado.protocolos?.[0];
+    const initial = (e.nombre||'?').charAt(0).toUpperCase();
+
+    const el = document.createElement('div');
+    el.className = 'consent-item';
+    el.onclick = () => evalShowDetail(e);
+    el.innerHTML = `
+      <div class="consent-avatar" style="background:#f0faf5;color:#1e7a45">${esc(initial)}</div>
+      <div class="consent-info">
+        <p class="consent-name">${esc(e.nombre)}${e.edad ? ', '+e.edad+' años' : ''}</p>
+        <p class="consent-meta">${topProtocol ? '⭐ '+esc(topProtocol.nombre)+' — '+topProtocol.porcentaje+'%' : 'Sin protocolos'}</p>
+      </div>
+      <div class="consent-right">
+        <span class="badge" style="background:#f0faf5;color:#1e7a45">🩺 Evaluación IA</span>
+        <div>
+          <p class="consent-date-main">${dateStr}</p>
+          <p class="consent-date-time">${timeStr}</p>
+        </div>
+        <span style="color:var(--acento);font-size:18px">›</span>
+      </div>`;
+    list.appendChild(el);
+  });
+}
+
+function evalShowDetail(e) {
+  document.getElementById('eval-list').style.display = 'none';
+  document.getElementById('eval-empty').classList.add('hidden');
+  document.getElementById('eval-detail-view').style.display = 'block';
+
+  let resultado = {};
+  try { resultado = JSON.parse(e.resultado||'{}'); } catch{}
+  let motivos = []; try { motivos = JSON.parse(e.motivos||'[]'); } catch{}
+  let sintomas = []; try { sintomas = JSON.parse(e.sintomas||'[]'); } catch{}
+  let vida = []; try { vida = JSON.parse(e.vida||'[]'); } catch{}
+  let objetivos = []; try { objetivos = JSON.parse(e.objetivos||'[]'); } catch{}
+
+  const d = new Date(e.timestamp);
+  const dateStr = d.toLocaleDateString('es-US',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  const timeStr = d.toLocaleTimeString('es-US',{hour:'2-digit',minute:'2-digit'});
+  const initial = (e.nombre||'?').charAt(0).toUpperCase();
+
+  const emojis = {'Terapia de Hierro IV':'⚡','Cocktail de Myers':'💊','NAD+ Infusion':'🧬','Vitamina C + Glutatión':'✨','Megadosis de Vitamina C':'🌟','Infusión de Colágeno IV':'💅','Hidratación IV':'💧'};
+  const bgMap  = {'Terapia de Hierro IV':'#fdf0f0','Cocktail de Myers':'#eff6ff','NAD+ Infusion':'#f5f3ff','Vitamina C + Glutatión':'#fffbeb','Megadosis de Vitamina C':'#fff7ed','Infusión de Colágeno IV':'#f0faf5','Hidratación IV':'#e0f2fe'};
+  const txtMap = {'Terapia de Hierro IV':'#c0392b','Cocktail de Myers':'#1a56a0','NAD+ Infusion':'#5b21b6','Vitamina C + Glutatión':'#8b6f00','Megadosis de Vitamina C':'#c2410c','Infusión de Colágeno IV':'#1e7a45','Hidratación IV':'#0369a1'};
+
+  const allSel = [...motivos,...sintomas,...vida,...objetivos];
+
+  let html = `
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--borde)">
+      <div style="width:52px;height:52px;border-radius:50%;background:#f0faf5;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600;color:#1e7a45;flex-shrink:0;font-family:var(--serif)">${esc(initial)}</div>
+      <div>
+        <p style="font-family:var(--serif);font-size:1.4rem">${esc(e.nombre)}${e.edad?', '+e.edad+' años':''}${e.sexo?' · '+e.sexo:''}</p>
+        <p style="font-size:13px;color:var(--texto-suave)">${dateStr} · ${timeStr}</p>
+        <div style="display:inline-flex;align-items:center;gap:4px;background:var(--prim-claro);border-radius:20px;padding:2px 8px;margin-top:4px">
+          <span style="font-size:11px;color:var(--prim);font-weight:500">✨ Análisis generado por IA</span>
+        </div>
+      </div>
+    </div>`;
+
+  if (resultado.resumen_clinico) {
+    html += `<div style="background:var(--fondo);border:1px solid var(--borde);border-radius:var(--radius);padding:1rem;margin-bottom:1.25rem">
+      <p style="font-size:11px;font-weight:500;color:var(--texto-suave);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Análisis clínico</p>
+      <p style="font-size:13px;color:var(--texto);line-height:1.6">${esc(resultado.resumen_clinico)}</p></div>`;
+  }
+
+  if (allSel.length > 0) {
+    html += `<div style="background:var(--fondo);border:1px solid var(--borde);border-radius:var(--radius);padding:1rem;margin-bottom:1.25rem">
+      <p style="font-size:11px;font-weight:500;color:var(--texto-suave);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Perfil del paciente</p>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">${allSel.map(id=>`<span style="font-size:12px;padding:3px 10px;border-radius:20px;background:var(--blanco);color:var(--texto);border:1px solid var(--borde)">${esc(id)}</span>`).join('')}</div></div>`;
+  }
+
+  if (resultado.protocolos?.length > 0) {
+    html += `<p style="font-size:11px;font-weight:500;color:var(--texto-suave);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">Protocolos recomendados</p>`;
+    resultado.protocolos.forEach((p,i) => {
+      const emoji = emojis[p.nombre]||'💉';
+      const bg    = bgMap[p.nombre]||'#f5ede0';
+      const txt   = txtMap[p.nombre]||'#8b6f47';
+      const pct   = Math.min(100,Math.max(0,p.porcentaje||0));
+      html += `
+        <div style="background:var(--blanco);border:${i===0?'2px solid var(--prim)':'1px solid var(--borde)'};border-radius:var(--radius);padding:1.25rem;margin-bottom:10px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:36px;height:36px;border-radius:50%;background:${bg};display:flex;align-items:center;justify-content:center;font-size:16px">${emoji}</div>
+              <div>
+                <p style="font-size:14px;font-weight:500">${esc(p.nombre)}</p>
+                <p style="font-size:11px;color:var(--prim)">${esc(p.prioridad||'')}</p>
+              </div>
+            </div>
+            <span style="font-size:13px;font-weight:500;background:var(--prim-claro);color:var(--prim);padding:3px 12px;border-radius:20px">${esc(p.precio||'')}</span>
+          </div>
+          <div style="margin-bottom:8px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="font-size:11px;color:var(--texto-suave)">Compatibilidad</span>
+              <span style="font-size:13px;font-weight:600;color:${txt}">${pct}%</span>
+            </div>
+            <div style="height:8px;background:var(--fondo);border-radius:10px;overflow:hidden">
+              <div style="height:100%;width:${pct}%;background:${txt};border-radius:10px"></div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--texto);line-height:1.5">${esc(p.razon_principal||'')}</p>
+        </div>`;
+    });
+  }
+
+  if (resultado.recomendacion_sesiones) {
+    html += `<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:var(--radius);padding:1rem;margin-top:10px">
+      <p style="font-size:12px;font-weight:500;color:#1a56a0;margin-bottom:3px">📅 Frecuencia recomendada</p>
+      <p style="font-size:13px;color:#1a56a0">${esc(resultado.recomendacion_sesiones)}</p></div>`;
+  }
+
+  html += `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--borde)">
+      <p style="font-size:11px;color:var(--acento)">ID: ${esc(e.id)}</p>
+      <button class="btn-danger" onclick="evalDelete('${esc(e.id)}')">🗑 Eliminar</button>
+    </div>`;
+
+  document.getElementById('eval-detail-content').innerHTML = html;
+}
+
+function evalBackList() {
+  document.getElementById('eval-detail-view').style.display = 'none';
+  document.getElementById('eval-list').style.display = 'flex';
+  evalRenderList();
+}
+
+async function evalDelete(id) {
+  if (!confirm('¿Eliminar esta evaluación permanentemente?')) return;
+  try {
+    await fetch(`${WORKER_URL}/admin/evaluaciones/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Basic ' + credentials }
+    });
+    allEvaluaciones = allEvaluaciones.filter(e => e.id !== id);
+    evalRenderStats();
+    evalBackList();
+  } catch(err) { alert('Error eliminando.'); }
+}
+
+function evalExportCSV() {
+  if (!allEvaluaciones.length) { alert('No hay evaluaciones para exportar.'); return; }
+  const header = ['ID','Fecha','Nombre','Edad','Sexo','Protocolo Principal','Porcentaje','Recomendacion Sesiones'];
+  const rows = allEvaluaciones.map(e => {
+    let r = {}; try { r = JSON.parse(e.resultado||'{}'); } catch{}
+    const top = r.protocolos?.[0];
+    return [e.id, new Date(e.timestamp).toLocaleString('es-US'), e.nombre, e.edad||'', e.sexo||'',
+      top?.nombre||'', top?.porcentaje||'', r.recomendacion_sesiones||'']
+      .map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',');
+  });
+  const csv = [header.join(','),...rows].join('\n');
+  const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download=`ncareiv_evaluaciones_${new Date().toISOString().slice(0,10)}.csv`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+
 function esc(str){ return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 </script>
 </body>
