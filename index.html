@@ -685,14 +685,17 @@
       </div>
       <hr class="form-separator">
 
-      <!-- FECHA — ahora va primero, visible al abrir -->
-      <span class="form-section-label" data-i18n="fecha-title">Fecha de Cita *</span>
-      <div style="display:flex;gap:.6rem;align-items:flex-end;justify-content:center;">
+      <!-- FECHA Y HORA — visibles al abrir -->
+      <span class="form-section-label" data-i18n="fecha-title">Fecha y Hora de Cita *</span>
+      <div style="display:flex;gap:.6rem;align-items:flex-end;justify-content:center;flex-wrap:wrap;">
         <div><div class="spinner-label" data-i18n="dia">Día</div><div class="spinner-wrap"><button class="spin-btn" onclick="cambiarFecha('dia',1)">▲</button><div id="spin-dia" class="spin-val">01</div><button class="spin-btn" onclick="cambiarFecha('dia',-1)">▼</button></div></div>
         <div style="font-size:1.4rem;color:var(--borde);padding-bottom:14px;">/</div>
         <div><div class="spinner-label" data-i18n="mes">Mes</div><div class="spinner-wrap"><button class="spin-btn" onclick="cambiarFecha('mes',1)">▲</button><div id="spin-mes" class="spin-val">01</div><button class="spin-btn" onclick="cambiarFecha('mes',-1)">▼</button></div></div>
         <div style="font-size:1.4rem;color:var(--borde);padding-bottom:14px;">/</div>
         <div><div class="spinner-label" data-i18n="anio">Año</div><div class="spinner-wrap"><button class="spin-btn" onclick="cambiarFecha('anio',1)">▲</button><div id="spin-anio" class="spin-val">2026</div><button class="spin-btn" onclick="cambiarFecha('anio',-1)">▼</button></div></div>
+        <div style="font-size:1.4rem;color:var(--borde);padding-bottom:14px;">·</div>
+        <div><div class="spinner-label" data-i18n="hora">Hora</div><div class="spinner-wrap"><button class="spin-btn" onclick="cambiarFecha('hora',1)">▲</button><div id="spin-hora" class="spin-val" style="min-width:64px">9:00</div><button class="spin-btn" onclick="cambiarFecha('hora',-1)">▼</button></div></div>
+        <div><div class="spinner-label" data-i18n="ampm">AM/PM</div><div class="spinner-wrap"><button class="spin-btn" onclick="cambiarFecha('ampm',1)">▲</button><div id="spin-ampm" class="spin-val" style="min-width:52px">AM</div><button class="spin-btn" onclick="cambiarFecha('ampm',-1)">▼</button></div></div>
       </div>
 
       <hr class="form-separator">
@@ -848,7 +851,7 @@ const i18n = {
     'c4':'Entiendo que los resultados pueden variar y que no se garantiza ningún resultado específico.',
     'c5':'Doy mi consentimiento voluntario para recibir el tratamiento de Terapia IV.',
     'firma-title':'Firma Digital *','firma-desc':'Dibuja tu firma en el recuadro (dedo en móvil / mouse en computadora):','firma-limpiar':'Limpiar',
-    'fecha-title':'Fecha de Cita *','dia':'Día','mes':'Mes','anio':'Año',
+    'fecha-title':'Fecha y Hora de Cita *','dia':'Día','mes':'Mes','anio':'Año','hora':'Hora','ampm':'AM/PM',
     'form-aviso':'✨💧 Al enviar este formulario, acepto recibir los servicios de Terapia IV y confirmo que he leído y comprendido la información anterior.',
     'recaptcha-msg':'🔒 Formulario protegido por reCAPTCHA',
     'form-send':'✉️ Enviar Formulario a NCare IV',
@@ -960,7 +963,7 @@ const i18n = {
     'c4':'I understand that results may vary and that no specific outcome is guaranteed.',
     'c5':'I voluntarily consent to receive IV Therapy treatment.',
     'firma-title':'Digital Signature *','firma-desc':'Draw your signature in the box (finger on mobile / mouse on desktop):','firma-limpiar':'Clear',
-    'fecha-title':'Appointment Date *','dia':'Day','mes':'Month','anio':'Year',
+    'fecha-title':'Appointment Date & Time *','dia':'Day','mes':'Month','anio':'Year','hora':'Hour','ampm':'AM/PM',
     'form-aviso':'✨💧 By submitting this form, I agree to receive IV Therapy services and confirm I have read and understood the information above.',
     'recaptcha-msg':'🔒 Form protected by reCAPTCHA',
     'form-send':'✉️ Send Form to NCare IV',
@@ -1119,7 +1122,7 @@ async function enviarFormulario(){
   const direccion=sanitizar(document.getElementById('f-direccion').value);
   const mensaje=sanitizar(document.getElementById('f-mensaje').value);
   const checks=['c1','c2','c3','c4','c5'].every(id=>document.getElementById(id).checked);
-  const fecha=`${String(fechaState.dia).padStart(2,'0')}/${String(fechaState.mes).padStart(2,'0')}/${fechaState.anio}`;
+  const fecha = `${String(fechaState.dia).padStart(2,'0')}/${String(fechaState.mes).padStart(2,'0')}/${fechaState.anio} ${fechaState.hora}:00 ${fechaState.ampm}`;
 
   if(!nombre||!telefono||!email||!tratamiento||!direccion){ errEl.textContent=t['err-campos']; errEl.style.display='block'; return; }
   if(!validarEmail(email)){ errEl.textContent=t['err-email']; errEl.style.display='block'; return; }
@@ -1207,20 +1210,25 @@ async function enviarFormulario(){
 }
 
 /* ════════ FECHA SPINNER ════════ */
-const fechaState={dia:1,mes:1,anio:2026};
+const fechaState={dia:1,mes:1,anio:2026,hora:9,ampm:'AM'};
 function initFecha(){
   const h=new Date(); fechaState.dia=h.getDate(); fechaState.mes=h.getMonth()+1; fechaState.anio=h.getFullYear();
+  fechaState.hora=9; fechaState.ampm='AM';
   renderFecha();
 }
 function renderFecha(){
   document.getElementById('spin-dia').textContent=String(fechaState.dia).padStart(2,'0');
   document.getElementById('spin-mes').textContent=String(fechaState.mes).padStart(2,'0');
   document.getElementById('spin-anio').textContent=fechaState.anio;
+  document.getElementById('spin-hora').textContent=fechaState.hora+':00';
+  document.getElementById('spin-ampm').textContent=fechaState.ampm;
 }
 function cambiarFecha(campo,delta){
-  if(campo==='dia')      fechaState.dia=((fechaState.dia-1+delta+31)%31)+1;
-  else if(campo==='mes') fechaState.mes=((fechaState.mes-1+delta+12)%12)+1;
-  else                   fechaState.anio=Math.max(2024,Math.min(2035,fechaState.anio+delta));
+  if(campo==='dia')       fechaState.dia=((fechaState.dia-1+delta+31)%31)+1;
+  else if(campo==='mes')  fechaState.mes=((fechaState.mes-1+delta+12)%12)+1;
+  else if(campo==='anio') fechaState.anio=Math.max(2024,Math.min(2035,fechaState.anio+delta));
+  else if(campo==='hora') fechaState.hora=((fechaState.hora-1+delta+12)%12)+1;
+  else if(campo==='ampm') fechaState.ampm=fechaState.ampm==='AM'?'PM':'AM';
   renderFecha();
 }
 
