@@ -190,6 +190,27 @@
     .modal-field input:focus,.modal-field select:focus{border-color:var(--prim)}
     .modal-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .modal-badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;background:var(--prim-claro);color:var(--prim);margin-bottom:1rem}
+
+    /* Calendar picker */
+    .cal-wrap{border:1.5px solid var(--borde);border-radius:var(--radius);overflow:hidden;background:var(--blanco)}
+    .cal-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--prim-claro);border-bottom:1px solid var(--borde)}
+    .cal-nav{background:none;border:none;border-radius:50%;width:28px;height:28px;font-size:18px;cursor:pointer;color:var(--prim);display:flex;align-items:center;justify-content:center;transition:background .15s}
+    .cal-nav:hover{background:var(--borde)}
+    .cal-days-header{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:6px 8px 2px;gap:2px}
+    .cal-days-header span{font-size:11px;font-weight:500;color:var(--texto-suave)}
+    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);padding:4px 8px 10px;gap:3px}
+    .cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:13px;cursor:pointer;color:var(--texto);transition:all .15s;border:none;background:none;font-family:var(--sans)}
+    .cal-day:hover:not(.empty):not(.other){background:var(--prim-claro);color:var(--prim)}
+    .cal-day.selected{background:var(--prim);color:#fff;font-weight:500}
+    .cal-day.today:not(.selected){border:1.5px solid var(--prim);color:var(--prim)}
+    .cal-day.other{color:var(--borde);cursor:default}
+    .cal-day.empty{cursor:default}
+    /* Time picker */
+    .time-picker{border:1.5px solid var(--borde);border-radius:var(--radius);padding:10px;background:var(--blanco)}
+    .time-slot-wrap{display:flex;flex-wrap:wrap;gap:6px}
+    .time-slot{padding:5px 10px;border-radius:20px;border:1.5px solid var(--borde);font-size:12px;cursor:pointer;font-family:var(--sans);background:var(--blanco);color:var(--texto);transition:all .15s}
+    .time-slot:hover{border-color:var(--prim);color:var(--prim);background:var(--prim-claro)}
+    .time-slot.selected{background:var(--prim);color:#fff;border-color:var(--prim);font-weight:500}
   </style>
 </head>
 <body>
@@ -522,15 +543,27 @@
       <label>Dirección / Ubicación</label>
       <input type="text" id="man-direccion" placeholder="Dirección del servicio">
     </div>
-    <div class="modal-row">
-      <div class="modal-field">
-        <label>Fecha de cita *</label>
-        <input type="date" id="man-fecha">
+    <div class="modal-field">
+      <label>Fecha de cita *</label>
+      <div class="cal-wrap">
+        <div class="cal-header">
+          <button class="cal-nav" onclick="calNav(-1)">‹</button>
+          <span id="cal-month-label" style="font-size:14px;font-weight:500;color:var(--texto)"></span>
+          <button class="cal-nav" onclick="calNav(1)">›</button>
+        </div>
+        <div class="cal-days-header">
+          <span>Do</span><span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sa</span>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+        <input type="hidden" id="man-fecha">
       </div>
-      <div class="modal-field">
-        <label>Hora de cita *</label>
-        <input type="time" id="man-hora">
+    </div>
+    <div class="modal-field">
+      <label>Hora de cita *</label>
+      <div class="time-picker">
+        <div class="time-slot-wrap" id="time-slots"></div>
       </div>
+      <input type="hidden" id="man-hora" value="09:00">
     </div>
     <div class="modal-field">
       <label>Notas / Comentarios</label>
@@ -1178,15 +1211,105 @@ function evalExportCSV() {
 
 
 /* ════════════════════════════════════════
+   CALENDARIO Y SELECTOR DE HORA
+════════════════════════════════════════ */
+const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+let calYear, calMonth, calSelected = null;
+
+const HORAS = [
+  '9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM',
+  '12:00 PM','12:30 PM','1:00 PM','1:30 PM','2:00 PM','2:30 PM',
+  '3:00 PM','3:30 PM','4:00 PM','4:30 PM','5:00 PM','5:30 PM',
+  '6:00 PM','6:30 PM','7:00 PM','7:30 PM','8:00 PM'
+];
+
+function initCalendar() {
+  const now = new Date();
+  calYear  = now.getFullYear();
+  calMonth = now.getMonth();
+  calSelected = null;
+  document.getElementById('man-fecha').value = '';
+  renderCalendar();
+  renderTimeSlots();
+}
+
+function renderCalendar() {
+  document.getElementById('cal-month-label').textContent = `${MESES[calMonth]} ${calYear}`;
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const today = new Date();
+
+  // Empty cells before first day
+  for (let i = 0; i < firstDay; i++) {
+    const el = document.createElement('button');
+    el.className = 'cal-day empty'; el.disabled = true;
+    grid.appendChild(el);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const el = document.createElement('button');
+    el.className = 'cal-day';
+    el.textContent = d;
+
+    const thisDate = new Date(calYear, calMonth, d);
+    const dateStr  = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+
+    if (thisDate.toDateString() === today.toDateString()) el.classList.add('today');
+    if (calSelected === dateStr) el.classList.add('selected');
+
+    el.onclick = () => selectDay(d, dateStr);
+    grid.appendChild(el);
+  }
+}
+
+function selectDay(d, dateStr) {
+  calSelected = dateStr;
+  document.getElementById('man-fecha').value = dateStr;
+  renderCalendar();
+}
+
+function calNav(delta) {
+  calMonth += delta;
+  if (calMonth > 11) { calMonth = 0;  calYear++; }
+  if (calMonth < 0)  { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function renderTimeSlots() {
+  const wrap = document.getElementById('time-slots');
+  wrap.innerHTML = '';
+  HORAS.forEach(h => {
+    const el = document.createElement('button');
+    el.className = 'time-slot';
+    el.textContent = h;
+    el.onclick = () => selectTime(h, el);
+    wrap.appendChild(el);
+  });
+}
+
+function selectTime(label, el) {
+  document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  // Convertir a formato HH:MM para el hidden input
+  const [time, ampm] = label.split(' ');
+  let [hh, mm] = time.split(':');
+  hh = parseInt(hh);
+  if (ampm === 'PM' && hh !== 12) hh += 12;
+  if (ampm === 'AM' && hh === 12) hh = 0;
+  document.getElementById('man-hora').value = `${String(hh).padStart(2,'0')}:${mm}`;
+}
+
+/* ════════════════════════════════════════
    REGISTRO MANUAL
 ════════════════════════════════════════ */
 function abrirRegistroManual() {
-  const hoy = new Date().toISOString().slice(0,10);
-  document.getElementById('man-fecha').value = hoy;
-  document.getElementById('man-hora').value  = '09:00';
   document.getElementById('man-error').style.display = 'none';
   document.getElementById('modal-manual').classList.add('visible');
   document.body.style.overflow = 'hidden';
+  initCalendar();
 }
 
 function cerrarRegistroManual() {
