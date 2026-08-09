@@ -264,6 +264,25 @@
     .spin-btn{background:var(--prim-claro);border:1px solid var(--borde);border-radius:6px;width:36px;height:28px;font-size:13px;cursor:pointer;color:var(--prim);font-family:var(--sans);transition:background .15s}
     .spin-btn:hover{background:var(--borde)}
     .spin-val{font-family:var(--serif);font-size:1.4rem;font-weight:600;color:var(--prim);min-width:52px;text-align:center;border:1.5px solid var(--borde);border-radius:8px;padding:4px 6px;background:var(--blanco)}
+
+    /* ── Calendario formulario ── */
+    .fcal-wrap{border:1.5px solid var(--borde);border-radius:var(--radius);overflow:hidden;background:var(--blanco);margin-bottom:2px}
+    .fcal-header{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--prim-claro);border-bottom:1px solid var(--borde)}
+    .fcal-nav{background:none;border:none;border-radius:50%;width:26px;height:26px;font-size:16px;cursor:pointer;color:var(--prim);display:flex;align-items:center;justify-content:center;transition:background .15s}
+    .fcal-nav:hover{background:var(--borde)}
+    .fcal-days-hdr{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:6px 6px 2px;gap:2px}
+    .fcal-days-hdr span{font-size:10px;font-weight:500;color:var(--texto-suave)}
+    .fcal-grid{display:grid;grid-template-columns:repeat(7,1fr);padding:3px 6px 8px;gap:2px}
+    .fcal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:12px;cursor:pointer;color:var(--texto);transition:all .15s;border:none;background:none;font-family:var(--sans)}
+    .fcal-day:hover:not([disabled]){background:var(--prim-claro);color:var(--prim)}
+    .fcal-day.selected{background:var(--prim);color:#fff;font-weight:500}
+    .fcal-day.today:not(.selected){border:1.5px solid var(--prim);color:var(--prim)}
+    .fcal-day.other-month{color:var(--borde);cursor:default}
+    /* Time slots */
+    .ftime-wrap{display:flex;flex-wrap:wrap;gap:6px}
+    .ftime-slot{padding:5px 11px;border-radius:20px;border:1.5px solid var(--borde);font-size:12px;cursor:pointer;font-family:var(--sans);background:var(--blanco);color:var(--texto);transition:all .15s}
+    .ftime-slot:hover{border-color:var(--prim);color:var(--prim);background:var(--prim-claro)}
+    .ftime-slot.selected{background:var(--prim);color:#fff;border-color:var(--prim);font-weight:500}
     .form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1rem}
     .form-separator{border:none;border-top:1px solid var(--borde);margin:1.2rem 0}
     .form-section-label{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--acento);font-weight:600;margin-bottom:10px;display:block}
@@ -685,17 +704,29 @@
       </div>
       <hr class="form-separator">
 
-      <!-- FECHA Y HORA — visibles al abrir -->
+      <!-- FECHA Y HORA — calendario visual -->
       <span class="form-section-label" data-i18n="fecha-title">Fecha y Hora de Cita *</span>
-      <div style="display:flex;gap:.6rem;align-items:flex-end;justify-content:center;flex-wrap:wrap;">
-        <div><div class="spinner-label" data-i18n="dia">Día</div><div class="spinner-wrap"><button class="spin-btn" onclick="cambiarFecha('dia',1)">▲</button><div id="spin-dia" class="spin-val">01</div><button class="spin-btn" onclick="cambiarFecha('dia',-1)">▼</button></div></div>
-        <div style="font-size:1.4rem;color:var(--borde);padding-bottom:14px;">/</div>
-        <div><div class="spinner-label" data-i18n="mes">Mes</div><div class="spinner-wrap"><button class="spin-btn" onclick="cambiarFecha('mes',1)">▲</button><div id="spin-mes" class="spin-val">01</div><button class="spin-btn" onclick="cambiarFecha('mes',-1)">▼</button></div></div>
-        <div style="font-size:1.4rem;color:var(--borde);padding-bottom:14px;">/</div>
-        <div><div class="spinner-label" data-i18n="anio">Año</div><div class="spinner-wrap"><button class="spin-btn" onclick="cambiarFecha('anio',1)">▲</button><div id="spin-anio" class="spin-val">2026</div><button class="spin-btn" onclick="cambiarFecha('anio',-1)">▼</button></div></div>
-        <div style="font-size:1.4rem;color:var(--borde);padding-bottom:14px;">·</div>
-        <div><div class="spinner-label" data-i18n="hora">Hora</div><div class="spinner-wrap"><button class="spin-btn" onclick="cambiarFecha('hora',1)">▲</button><div id="spin-hora" class="spin-val" style="min-width:64px">9:00</div><button class="spin-btn" onclick="cambiarFecha('hora',-1)">▼</button></div></div>
-        <div><div class="spinner-label" data-i18n="ampm">AM/PM</div><div class="spinner-wrap"><button class="spin-btn" onclick="cambiarFecha('ampm',1)">▲</button><div id="spin-ampm" class="spin-val" style="min-width:52px">AM</div><button class="spin-btn" onclick="cambiarFecha('ampm',-1)">▼</button></div></div>
+
+      <!-- Calendario -->
+      <div class="fcal-wrap">
+        <div class="fcal-header">
+          <button class="fcal-nav" onclick="fCalNav(-1)">‹</button>
+          <span id="fcal-label" style="font-size:13px;font-weight:500;color:var(--texto)"></span>
+          <button class="fcal-nav" onclick="fCalNav(1)">›</button>
+        </div>
+        <div class="fcal-days-hdr">
+          <span data-i18n="cal-do">Do</span><span data-i18n="cal-lu">Lu</span><span data-i18n="cal-ma">Ma</span>
+          <span data-i18n="cal-mi">Mi</span><span data-i18n="cal-ju">Ju</span><span data-i18n="cal-vi">Vi</span><span data-i18n="cal-sa">Sa</span>
+        </div>
+        <div class="fcal-grid" id="fcal-grid"></div>
+        <input type="hidden" id="fcal-value">
+      </div>
+
+      <!-- Horarios -->
+      <div style="margin-top:10px">
+        <p style="font-size:11px;color:var(--texto-suave);margin-bottom:8px;" data-i18n="hora-label">Selecciona un horario:</p>
+        <div class="ftime-wrap" id="ftime-slots"></div>
+        <input type="hidden" id="ftime-value" value="9:00 AM">
       </div>
 
       <hr class="form-separator">
@@ -1210,26 +1241,74 @@ async function enviarFormulario(){
 }
 
 /* ════════ FECHA SPINNER ════════ */
-const fechaState={dia:1,mes:1,anio:2026,hora:9,ampm:'AM'};
-function initFecha(){
-  const h=new Date(); fechaState.dia=h.getDate(); fechaState.mes=h.getMonth()+1; fechaState.anio=h.getFullYear();
-  fechaState.hora=9; fechaState.ampm='AM';
-  renderFecha();
+/* ════════ CALENDARIO FORMULARIO ════════ */
+const FCAL_MESES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const FCAL_MESES_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const FCAL_HORAS = ['9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','12:00 PM','12:30 PM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM','6:30 PM','7:00 PM','7:30 PM','8:00 PM'];
+
+let fCalYear, fCalMonth, fCalSelected = null;
+
+function initFecha() {
+  const now  = new Date();
+  fCalYear   = now.getFullYear();
+  fCalMonth  = now.getMonth();
+  fCalSelected = null;
+  document.getElementById('fcal-value').value  = '';
+  document.getElementById('ftime-value').value = '9:00 AM';
+  renderFCal();
+  renderFTimeSlots();
 }
-function renderFecha(){
-  document.getElementById('spin-dia').textContent=String(fechaState.dia).padStart(2,'0');
-  document.getElementById('spin-mes').textContent=String(fechaState.mes).padStart(2,'0');
-  document.getElementById('spin-anio').textContent=fechaState.anio;
-  document.getElementById('spin-hora').textContent=fechaState.hora+':00';
-  document.getElementById('spin-ampm').textContent=fechaState.ampm;
+
+function renderFCal() {
+  const meses = currentLang === 'en' ? FCAL_MESES_EN : FCAL_MESES_ES;
+  document.getElementById('fcal-label').textContent = `${meses[fCalMonth]} ${fCalYear}`;
+  const grid = document.getElementById('fcal-grid');
+  grid.innerHTML = '';
+  const firstDay    = new Date(fCalYear, fCalMonth, 1).getDay();
+  const daysInMonth = new Date(fCalYear, fCalMonth+1, 0).getDate();
+  const today       = new Date();
+
+  for (let i = 0; i < firstDay; i++) {
+    const el = document.createElement('button');
+    el.className = 'fcal-day other-month'; el.disabled = true; el.textContent = '';
+    grid.appendChild(el);
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const el      = document.createElement('button');
+    const dateStr = `${fCalYear}-${String(fCalMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    el.className  = 'fcal-day';
+    el.textContent = d;
+    const thisDate = new Date(fCalYear, fCalMonth, d);
+    if (thisDate.toDateString() === today.toDateString()) el.classList.add('today');
+    if (fCalSelected === dateStr) el.classList.add('selected');
+    el.onclick = () => { fCalSelected = dateStr; document.getElementById('fcal-value').value = dateStr; renderFCal(); };
+    grid.appendChild(el);
+  }
 }
-function cambiarFecha(campo,delta){
-  if(campo==='dia')       fechaState.dia=((fechaState.dia-1+delta+31)%31)+1;
-  else if(campo==='mes')  fechaState.mes=((fechaState.mes-1+delta+12)%12)+1;
-  else if(campo==='anio') fechaState.anio=Math.max(2024,Math.min(2035,fechaState.anio+delta));
-  else if(campo==='hora') fechaState.hora=((fechaState.hora-1+delta+12)%12)+1;
-  else if(campo==='ampm') fechaState.ampm=fechaState.ampm==='AM'?'PM':'AM';
-  renderFecha();
+
+function fCalNav(delta) {
+  fCalMonth += delta;
+  if (fCalMonth > 11) { fCalMonth = 0;  fCalYear++; }
+  if (fCalMonth < 0)  { fCalMonth = 11; fCalYear--; }
+  renderFCal();
+}
+
+function renderFTimeSlots() {
+  const wrap = document.getElementById('ftime-slots');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  const selectedVal = document.getElementById('ftime-value').value || '9:00 AM';
+  FCAL_HORAS.forEach(h => {
+    const el = document.createElement('button');
+    el.className = 'ftime-slot' + (h === selectedVal ? ' selected' : '');
+    el.textContent = h;
+    el.onclick = () => {
+      document.querySelectorAll('.ftime-slot').forEach(s => s.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('ftime-value').value = h;
+    };
+    wrap.appendChild(el);
+  });
 }
 
 /* ════════ FIRMA CANVAS ════════ */
