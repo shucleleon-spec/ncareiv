@@ -177,6 +177,19 @@
       .topbar,.tab-nav,.eval-steps-nav,.eval-progress,.result-actions-eval,.nav-btns,.page-actions,.filters{display:none!important;}
       body{background:#fff;}
     }
+    /* Modal registro manual */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+    .modal-overlay.visible{display:flex}
+    .modal-box{background:var(--blanco);border-radius:20px;padding:2rem;width:90%;max-width:480px;box-shadow:0 20px 50px rgba(0,0,0,.3);position:relative}
+    .modal-title{font-family:var(--serif);font-size:1.4rem;color:var(--prim);margin-bottom:.25rem}
+    .modal-sub{font-size:13px;color:var(--texto-suave);margin-bottom:1.5rem}
+    .modal-close{position:absolute;top:16px;right:20px;font-size:26px;cursor:pointer;color:var(--prim);background:none;border:none;padding:0}
+    .modal-field{margin-bottom:1rem}
+    .modal-field label{display:block;font-size:12px;color:var(--texto-suave);margin-bottom:5px;font-weight:500}
+    .modal-field input,.modal-field select{font-family:var(--sans);font-size:14px;padding:8px 12px;border:1.5px solid var(--borde);border-radius:var(--radius);background:var(--blanco);color:var(--texto);outline:none;width:100%}
+    .modal-field input:focus,.modal-field select:focus{border-color:var(--prim)}
+    .modal-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .modal-badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;background:var(--prim-claro);color:var(--prim);margin-bottom:1rem}
   </style>
 </head>
 <body>
@@ -241,6 +254,7 @@
         <div class="page-header">
           <p class="page-title">Consentimientos firmados</p>
           <div class="page-actions">
+            <button class="btn-primary" onclick="abrirRegistroManual()" style="font-size:13px">+ Agregar registro</button>
             <button class="btn-ghost" onclick="admExportCSV()" style="font-size:13px">⬇️ Exportar CSV</button>
           </div>
         </div>
@@ -471,6 +485,65 @@
   </div>
 
   </div><!-- /tab-content -->
+<!-- MODAL: REGISTRO MANUAL -->
+<div id="modal-manual" class="modal-overlay" onclick="if(event.target===this)cerrarRegistroManual()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="cerrarRegistroManual()">×</button>
+    <p class="modal-title">Agregar registro</p>
+    <p class="modal-sub">Ingresa los datos del consentimiento anterior.</p>
+    <span class="modal-badge">📋 Registro manual</span>
+
+    <div class="modal-field">
+      <label>Nombre completo *</label>
+      <input type="text" id="man-nombre" placeholder="Nombre del cliente">
+    </div>
+    <div class="modal-field">
+      <label>Teléfono</label>
+      <input type="tel" id="man-telefono" placeholder="+1 (000) 000-0000">
+    </div>
+    <div class="modal-field">
+      <label>Email</label>
+      <input type="email" id="man-email" placeholder="correo@email.com">
+    </div>
+    <div class="modal-field">
+      <label>Tratamiento *</label>
+      <select id="man-tratamiento">
+        <option value="">Selecciona...</option>
+        <option>Megadosis de Vitamina C — $250</option>
+        <option>Terapia de Hierro IV — $120</option>
+        <option>Cocktail de Myers — $120</option>
+        <option>Infusión de Colágeno IV — $120</option>
+        <option>Vitamina C + Glutathione — $120</option>
+        <option>NAD+ Infusion — $120</option>
+        <option>Hidratación IV — $120</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>Dirección / Ubicación</label>
+      <input type="text" id="man-direccion" placeholder="Dirección del servicio">
+    </div>
+    <div class="modal-row">
+      <div class="modal-field">
+        <label>Fecha de cita *</label>
+        <input type="date" id="man-fecha">
+      </div>
+      <div class="modal-field">
+        <label>Hora de cita *</label>
+        <input type="time" id="man-hora">
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>Notas / Comentarios</label>
+      <input type="text" id="man-notas" placeholder="Observaciones adicionales">
+    </div>
+
+    <p id="man-error" style="font-size:12px;color:var(--rojo);display:none;margin-bottom:10px"></p>
+    <button class="btn-primary" onclick="guardarRegistroManual()" style="width:100%;padding:12px">
+      💾 Guardar registro
+    </button>
+  </div>
+</div>
+
 </div><!-- /shell -->
 
 <script>
@@ -1103,6 +1176,79 @@ function evalExportCSV() {
   URL.revokeObjectURL(url);
 }
 
+
+/* ════════════════════════════════════════
+   REGISTRO MANUAL
+════════════════════════════════════════ */
+function abrirRegistroManual() {
+  const hoy = new Date().toISOString().slice(0,10);
+  document.getElementById('man-fecha').value = hoy;
+  document.getElementById('man-hora').value  = '09:00';
+  document.getElementById('man-error').style.display = 'none';
+  document.getElementById('modal-manual').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+}
+
+function cerrarRegistroManual() {
+  document.getElementById('modal-manual').classList.remove('visible');
+  document.body.style.overflow = '';
+  ['man-nombre','man-telefono','man-email','man-direccion','man-notas'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('man-tratamiento').value = '';
+}
+
+async function guardarRegistroManual() {
+  const errEl = document.getElementById('man-error');
+  errEl.style.display = 'none';
+
+  const nombre      = document.getElementById('man-nombre').value.trim();
+  const telefono    = document.getElementById('man-telefono').value.trim();
+  const email       = document.getElementById('man-email').value.trim();
+  const tratamiento = document.getElementById('man-tratamiento').value;
+  const direccion   = document.getElementById('man-direccion').value.trim();
+  const fecha       = document.getElementById('man-fecha').value;
+  const hora        = document.getElementById('man-hora').value;
+  const notas       = document.getElementById('man-notas').value.trim();
+
+  if (!nombre || !tratamiento || !fecha || !hora) {
+    errEl.textContent = '⚠️ Nombre, tratamiento, fecha y hora son obligatorios.';
+    errEl.style.display = 'block'; return;
+  }
+
+  const [y,m,d] = fecha.split('-');
+  const [hh,mm] = hora.split(':');
+  const h    = parseInt(hh);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const h12  = h % 12 || 12;
+  const fechaFirma = `${d}/${m}/${y} ${h12}:${mm} ${ampm}`;
+
+  try {
+    const res = await fetch(WORKER_URL + '/consent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nombre, telefono: telefono||'—', email: email||'—',
+        tratamiento, direccion: direccion||'—',
+        mensaje: notas, fecha_firma: fechaFirma
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error||'Error del servidor');
+
+    cerrarRegistroManual();
+
+    // Recargar lista actualizada
+    const res2  = await fetch(WORKER_URL + '/admin/consents', { headers:{'Authorization':'Basic '+credentials} });
+    const data2 = await res2.json();
+    allConsents = data2.consents || [];
+    admRenderStats(); admRenderList();
+
+  } catch(err) {
+    errEl.textContent = '⚠️ Error guardando: ' + err.message;
+    errEl.style.display = 'block';
+  }
+}
 
 function esc(str){ return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 </script>
