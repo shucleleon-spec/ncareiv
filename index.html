@@ -882,7 +882,8 @@ const i18n = {
     'c4':'Entiendo que los resultados pueden variar y que no se garantiza ningún resultado específico.',
     'c5':'Doy mi consentimiento voluntario para recibir el tratamiento de Terapia IV.',
     'firma-title':'Firma Digital *','firma-desc':'Dibuja tu firma en el recuadro (dedo en móvil / mouse en computadora):','firma-limpiar':'Limpiar',
-    'fecha-title':'Fecha y Hora de Cita *','dia':'Día','mes':'Mes','anio':'Año','hora':'Hora','ampm':'AM/PM',
+    'fecha-title':'Fecha y Hora de Cita *','hora-label':'Selecciona un horario:',
+    'cal-do':'Do','cal-lu':'Lu','cal-ma':'Ma','cal-mi':'Mi','cal-ju':'Ju','cal-vi':'Vi','cal-sa':'Sa',
     'form-aviso':'✨💧 Al enviar este formulario, acepto recibir los servicios de Terapia IV y confirmo que he leído y comprendido la información anterior.',
     'recaptcha-msg':'🔒 Formulario protegido por reCAPTCHA',
     'form-send':'✉️ Enviar Formulario a NCare IV',
@@ -994,7 +995,8 @@ const i18n = {
     'c4':'I understand that results may vary and that no specific outcome is guaranteed.',
     'c5':'I voluntarily consent to receive IV Therapy treatment.',
     'firma-title':'Digital Signature *','firma-desc':'Draw your signature in the box (finger on mobile / mouse on desktop):','firma-limpiar':'Clear',
-    'fecha-title':'Appointment Date & Time *','dia':'Day','mes':'Month','anio':'Year','hora':'Hour','ampm':'AM/PM',
+    'fecha-title':'Appointment Date & Time *','hora-label':'Select a time slot:',
+    'cal-do':'Su','cal-lu':'Mo','cal-ma':'Tu','cal-mi':'We','cal-ju':'Th','cal-vi':'Fr','cal-sa':'Sa',
     'form-aviso':'✨💧 By submitting this form, I agree to receive IV Therapy services and confirm I have read and understood the information above.',
     'recaptcha-msg':'🔒 Form protected by reCAPTCHA',
     'form-send':'✉️ Send Form to NCare IV',
@@ -1153,7 +1155,20 @@ async function enviarFormulario(){
   const direccion=sanitizar(document.getElementById('f-direccion').value);
   const mensaje=sanitizar(document.getElementById('f-mensaje').value);
   const checks=['c1','c2','c3','c4','c5'].every(id=>document.getElementById(id).checked);
-  const fecha = `${String(fechaState.dia).padStart(2,'0')}/${String(fechaState.mes).padStart(2,'0')}/${fechaState.anio} ${fechaState.hora}:00 ${fechaState.ampm}`;
+  const fcalVal  = document.getElementById('fcal-value')?.value || '';
+  const ftimeVal = document.getElementById('ftime-value')?.value || '';
+
+  if (!fcalVal) {
+    errEl.textContent = currentLang === 'en' ? '⚠️ Please select an appointment date.' : '⚠️ Por favor selecciona una fecha de cita.';
+    errEl.style.display = 'block'; return;
+  }
+  if (!ftimeVal) {
+    errEl.textContent = currentLang === 'en' ? '⚠️ Please select an appointment time.' : '⚠️ Por favor selecciona un horario.';
+    errEl.style.display = 'block'; return;
+  }
+
+  const [fy, fm, fd] = fcalVal.split('-');
+  const fecha = `${fd}/${fm}/${fy} ${ftimeVal}`;
 
   if(!nombre||!telefono||!email||!tratamiento||!direccion){ errEl.textContent=t['err-campos']; errEl.style.display='block'; return; }
   if(!validarEmail(email)){ errEl.textContent=t['err-email']; errEl.style.display='block'; return; }
@@ -1244,7 +1259,7 @@ async function enviarFormulario(){
 /* ════════ CALENDARIO FORMULARIO ════════ */
 const FCAL_MESES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const FCAL_MESES_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const FCAL_HORAS = ['9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','12:00 PM','12:30 PM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM','6:30 PM','7:00 PM','7:30 PM','8:00 PM'];
+const FCAL_HORAS = ['9:00 AM','10:00 AM','11:00 AM','12:00 PM','1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM','6:00 PM','7:00 PM','8:00 PM'];
 
 let fCalYear, fCalMonth, fCalSelected = null;
 
@@ -1281,7 +1296,7 @@ function renderFCal() {
     const thisDate = new Date(fCalYear, fCalMonth, d);
     if (thisDate.toDateString() === today.toDateString()) el.classList.add('today');
     if (fCalSelected === dateStr) el.classList.add('selected');
-    el.onclick = () => { fCalSelected = dateStr; document.getElementById('fcal-value').value = dateStr; renderFCal(); };
+    el.onclick = () => { fCalSelected = dateStr; document.getElementById('fcal-value').value = dateStr; renderFCal(); cargarDisponibilidad(dateStr); };
     grid.appendChild(el);
   }
 }
@@ -1293,22 +1308,49 @@ function fCalNav(delta) {
   renderFCal();
 }
 
-function renderFTimeSlots() {
+function renderFTimeSlots(ocupadas = []) {
   const wrap = document.getElementById('ftime-slots');
   if (!wrap) return;
   wrap.innerHTML = '';
-  const selectedVal = document.getElementById('ftime-value').value || '9:00 AM';
+  const selectedVal = document.getElementById('ftime-value').value || '';
+  const labelOcupado = currentLang === 'en' ? 'Not available' : 'No disponible';
+
   FCAL_HORAS.forEach(h => {
+    const isOcupado = ocupadas.includes(h);
     const el = document.createElement('button');
-    el.className = 'ftime-slot' + (h === selectedVal ? ' selected' : '');
-    el.textContent = h;
-    el.onclick = () => {
-      document.querySelectorAll('.ftime-slot').forEach(s => s.classList.remove('selected'));
-      el.classList.add('selected');
-      document.getElementById('ftime-value').value = h;
-    };
+    el.style.cssText = isOcupado
+      ? 'padding:5px 11px;border-radius:20px;border:1.5px solid var(--borde);font-size:12px;font-family:var(--sans);background:#f5f5f5;color:#bbb;cursor:not-allowed;text-decoration:line-through'
+      : '';
+    el.className = isOcupado ? '' : 'ftime-slot' + (h === selectedVal ? ' selected' : '');
+    el.textContent = isOcupado ? `${h} — ${labelOcupado}` : h;
+    el.disabled = isOcupado;
+    if (!isOcupado) {
+      el.onclick = () => {
+        document.querySelectorAll('.ftime-slot').forEach(s => s.classList.remove('selected'));
+        el.classList.add('selected');
+        document.getElementById('ftime-value').value = h;
+      };
+    }
     wrap.appendChild(el);
   });
+}
+
+async function cargarDisponibilidad(dateStr) {
+  const wrap = document.getElementById('ftime-slots');
+  if (!wrap) return;
+  // Mostrar loading en los slots
+  wrap.innerHTML = '<span style="font-size:12px;color:var(--texto-suave)">Verificando disponibilidad...</span>';
+  document.getElementById('ftime-value').value = '';
+
+  try {
+    const WORKER_URL = 'https://ncareiv-worker.shucleleon.workers.dev';
+    const res  = await fetch(`${WORKER_URL}/disponibilidad?fecha=${dateStr}`);
+    const data = await res.json();
+    renderFTimeSlots(data.ocupadas || []);
+  } catch(e) {
+    // Si falla la consulta, mostrar todos disponibles
+    renderFTimeSlots([]);
+  }
 }
 
 /* ════════ FIRMA CANVAS ════════ */
