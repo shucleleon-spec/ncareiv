@@ -508,6 +508,25 @@
     </div>
   </div>
 
+  <!-- ══ TAB 4: PAPELERA ══ -->
+  <div class="tab-page" id="page-papelera">
+    <div style="max-width:1000px;margin:0 auto;padding:1.5rem">
+      <div class="page-header">
+        <div>
+          <p class="page-title">🗑️ Papelera</p>
+          <p style="font-size:12px;color:var(--texto-suave);margin-top:3px">Los registros se eliminan automáticamente después de 24 horas.</p>
+        </div>
+        <button class="btn-ghost" onclick="loadPapelera()" style="font-size:13px">🔄 Actualizar</button>
+      </div>
+      <div id="papelera-loading" class="loading" style="display:none">Cargando papelera...</div>
+      <div id="papelera-list" style="display:flex;flex-direction:column;gap:10px"></div>
+      <div id="papelera-empty" class="empty-msg hidden">
+        La papelera está vacía.
+        <span>Los registros eliminados aparecerán aquí por 24 horas.</span>
+      </div>
+    </div>
+  </div>
+
   </div><!-- /tab-content -->
 <!-- MODAL: REGISTRO MANUAL -->
 <div id="modal-manual" class="modal-overlay" onclick="if(event.target===this)cerrarRegistroManual()">
