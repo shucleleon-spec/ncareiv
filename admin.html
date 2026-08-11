@@ -263,6 +263,9 @@
     <button class="tab-btn" onclick="switchTab('evaluaciones')" id="tab-evaluaciones">
       📊 Historial de evaluaciones
     </button>
+    <button class="tab-btn" onclick="switchTab('papelera')" id="tab-papelera">
+      🗑️ Papelera
+    </button>
   </nav>
 
   <div class="tab-content">
@@ -638,6 +641,81 @@ function switchTab(tab) {
   document.getElementById('tab-'+tab).classList.add('active');
   document.getElementById('page-'+tab).classList.add('active');
   if (tab === 'evaluaciones' && allEvaluaciones.length === 0) loadEvaluaciones();
+  if (tab === 'papelera') loadPapelera();
+}
+
+/* ════════════════════════════════════════
+   PAPELERA
+════════════════════════════════════════ */
+async function loadPapelera() {
+  document.getElementById('papelera-loading').style.display = 'block';
+  document.getElementById('papelera-list').innerHTML = '';
+  document.getElementById('papelera-empty').classList.add('hidden');
+  try {
+    const res  = await fetch(WORKER_URL + '/admin/papelera', { headers:{'Authorization':'Basic '+credentials} });
+    const data = await res.json();
+    renderPapelera(data.consents || []);
+  } catch(err) { console.error('Error loading papelera:', err); }
+  document.getElementById('papelera-loading').style.display = 'none';
+}
+
+function renderPapelera(items) {
+  const list  = document.getElementById('papelera-list');
+  const empty = document.getElementById('papelera-empty');
+  list.innerHTML = '';
+  if (!items.length) { empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+
+  items.forEach(c => {
+    const d = new Date(c.deleted_at);
+    const expira = new Date(d.getTime() + 24*60*60*1000);
+    const ahora  = new Date();
+    const mins   = Math.round((expira - ahora) / 60000);
+    const horas  = Math.floor(mins / 60);
+    const minR   = mins % 60;
+    const tiempoStr = horas > 0 ? `${horas}h ${minR}m` : `${minR}m`;
+    const initial   = (c.nombre||'?').charAt(0).toUpperCase();
+    const tratShort = (c.tratamiento||'').split('—')[0].trim();
+
+    const el = document.createElement('div');
+    el.style.cssText = 'background:var(--blanco);border:1px solid #f5c6c6;border-radius:16px;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;opacity:.9';
+    el.innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0">
+        <div style="width:40px;height:40px;border-radius:50%;background:#fdf0f0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#c0392b;flex-shrink:0">${esc(initial)}</div>
+        <div style="min-width:0">
+          <p style="font-weight:500;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--texto)">${esc(c.nombre)}</p>
+          <p style="font-size:12px;color:var(--texto-suave)">${esc(tratShort)} · ${esc(c.fecha_firma||'—')}</p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap">
+        <span style="font-size:11px;background:#fdf0f0;color:#c0392b;padding:3px 10px;border-radius:20px;white-space:nowrap">⏱ Expira en ${tiempoStr}</span>
+        <button onclick="papeleraRestaurar('${esc(c.id)}')" style="background:var(--verde-claro);color:var(--verde);border:1px solid var(--verde-borde);border-radius:20px;padding:5px 14px;font-size:12px;cursor:pointer;font-family:var(--sans)">↩ Restaurar</button>
+        <button onclick="papeleraEliminar('${esc(c.id)}')" style="background:var(--rojo-claro);color:var(--rojo);border:1px solid var(--rojo-borde);border-radius:20px;padding:5px 14px;font-size:12px;cursor:pointer;font-family:var(--sans)">🗑 Eliminar ya</button>
+      </div>`;
+    list.appendChild(el);
+  });
+}
+
+async function papeleraRestaurar(id) {
+  try {
+    const res = await fetch(`${WORKER_URL}/admin/consents/restore/${id}`,{method:'POST',headers:{'Authorization':'Basic '+credentials}});
+    if (res.ok) {
+      loadPapelera();
+      const res2 = await fetch(WORKER_URL+'/admin/consents',{headers:{'Authorization':'Basic '+credentials}});
+      const data = await res2.json();
+      allConsents = data.consents || [];
+      admRenderStats(); admRenderList();
+      alert('✅ Registro restaurado correctamente.');
+    }
+  } catch(e) { alert('Error restaurando.'); }
+}
+
+async function papeleraEliminar(id) {
+  if (!confirm('¿Eliminar permanentemente? Esta acción NO se puede deshacer.')) return;
+  try {
+    const res = await fetch(`${WORKER_URL}/admin/consents/permanent/${id}`,{method:'DELETE',headers:{'Authorization':'Basic '+credentials}});
+    if (res.ok) loadPapelera();
+  } catch(e) { alert('Error eliminando.'); }
 }
 
 /* ════════════════════════════════════════
