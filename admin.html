@@ -248,6 +248,7 @@
     </div>
     <div class="topbar-right">
       <span style="font-size:12px;color:var(--texto-suave)" id="topbar-fecha"></span>
+      <button class="btn-ghost" onclick="descargarBackup()" style="font-size:12px;padding:6px 14px" title="Descargar backup completo">💾 Backup</button>
       <button class="btn-ghost" onclick="doLogout()" style="font-size:12px;padding:6px 14px">Salir</button>
     </div>
   </header>
@@ -605,9 +606,8 @@
 /* ════════════════════════════════════════
    CONFIGURACIÓN
 ════════════════════════════════════════ */
-const WORKER_URL  = 'https://ncareiv-worker.shucleleon.workers.dev';
-const ADMIN_USER  = 'admin';
-const ADMIN_PASS  = 'ncareiv2026*';
+const WORKER_URL = 'https://ncareiv-worker.shucleleon.workers.dev';
+// Las credenciales se verifican en el servidor — no se almacenan en el cliente
 
 let allConsents = [];
 let credentials = '';
@@ -626,19 +626,53 @@ async function doLogin() {
   const pass  = document.getElementById('login-pass').value.trim();
   const errEl = document.getElementById('login-error');
   errEl.style.display = 'none';
-  credentials = btoa(`${user}:${pass}`);
+
+  if (!user || !pass) {
+    errEl.textContent = 'Por favor ingresa usuario y contraseña.';
+    errEl.style.display = 'block'; return;
+  }
+
+  const btnLogin = document.querySelector('#view-login button');
+  if (btnLogin) { btnLogin.disabled = true; btnLogin.textContent = 'Verificando...'; }
+
+  const tentativa = btoa(`${user}:${pass}`);
   try {
+    // Verificar credenciales contra el servidor
+    const loginRes = await fetch(`${WORKER_URL}/admin/login`, {
+      method: 'POST',
+      headers: { 'Authorization': `Basic ${tentativa}` }
+    });
+
+    if (loginRes.status === 401) {
+      errEl.textContent = 'Usuario o contraseña incorrectos.';
+      errEl.style.display = 'block';
+      credentials = '';
+      if (btnLogin) { btnLogin.disabled = false; btnLogin.textContent = 'Entrar'; }
+      return;
+    }
+
+    if (loginRes.status === 429) {
+      errEl.textContent = 'Demasiados intentos. Espera 1 minuto.';
+      errEl.style.display = 'block';
+      if (btnLogin) { btnLogin.disabled = false; btnLogin.textContent = 'Entrar'; }
+      return;
+    }
+
+    // Login correcto — guardar credenciales y cargar datos
+    credentials = tentativa;
     const res  = await fetch(`${WORKER_URL}/admin/consents`, { headers:{'Authorization':`Basic ${credentials}`} });
-    if (res.status === 401) { errEl.style.display='block'; credentials=''; return; }
     const data = await res.json();
     allConsents = data.consents || [];
     document.getElementById('view-login').style.display = 'none';
     document.getElementById('shell').style.display      = 'flex';
     document.getElementById('loading-msg').style.display = 'none';
     admRenderStats(); admRenderList();
+    if (btnLogin) { btnLogin.disabled = false; btnLogin.textContent = 'Entrar'; }
+
   } catch(err) {
-    errEl.textContent = 'Error conectando al servidor.';
+    errEl.textContent = 'Error conectando al servidor. Verifica tu conexión.';
     errEl.style.display = 'block';
+    if (btnLogin) { btnLogin.disabled = false; btnLogin.textContent = 'Entrar'; }
   }
 }
 
@@ -1397,6 +1431,25 @@ function selectTime(label, el) {
   if (ampm === 'PM' && hh !== 12) hh += 12;
   if (ampm === 'AM' && hh === 12) hh = 0;
   document.getElementById('man-hora').value = `${String(hh).padStart(2,'0')}:${mm}`;
+}
+
+/* ════════════════════════════════════════
+   BACKUP
+════════════════════════════════════════ */
+async function descargarBackup() {
+  try {
+    const res = await fetch(`${WORKER_URL}/admin/backup`, {
+      headers: { 'Authorization': 'Basic ' + credentials }
+    });
+    if (!res.ok) { alert('Error generando backup.'); return; }
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `ncareiv_backup_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch(err) { alert('Error descargando backup: ' + err.message); }
 }
 
 /* ════════════════════════════════════════
