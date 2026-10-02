@@ -84,9 +84,7 @@
     });
   </script>
 
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/local-fonts.css">
 
   <style>
     :root {
@@ -256,6 +254,12 @@
     .form-lbl{display:block;font-size:12px;font-weight:500;color:var(--texto);margin-bottom:5px}
     .form-inp{width:100%;padding:.7rem .9rem;border:1.5px solid var(--borde);border-radius:10px;font-size:14px;font-family:var(--sans);color:var(--texto);background:var(--blanco);outline:none;transition:border .2s}
     .form-inp:focus{border-color:var(--prim)}
+    .local-captcha{margin-top:1rem;padding:.9rem;border:1.5px solid var(--borde);border-radius:12px;background:var(--prim-claro);flex-shrink:0}
+    .local-captcha-row{display:grid;grid-template-columns:1fr 96px;gap:10px;align-items:center}
+    .local-captcha-label{font-size:12px;color:var(--texto);line-height:1.4}
+    .local-captcha-question{font-weight:600;color:var(--prim)}
+    .local-captcha input{text-align:center;background:var(--blanco)}
+    .local-captcha-note{font-size:11px;color:var(--texto-suave);text-align:center;margin-top:6px}
     .check-item{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
     .check-box{width:17px;height:17px;flex-shrink:0;margin-top:2px;accent-color:var(--prim);cursor:pointer}
     .check-item label{font-size:13px;color:var(--texto-suave);line-height:1.5;cursor:pointer}
@@ -757,11 +761,17 @@
       <input type="text" id="hp-field" name="website" tabindex="-1" autocomplete="off">
     </div>
 
-    <!-- reCAPTCHA v2 -->
-    <div style="margin-top:1rem;display:flex;justify-content:center;flex-shrink:0;">
-      <div class="g-recaptcha" data-sitekey="6LcehBotAAAAAP0rVF3sV10YXJKedi8WM2lLhsVI" data-theme="light"></div>
+    <!-- Captcha propio ligero -->
+    <div class="local-captcha">
+      <div class="local-captcha-row">
+        <label class="local-captcha-label" for="captcha-answer">
+          <span data-i18n="captcha-label">Verificación rápida</span><br>
+          <span id="captcha-question" class="local-captcha-question"></span>
+        </label>
+        <input id="captcha-answer" class="form-inp" type="text" inputmode="numeric" autocomplete="off" aria-describedby="captcha-note">
+      </div>
+      <p id="captcha-note" class="local-captcha-note" data-i18n="captcha-msg">Protección propia sin servicios externos.</p>
     </div>
-    <p style="font-size:11px;color:var(--texto-suave);text-align:center;margin-top:6px;flex-shrink:0;" data-i18n="recaptcha-msg">🔒 Formulario protegido por reCAPTCHA</p>
 
     <p id="form-error" style="font-size:13px;margin-top:.75rem;display:none;flex-shrink:0;"></p>
     <button onclick="enviarFormulario()" class="btn-entendido" style="margin-top:.5rem;flex-shrink:0;" data-i18n="form-send">✉️ Enviar Formulario a NCare IV</button>
@@ -885,7 +895,8 @@ const i18n = {
     'fecha-title':'Fecha y Hora de Cita *','hora-label':'Selecciona un horario:',
     'cal-do':'Do','cal-lu':'Lu','cal-ma':'Ma','cal-mi':'Mi','cal-ju':'Ju','cal-vi':'Vi','cal-sa':'Sa',
     'form-aviso':'✨💧 Al enviar este formulario, acepto recibir los servicios de Terapia IV y confirmo que he leído y comprendido la información anterior.',
-    'recaptcha-msg':'🔒 Formulario protegido por reCAPTCHA',
+    'captcha-label':'Verificación rápida',
+    'captcha-msg':'Protección propia sin servicios externos.',
     'form-send':'✉️ Enviar Formulario a NCare IV',
     'err-campos':'⚠️ Por favor completa todos los campos obligatorios.',
     'err-email':'⚠️ El formato del email no es válido.',
@@ -893,7 +904,7 @@ const i18n = {
     'err-nombre':'⚠️ El nombre solo puede contener letras y espacios.',
     'err-checks':'⚠️ Debes marcar todas las casillas de consentimiento.',
     'err-firma':'⚠️ Por favor dibuja tu firma en el recuadro.',
-    'err-recaptcha':'⚠️ Por favor marca el checkbox "No soy un robot".',
+    'err-captcha':'⚠️ La verificación no es correcta. Inténtalo de nuevo.',
     'err-rate':'⚠️ Has alcanzado el límite de envíos. Contáctanos por WhatsApp.',
     'err-tiempo':'⚠️ Por favor tómate un momento para revisar el formulario antes de enviarlo.',
     'ok-msg':'✅ ¡Listo! Se abrirá tu app de correo para enviar el formulario.',
@@ -998,7 +1009,8 @@ const i18n = {
     'fecha-title':'Appointment Date & Time *','hora-label':'Select a time slot:',
     'cal-do':'Su','cal-lu':'Mo','cal-ma':'Tu','cal-mi':'We','cal-ju':'Th','cal-vi':'Fr','cal-sa':'Sa',
     'form-aviso':'✨💧 By submitting this form, I agree to receive IV Therapy services and confirm I have read and understood the information above.',
-    'recaptcha-msg':'🔒 Form protected by reCAPTCHA',
+    'captcha-label':'Quick verification',
+    'captcha-msg':'Built-in protection without external services.',
     'form-send':'✉️ Send Form to NCare IV',
     'err-campos':'⚠️ Please complete all required fields.',
     'err-email':'⚠️ Please enter a valid email address.',
@@ -1006,7 +1018,7 @@ const i18n = {
     'err-nombre':'⚠️ Name may only contain letters and spaces.',
     'err-checks':'⚠️ You must check all consent boxes.',
     'err-firma':'⚠️ Please draw your signature in the box.',
-    'err-recaptcha':'⚠️ Please check the "I am not a robot" box.',
+    'err-captcha':'⚠️ The verification answer is not correct. Please try again.',
     'err-rate':'⚠️ Submission limit reached. Please contact us via WhatsApp.',
     'err-tiempo':'⚠️ Please take a moment to review the form before submitting.',
     'ok-msg':'✅ Done! Your email app will open to send the form.',
@@ -1119,11 +1131,32 @@ window.addEventListener('keydown', e => {
 /* ════════ FORMULARIO SEGURO ════════ */
 let intentosEnvio=0; const MAX_INTENTOS=3;
 let tiempoAperturaForm=0; const TIEMPO_MIN_MS=10000;
+let captchaResultado=null;
+
+function generarCaptcha(){
+  const a=Math.floor(Math.random()*8)+2;
+  const b=Math.floor(Math.random()*8)+2;
+  const resta=Math.random()>.55;
+  captchaResultado=resta?Math.max(a,b)-Math.min(a,b):a+b;
+  const pregunta=resta
+    ? `${Math.max(a,b)} - ${Math.min(a,b)} = ?`
+    : `${a} + ${b} = ?`;
+  const q=document.getElementById('captcha-question');
+  const input=document.getElementById('captcha-answer');
+  if(q) q.textContent=pregunta;
+  if(input) input.value='';
+}
+
+function captchaValido(){
+  const input=document.getElementById('captcha-answer');
+  return input && Number(input.value.trim())===captchaResultado;
+}
 
 function abrirFormulario(){
   document.getElementById('popup-formulario').classList.add('visible');
   document.body.style.overflow='hidden';
   tiempoAperturaForm=Date.now();
+  generarCaptcha();
   initCanvas(); initFecha();
 }
 function cerrarFormulario(){
@@ -1176,8 +1209,7 @@ async function enviarFormulario(){
   if(!/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-'\.]{2,80}$/.test(nombre)){ errEl.textContent=t['err-nombre']; errEl.style.display='block'; return; }
   if(!checks){ errEl.textContent=t['err-checks']; errEl.style.display='block'; return; }
   if(firmaVacia){ errEl.textContent=t['err-firma']; errEl.style.display='block'; return; }
-  const recap=typeof grecaptcha!=='undefined'?grecaptcha.getResponse():'';
-  if(!recap){ errEl.textContent=t['err-recaptcha']; errEl.style.display='block'; return; }
+  if(!captchaValido()){ errEl.textContent=t['err-captcha']; errEl.style.display='block'; generarCaptcha(); return; }
 
   intentosEnvio++;
 
@@ -1223,7 +1255,7 @@ async function enviarFormulario(){
         });
         limpiarFirma();
         initFecha();
-        if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
+        generarCaptcha();
         if (btnSend) {
           btnSend.disabled = false;
           btnSend.textContent = currentLang === 'en'
@@ -1251,7 +1283,7 @@ async function enviarFormulario(){
         ? '✉️ Send Form to NCare IV'
         : '✉️ Enviar Formulario a NCare IV';
     }
-    if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
+    generarCaptcha();
   }
 }
 
